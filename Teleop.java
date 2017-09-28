@@ -18,6 +18,8 @@ public class Teleop extends OpMode {
 
     Hardware robot = new Hardware();
 
+    //Drive Variables
+
     private double leftGP1Y = 0;
     private double leftGP1X = 0;
     private double frontleftPOWER = 0;
@@ -25,9 +27,15 @@ public class Teleop extends OpMode {
     private double backleftPOWER = 0;
     private double backrightPOWER = 0;
     private double maxPOWER = 0;
-    //private double rightGP1 = 0;
+    //private double rightGP1 = 0; -- figure out something to do with right stick
     private boolean speedToggle = true;
     private double speedToggleMultiplier = 0.1; // Between 0 and 1
+
+
+    //Lift Variables
+
+    private double leftGP2Y = 0;
+    private double liftLevel = 0;
 
     /*
     Controller Layout
@@ -62,6 +70,10 @@ public class Teleop extends OpMode {
     @Override
     public void loop()
     {
+
+        //*****************
+        //Game Controller 1
+        //*****************
 
         //Read controller input
         //Left and right are opposite; front and back are same
@@ -109,7 +121,7 @@ public class Teleop extends OpMode {
         }
 
 
-        //rightGP1 = -gamepad1.right_stick_y;
+        //rightGP1 = -gamepad1.right_stick_y;  -- determine what the right stick is used for
 
         if (gamepad1.b) {
             speedToggle = !speedToggle;
@@ -166,6 +178,18 @@ public class Teleop extends OpMode {
             robot.backRightMotor.setPower(speedToggleMultiplier * backrightPOWER);
             robot.backLeftMotor.setPower(speedToggleMultiplier * backleftPOWER);
         }
+
+
+        //*****************
+        //Game Controller 2
+        //*****************
+
+        //Read controller input
+        leftGP2Y = gamepad2.left_stick_y;
+
+        robot.leftLiftMotor.setPower(leftGP2Y);
+        robot.rightLiftMotor.setPower(-leftGP2Y);
+
 
     }
 
