@@ -18,6 +18,10 @@ public class Teleop extends OpMode {
 
     Hardware robot = new Hardware();
 
+    //PRE-GYRO
+    //---------------------------------------------------------------****
+    //PRE-GYRO
+
     //Drive Variables
 
     private double leftGP1Y = 0;
