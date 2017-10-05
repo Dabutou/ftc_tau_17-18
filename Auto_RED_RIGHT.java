@@ -52,7 +52,8 @@ public class Auto_RED_RIGHT extends LinearOpMode{
     Acceleration gravity;
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException, NullPointerException{
+
         robot.init(hardwareMap);
 
 
@@ -71,16 +72,16 @@ public class Auto_RED_RIGHT extends LinearOpMode{
 
         relicTrackables.activate();
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibrafion sample opmode
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        imu.initialize(parameters);*/
 
         // Set up our telemetry dashboard
         composeTelemetry();
@@ -92,6 +93,10 @@ public class Auto_RED_RIGHT extends LinearOpMode{
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         // Loop and update the dashboard
+        driveForwardStraightTIME(1500);
+        sleepTau(3000);
+        driveBackwardStraightTIME(1500);
+
         while (opModeIsActive()) {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
@@ -129,6 +134,8 @@ public class Auto_RED_RIGHT extends LinearOpMode{
             }
             telemetry.update();
         }
+
+
 
     }
 
@@ -211,6 +218,57 @@ public class Auto_RED_RIGHT extends LinearOpMode{
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Drive Methods
+    //----------------------------------------------------------------------------------------------
+
+
+    //METHODS YOU CALL FOR AUTO
+    public void turnRobot(int degrees) {
+
+    }
+    public void driveForwardStraightTIME(long milliSec){
+        driveRobotTIME(1,milliSec,-1,1,1,-1);
+    }
+    public void driveBackwardStraightTIME(long milliSec){
+        driveRobotTIME(1,milliSec,1,-1,-1,1);
+    }
+    public void driveForwardStraightTIME(double speed, long milliSec){
+        driveRobotTIME(speed,milliSec,-1,1,1,-1);
+    }
+    public void driveBackwardStraightTIME(double speed, long milliSec){
+        driveRobotTIME(speed,milliSec,1,-1,-1,1);
+    }
+    public void sleepTau(long milliSec){
+        double startTime = robot.getTime();
+
+        double endTime = startTime + (double)milliSec/1000;
+
+        while (robot.getTime() < endTime && opModeIsActive()){
+            idle();
+        }
+    }
+
+
+    //BEHIND THE SCENES METHODS
+    private void driveRobotTIME(double speed, long milliSec, double flPower, double frPower, double blPower, double brPower){
+        powerMotors(speed,flPower,frPower,blPower,brPower);
+        sleepTau(milliSec);
+        powerMotors(0,0,0,0,0);
+    }
+    private void driveRobotDISTANCE(double speed, double distance, double flPower, double frPower, double blPower, double brPower){
+
+    }
+    public void reAlign(){
+
+    }
+    private void powerMotors(double speed, double flPower, double frPower, double blPower, double brPower){
+        robot.frontLeftMotor.setPower(flPower * speed);
+        robot.frontRightMotor.setPower(frPower * speed);
+        robot.backLeftMotor.setPower(blPower * speed);
+        robot.backRightMotor.setPower(brPower * speed);
     }
 
 }
