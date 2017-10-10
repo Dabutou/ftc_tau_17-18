@@ -31,8 +31,8 @@ public class Teleop extends OpMode {
     private double backleftPOWER = 0;
     private double backrightPOWER = 0;
     private double maxPOWER = 0;
-    private double triggerConstant = 0.75;
-    private double maxPOWERConstant = 0.8;
+    private final double triggerConstant = 0.75;
+    private final double maxPOWERConstant = 0.8;
     //private double rightGP1 = 0; -- figure out something to do with right stick
     private boolean speedToggle = true;
     private double speedToggleMultiplier = 0.6; // Between 0.25 and 0.85
@@ -54,7 +54,7 @@ public class Teleop extends OpMode {
     @Override
     public void init()
     {
-        robot.init(hardwareMap);
+        robot.initTeleOp(hardwareMap);
         telemetry.addData("If you notice this", "You are COOL!!!");
         updateTelemetry(telemetry);
     }
@@ -196,8 +196,8 @@ public class Teleop extends OpMode {
         //Read controller input
         leftGP2Y = gamepad2.left_stick_y;
 
-        robot.leftLiftMotor.setPower(leftGP2Y);
-        robot.rightLiftMotor.setPower(-leftGP2Y);
+        //robot.leftLiftMotor.setPower(leftGP2Y);
+        //robot.rightLiftMotor.setPower(-leftGP2Y);
 
 
     }
@@ -208,13 +208,6 @@ public class Teleop extends OpMode {
 
     }
 
-    /*public void waitTau(long milliSec)
-    {
-        try{
-            Thread.sleep(milliSec);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-    }*/
+
 
 }

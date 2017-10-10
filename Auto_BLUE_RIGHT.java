@@ -36,15 +36,14 @@ import java.util.Locale;
  */
 
 @Autonomous(name = "Auto Blue Right", group = "Tau")
-//@Disabled
+@Disabled
 public class Auto_BLUE_RIGHT extends LinearOpMode{
 
     Hardware robot = new Hardware();
-    private ElapsedTime runtime = new ElapsedTime();
 
 
     //VuForia**************************
-    OpenGLMatrix lastLocation = null;
+    //OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
 
     //IMU******************************
