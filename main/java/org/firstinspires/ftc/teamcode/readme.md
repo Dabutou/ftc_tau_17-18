@@ -1,6 +1,14 @@
 ## TeamCode Module
 
-Welcome!
+Welcome Tau Coders!
+
+This is Lance from Team 5628 : 2017-2018.
+These are the Teleop and Hardware classes as a basis to structure your code off of.
+Many parts are commented out--TBD for year's challenge.
+
+I hope this helps!
+
+
 
 This module, TeamCode, is the place where you will write/paste the code for your team's
 robot controller App. This module is currently empty (a clean slate) but the
