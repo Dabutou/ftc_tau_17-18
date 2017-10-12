@@ -44,6 +44,7 @@ public class Hardware {
 
     // Other variable names
     HardwareMap hwMap;
+    private ElapsedTime period = new ElapsedTime();
     private Orientation angles;
     private Acceleration gravity;
 
@@ -63,22 +64,23 @@ public class Hardware {
 
         // Save reference to Hardware map
         this.hwMap = hwMap;
+        period.reset();
 
         // Define Motors
         frontLeftMotor = hwMap.dcMotor.get("left_front");
         frontRightMotor = hwMap.dcMotor.get("right_front");
         backLeftMotor = hwMap.dcMotor.get("left_back");
         backRightMotor = hwMap.dcMotor.get("right_back");
-       // leftLiftMotor = hwMap.dcMotor.get("left_lift");
-       // rightLiftMotor = hwMap.dcMotor.get("right_lift");
+        leftLiftMotor = hwMap.dcMotor.get("left_lift");
+        rightLiftMotor = hwMap.dcMotor.get("right_lift");
 
         // Initialize Motors
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-      //  leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-      //  rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // ******MAY CHANGE *******  Fix Forward/Reverse under testing
@@ -86,23 +88,23 @@ public class Hardware {
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
-       // leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
-       // rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-       // leftLiftMotor.setPower(0);
-       // rightLiftMotor.setPower(0);
+        leftLiftMotor.setPower(0);
+        rightLiftMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       // leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       // rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
         //leftLiftServo = hwMap.servo.get("left_lift");
@@ -146,16 +148,16 @@ public class Hardware {
         frontRightMotor = hwMap.dcMotor.get("right_front");
         backLeftMotor = hwMap.dcMotor.get("left_back");
         backRightMotor = hwMap.dcMotor.get("right_back");
-        // leftLiftMotor = hwMap.dcMotor.get("left_lift");
-        // rightLiftMotor = hwMap.dcMotor.get("right_lift");
+        leftLiftMotor = hwMap.dcMotor.get("left_lift");
+        rightLiftMotor = hwMap.dcMotor.get("right_lift");
 
         // Initialize Motors
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //  leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //  rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // ******MAY CHANGE *******  Fix Forward/Reverse under testing
@@ -163,23 +165,23 @@ public class Hardware {
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        // leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
-        // rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-        // leftLiftMotor.setPower(0);
-        // rightLiftMotor.setPower(0);
+        leftLiftMotor.setPower(0);
+        rightLiftMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
         //leftLiftServo = hwMap.servo.get("left_lift");
@@ -202,6 +204,10 @@ public class Hardware {
 
         // Initialize sensors
         imu.initialize(parameters);
+    }
+
+    public double getTime(){
+        return period.time();
     }
 
     public BNO055IMU getImu(){

@@ -23,9 +23,10 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
     @Override//CALLS AUTO_METHODS TO RUN
     public void runOpMode() throws InterruptedException{
 
-        //initialize();
         IMUandVu();
 
+        turnRobot(1,90,1);
+        turnRobot(1,90,0);
         driveForwardStraightTIME(0.5,1500);
         sleepTau(2000);
         driveRightStraightTIME(0.75,1500);

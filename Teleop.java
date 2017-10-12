@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,6 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
  * Created by Lance He on 9/16/2017.
@@ -33,15 +38,20 @@ public class Teleop extends OpMode {
     private double maxPOWER = 0;
     private final double triggerConstant = 0.75;
     private final double maxPOWERConstant = 0.8;
+    private double Lift_POS = 0;
     //private double rightGP1 = 0; -- figure out something to do with right stick
     private boolean speedToggle = true;
     private double speedToggleMultiplier = 0.6; // Between 0.25 and 0.85
-
+    private double startTimeB = 0;
+    private double endTimeB = 0;
+    private double startTimeS = 0;
+    private double endTimeS = 0;
 
     //Lift Variables
 
     private double leftGP2Y = 0;
     private double liftLevel = 0;
+
 
     /*
     Controller Layout
@@ -138,7 +148,9 @@ public class Teleop extends OpMode {
         //rightGP1 = -gamepad1.right_stick_y;  -- determine what the right stick is used for
 
         //Speed Toggle
-        if (gamepad1.b) {
+        if (gamepad1.b && (endTimeB == 0 || robot.getTime() >= endTimeB)) {
+            startTimeB = robot.getTime();
+            endTimeB = startTimeB + 0.1;
             speedToggle = !speedToggle;
         }
 
@@ -158,16 +170,26 @@ public class Teleop extends OpMode {
 
 
         //Changing speedToggleMultiplier
-        if (gamepad1.dpad_down)
+        if (gamepad1.left_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS))
         {
             if (speedToggleMultiplier > 0.25){
-                speedToggleMultiplier = speedToggleMultiplier - 0.01;
+                startTimeS = robot.getTime();
+                endTimeS = startTimeS + 0.05;
+                speedToggleMultiplier = speedToggleMultiplier - 0.1;
             }
         }
-        if (gamepad1.dpad_up) {
+        if (gamepad1.right_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS)) {
             if (speedToggleMultiplier < 0.95) {
-                speedToggleMultiplier = speedToggleMultiplier + 0.01;
+                startTimeS = robot.getTime();
+                endTimeS = startTimeS + 0.05;
+                speedToggleMultiplier = speedToggleMultiplier + 0.1;
             }
+        }
+
+        if (gamepad1.dpad_left){
+            BNO055IMU imu = robot.getImu();
+            telemetry.addData("FIRST_ANGLE",""+imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+            updateTelemetry(telemetry);
         }
 
 
@@ -179,7 +201,7 @@ public class Teleop extends OpMode {
             robot.backRightMotor.setPower(backrightPOWER * maxPOWERConstant);
             robot.backLeftMotor.setPower(backleftPOWER * maxPOWERConstant);
 
-        }
+    }
         else
         {
             robot.frontLeftMotor.setPower(speedToggleMultiplier * (frontleftPOWER * maxPOWERConstant));
@@ -196,8 +218,17 @@ public class Teleop extends OpMode {
         //Read controller input
         leftGP2Y = gamepad2.left_stick_y;
 
-        //robot.leftLiftMotor.setPower(leftGP2Y);
-        //robot.rightLiftMotor.setPower(-leftGP2Y);
+        //Limit extension of lift
+        if (liftLevel >= 0) {
+            liftLevel += leftGP2Y;
+        }
+        else{
+            liftLevel = -0.1;
+        }
+        if (liftLevel>=0 && liftLevel <= 150) {
+            robot.leftLiftMotor.setPower(-leftGP2Y);
+            robot.rightLiftMotor.setPower(leftGP2Y);
+        }
 
 
     }

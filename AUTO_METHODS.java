@@ -58,28 +58,6 @@ class AUTO_METHODS extends LinearOpMode{
         robot.init(hardwareMap);
         imu = robot.getImu();
 
-        /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters Vuparameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        Vuparameters.vuforiaLicenseKey = "AW8UaHn/////AAAAGSEYBhrOd0rKoinNfInqojQEhkiiEXypTuQY/KgFQY8k+6dx0JDcvHPtVpMjrNdnPY2boqh97cPelF2Si0HqBGdDErR3pyMYpV5evj1cppHIRqDHO0HjNkdbnvnoILWRJtn5+MLWocscbvi2Kbc9PBKxziwcIfl82Dl1t62Y5C8mL3iFF0fAtmTifuB0qp4r1wekhd9hScm6NTybtyBEk9QduDH8kyMOW56geGGhot9Oq+A/wk6spIv8NCQLJHgD30pj9TrtVBmWmA59x/pT9nBKBuI/ah1b+SZ5cSm5CTPv+Gra53m3y4k/usz66j8rCakKdj5DDg6+Ivpc3V6uQxDNpzh0HBE+x/zEGr7dMFRz";
-        Vuparameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(Vuparameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
-
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibrafion sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-*/
         // Set up our telemetry dashboard
         telemetry.addData("Readiness", "Press Play to start");
         composeTelemetry();
@@ -180,10 +158,12 @@ class AUTO_METHODS extends LinearOpMode{
 
 
     //METHODS YOU CALL FOR AUTO
-    /*public void turnRobot(int degrees) {
 
-    }*/
-
+    public void realign(){
+        float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int direction = 0;
+        turnRobot(1,heading,direction);
+    }
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
     public void driveForwardStraightTIME(long milliSec){driveRobotTIME(1,milliSec,1,-1,1,-1);}
     public void driveBackwardStraightTIME(long milliSec){
@@ -222,7 +202,17 @@ class AUTO_METHODS extends LinearOpMode{
     public void reAlign(){
 
     }*/
-   private void powerMotors(double speed, double flPower, double frPower, double blPower, double brPower){
+    public void turnRobot(double speed, double degrees, int direction){
+        final double timeToSpin = 1500;
+        try{
+            //direction = 0: left   direction = 1: right
+            if (direction==0){powerMotors(speed,-1,-1,-1,-1);}
+            else {powerMotors(speed,1,1,1,1);}
+            Thread.sleep((long)(timeToSpin*degrees/360));
+            powerMotors(0,0,0,0,0);
+        }catch(InterruptedException e){throw new RuntimeException(e);}
+    }
+    private void powerMotors(double speed, double flPower, double frPower, double blPower, double brPower){
         try {
             robot.frontLeftMotor.setPower(flPower * speed);
             robot.frontRightMotor.setPower(frPower * speed);
