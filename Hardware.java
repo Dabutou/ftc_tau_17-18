@@ -139,7 +139,7 @@ public class Hardware {
         imu = hwMap.get(BNO055IMU.class, "imu");
         
         //Initialize color sensor
-        I2cDevice colori2c = hardwareMap.i2cDevice.get("colorsensorname");
+        I2cDevice colori2c = hardwareMap.i2cDevice.get("color");
         colorx = new ModernRoboticsI2cColorSensor2(colori2c.getI2cController(),colori2c.getPort());
 
         // Initialize sensors
