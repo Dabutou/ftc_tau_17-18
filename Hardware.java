@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -41,6 +42,9 @@ public class Hardware {
 
     //IMU******************************
     private BNO055IMU imu;
+    
+    //Color****************************
+    public ModernRoboticsI2cColorSensor2 colorx;
 
     // Other variable names
     HardwareMap hwMap;
@@ -133,6 +137,10 @@ public class Hardware {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hwMap.get(BNO055IMU.class, "imu");
+        
+        //Initialize color sensor
+        I2cDevice colori2c = hardwareMap.i2cDevice.get("colorsensorname");
+        colorx = new ModernRoboticsI2cColorSensor2(colori2c.getI2cController(),colori2c.getPort());
 
         // Initialize sensors
         imu.initialize(parameters);
