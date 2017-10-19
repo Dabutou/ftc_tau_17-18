@@ -183,6 +183,16 @@ class AUTO_METHODS extends LinearOpMode{
     public void driveNEStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,1,0,-1,0);}
     public void driveSEStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,0,1,0,-1);}
     public void driveSWStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,-1,0,1,0);}
+    
+    public void openClaw(){
+        robot.leftLiftServo.setPosition(0);
+        robot.rightLiftServo.setPosition(1);
+    }
+     public void closeClaw(){
+        robot.leftLiftServo.setPosition(1);
+        robot.rightLiftServo.setPosition(0);
+    }
+    
 
 
 
