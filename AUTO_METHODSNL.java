@@ -212,10 +212,16 @@ class AUTO_METHODSNL extends LinearOpMode{
 
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
-    
+
     //distance by centimeters
     //FIGURE OUT "number of encoder ticks" to reach 1 meter; follow my example for turndegrees
-    public void driveForwardStraightDISTANCE(double distance){}
+    public void driveForwardStraightDISTANCE(double distance){
+
+        //FINISH ME
+
+    }
+
+    //USE similar setup from driveForward for the rest; you'll need to rename the methods & variables
     public void driveBackwardStraightTIME(long milliSec){}
     public void driveRightStraightTIME(long milliSec){}
     public void driveLeftStraightTIME(long milliSec){}

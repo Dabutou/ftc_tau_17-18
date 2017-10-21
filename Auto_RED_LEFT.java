@@ -43,29 +43,10 @@ public class Auto_RED_LEFT extends AUTO_METHODSNL{
     @Override
     public void runOpMode() throws InterruptedException {
         IMUandVu();
-        /*turnRobot(0.5,155); //right turn
-        sleepTau(1500);
-        realign();
-        sleepTau(1500);
-        turnRobot(0.8,-93);
-        sleepTau(1500);
-        realign();
-        sleepTau(1500);
-        turnRobot(1,-100);
-        sleepTau(1500);
-        realign();
-        getHeading();
-        sleepTau(1500);
-        */
-        left90(1);
-        sleepTau(1000);
-        realign(1);
-        sleepTau(1000);
-        right90(1);
-        sleepTau(1000);
-        realign(0.8);
-        sleepTau(1000);
-        right90(1);
+
+        //CALL WHATEVER METHODS HERE:
+
+
 
     }
 
