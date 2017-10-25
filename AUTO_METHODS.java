@@ -326,7 +326,10 @@ class AUTO_METHODS extends LinearOpMode{
     public void driveNEStraightTIME(double speed, long milliSec){}
     public void driveSEStraightTIME(double speed, long milliSec){}
     public void driveSWStraightTIME(double speed, long milliSec){}
-
+    
+    /*public boolen isRed(){
+        return robot.colorx.colorNumber() == 10;
+    }*/
 
 
     //BEHIND THE SCENES METHODS
