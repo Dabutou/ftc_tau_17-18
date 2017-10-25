@@ -146,7 +146,7 @@ public class Hardware {
         imu.initialize(parameters);
         
         /*//Initialize color sensor
-        I2cDevice colori2c = hardwareMap.i2cDevice.get("color");
+        I2cDevice colori2c = hwMap.i2cDevice.get("color");
         colorx = new ModernRoboticsI2cColorSensor2(colori2c.getI2cController(),colori2c.getPort());*/
 
     }
