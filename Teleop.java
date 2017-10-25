@@ -49,8 +49,12 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
+    private static final double LEFT_LIFT_OPEN = 1;
+    private static final double LEFT_LIFT_CLOSE = 0.35;
+    private static final double RIGHT_LIFT_OPEN = 0.65;
+    private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
-    private double liftLevel = 0;
+
 
 
     /*
@@ -64,7 +68,13 @@ public class Teleop extends OpMode {
     @Override
     public void init()
     {
+        telemetry.addData("Readiness", "NOT READY TO START, PLEASE WAIT");
+        telemetry.update();
+
         robot.initTeleOp(hardwareMap);
+
+        // Set up our telemetry dashboard
+        telemetry.addData("Readiness", "Press Play to start");
         telemetry.addData("If you notice this", "You are COOL!!!");
         updateTelemetry(telemetry);
     }
@@ -156,7 +166,7 @@ public class Teleop extends OpMode {
 
 
         if (speedToggle){
-            telemetry.addData("Mode:", "Full Speed");
+            telemetry.addData("Mode:", "Full Speed ahead!");
             updateTelemetry(telemetry);
         }
         else{
@@ -174,19 +184,19 @@ public class Teleop extends OpMode {
         {
             if (speedToggleMultiplier > 0.25){
                 startTimeS = robot.getTime();
-                endTimeS = startTimeS + 0.05;
+                endTimeS = startTimeS + 0.09;
                 speedToggleMultiplier = speedToggleMultiplier - 0.1;
             }
         }
         if (gamepad1.right_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS)) {
             if (speedToggleMultiplier < 0.95) {
                 startTimeS = robot.getTime();
-                endTimeS = startTimeS + 0.05;
+                endTimeS = startTimeS + 0.09;
                 speedToggleMultiplier = speedToggleMultiplier + 0.1;
             }
         }
 
-        if (gamepad1.dpad_left){
+        if (gamepad1.x){
             BNO055IMU imu = robot.getImu();
             telemetry.addData("FIRST_ANGLE",""+imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
             updateTelemetry(telemetry);
@@ -219,15 +229,17 @@ public class Teleop extends OpMode {
         leftGP2Y = gamepad2.left_stick_y;
 
         //Limit extension of lift
-        if (liftLevel >= 0) {
-            liftLevel += leftGP2Y;
+        robot.leftLiftMotor.setPower(-leftGP2Y);
+        robot.rightLiftMotor.setPower(leftGP2Y);
+
+        //Open and close claw servos
+        if (gamepad2.left_bumper){
+            robot.leftLiftServo.setPosition(LEFT_LIFT_OPEN);
+            robot.rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
         }
-        else{
-            liftLevel = -0.1;
-        }
-        if (liftLevel>=0 && liftLevel <= 150) {
-            robot.leftLiftMotor.setPower(-leftGP2Y);
-            robot.rightLiftMotor.setPower(leftGP2Y);
+        if (gamepad2.right_bumper){
+            robot.leftLiftServo.setPosition(LEFT_LIFT_CLOSE);
+            robot.rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
         }
 
 

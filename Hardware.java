@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.I2cDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -42,9 +41,6 @@ public class Hardware {
 
     //IMU******************************
     private BNO055IMU imu;
-    
-    //Color****************************
-    public ModernRoboticsI2cColorSensor2 colorx;
 
     // Other variable names
     HardwareMap hwMap;
@@ -53,10 +49,8 @@ public class Hardware {
     private Acceleration gravity;
 
     // Constant variable names
-    public static final double LEFT_LIFT_OPEN = 0;
-    public static final double LEFT_LIFT_CLOSE = 0;
-    public static final double RIGHT_LIFT_OPEN = 0;
-    public static final double RIGHT_LIFT_CLOSE = 0;
+    public static final double LEFT_LIFT_OPEN = 1;
+    public static final double RIGHT_LIFT_OPEN = 0.65;
 
     public Hardware()
     {
@@ -103,20 +97,30 @@ public class Hardware {
         rightLiftMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Define servos
-        //leftLiftServo = hwMap.servo.get("left_lift");
-        //rightLiftServo = hwMap.servo.get("right_lift");
+        leftLiftServo = hwMap.servo.get("left_servo");
+        rightLiftServo = hwMap.servo.get("right_servo");
 
         // Initialize servos
-        //leftLiftServo.setPosition(LEFT_LIFT_CLOSE);
-        //rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
+        leftLiftServo.scaleRange(0,1);
+        rightLiftServo.scaleRange(0,1);
+        leftLiftServo.setDirection(Servo.Direction.REVERSE);
+        rightLiftServo.setDirection(Servo.Direction.FORWARD);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(1);
 
         // Define sensors
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
@@ -137,10 +141,6 @@ public class Hardware {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hwMap.get(BNO055IMU.class, "imu");
-        
-        //Initialize color sensor
-        I2cDevice colori2c = hardwareMap.i2cDevice.get("color");
-        colorx = new ModernRoboticsI2cColorSensor2(colori2c.getI2cController(),colori2c.getPort());
 
         // Initialize sensors
         imu.initialize(parameters);
@@ -192,12 +192,16 @@ public class Hardware {
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
-        //leftLiftServo = hwMap.servo.get("left_lift");
-        //rightLiftServo = hwMap.servo.get("right_lift");
+        leftLiftServo = hwMap.servo.get("left_servo");
+        rightLiftServo = hwMap.servo.get("right_servo");
 
         // Initialize servos
-        //leftLiftServo.setPosition(LEFT_LIFT_CLOSE);
-        //rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
+        leftLiftServo.scaleRange(0,1);
+        rightLiftServo.scaleRange(0,1);
+        leftLiftServo.setDirection(Servo.Direction.REVERSE);
+        rightLiftServo.setDirection(Servo.Direction.FORWARD);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(1);
 
         // Define sensors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

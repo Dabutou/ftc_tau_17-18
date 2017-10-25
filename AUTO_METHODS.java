@@ -30,17 +30,22 @@ import java.util.Locale;
 class AUTO_METHODS extends LinearOpMode{
 
     Hardware robot = new Hardware();
-/*
-    //VuForia**************************
-    OpenGLMatrix lastLocation = null;
-    private VuforiaLocalizer vuforia;
-*/
+    /*
+        //VuForia**************************
+        OpenGLMatrix lastLocation = null;
+        private VuforiaLocalizer vuforia;
+    */
     //IMU******************************
     private BNO055IMU imu;
 
     private Orientation angles;
     private Acceleration gravity;
 
+    private int backLeftMotorPosition = 0;
+    private int backRightMotorPosition = 0;
+    private int frontLeftMotorPosition = 0;
+    private int frontRightMotorPosition = 0;
+    private final int distancetoBlock = 990;
 
 
     public AUTO_METHODS(){}
@@ -148,88 +153,199 @@ class AUTO_METHODS extends LinearOpMode{
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
-    }
-
-
 
 
 
 
     //METHODS YOU CALL FOR AUTO
 
-    public void realign(){
+    //realigns to initial setup
+    public void realign(double speed){
         float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        int direction = 0;
-        turnRobot(1,heading,direction);
+        speed(speed);
+        frontLeftMotorPosition += (int)(3520.0*heading/360);
+        frontRightMotorPosition += (int)(3520.0*heading/360);
+        backLeftMotorPosition += (int)(3520.0*heading/360);
+        backRightMotorPosition += (int)(3520.0*heading/360);
+        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
+        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
+        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
+        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
+
+    //negative degree is left turn, positive is right turn
+    public void turnDegree(double speed, double degree){
+        speed(speed);
+        frontLeftMotorPosition += (int)(3520.0*degree/360);
+        frontRightMotorPosition += (int)(3520.0*degree/360);
+        backLeftMotorPosition += (int)(3520.0*degree/360);
+        backRightMotorPosition += (int)(3520.0*degree/360);
+        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
+        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
+        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
+        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
+    }
+
+    //probably don't need left90 and right90
+    public void left90(double speed){
+        speed(speed);
+        setDistances(-880,-880,-880,-880);
+        runDistances();
+    }
+    public void right90(double speed){
+        speed(speed);
+        setDistances(880,880,880,880);
+        runDistances();
+    }
+
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
-    public void driveForwardStraightTIME(long milliSec){driveRobotTIME(1,milliSec,1,-1,1,-1);}
-    public void driveBackwardStraightTIME(long milliSec){
-        driveRobotTIME(1,milliSec,-1,1,-1,1);
-    }
-    public void driveRightStraightTIME(long milliSec){driveRobotTIME(1,milliSec,1,1,-1,-1);}
-    public void driveLeftStraightTIME(long milliSec){driveRobotTIME(1,milliSec,-1,-1,1,1);}
-    public void driveNWStraightTIME(long milliSec){driveRobotTIME(1,milliSec,0,-1,0,1);}
-    public void driveNEStraightTIME(long milliSec){driveRobotTIME(1,milliSec,1,0,-1,0);}
-    public void driveSEStraightTIME(long milliSec){driveRobotTIME(1,milliSec,0,1,0,-1);}
-    public void driveSWStraightTIME(long milliSec){driveRobotTIME(1,milliSec,-1,0,1,0);}
-    public void driveForwardStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,1,-1,1,-1);}
-    public void driveBackwardStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,-1,1,-1,1);}
-    public void driveRightStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,1,1,-1,-1);}
-    public void driveLeftStraightTIME(double speed, long milliSec) {driveRobotTIME(speed, milliSec, -1, -1, 1, 1);}
-    public void driveNWStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,0,-1,0,1);}
-    public void driveNEStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,1,0,-1,0);}
-    public void driveSEStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,0,1,0,-1);}
-    public void driveSWStraightTIME(double speed, long milliSec){driveRobotTIME(speed,milliSec,-1,0,1,0);}
-    
-    public void openClaw(){
-        robot.leftLiftServo.setPosition(0);
-        robot.rightLiftServo.setPosition(1);
-    }
-     public void closeClaw(){
-        robot.leftLiftServo.setPosition(1);
+
+    public void closeClaw(){
+        robot.leftLiftServo.setPosition(0.35);
         robot.rightLiftServo.setPosition(0);
     }
-    
+
+    public void openClaw(){
+        robot.leftLiftServo.setPosition(1);
+        robot.rightLiftServo.setPosition(0.65);
+    }
+
+    public void readEncoders(){
+        telemetry.addData("Front Left", "" + frontLeftMotorPosition + " : " + robot.frontLeftMotor.getCurrentPosition());
+        telemetry.addData("Front Right", "" + frontRightMotorPosition + " : " + robot.frontRightMotor.getCurrentPosition());
+        telemetry.addData("Front Left", "" + backLeftMotorPosition + " : " + robot.backLeftMotor.getCurrentPosition());
+        telemetry.addData("Front Left", "" + backRightMotorPosition + " : " + robot.backRightMotor.getCurrentPosition());
+    }
+
+    public void driveForwardStraightDISTANCE(double distance){
+        speed(0.6);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-5)*distance);
+        setDistances(distancesr,-distancesl,distancesl,-distancesr);
+        runDistances();
+    }
+    public void driveBackwardStraightDISTANCE(double distance){
+        speed(0.6);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-5)*distance);
+        setDistances(-distancesr,distancesl,-distancesl, distancesr);
+        runDistances();
+    }
+    public void driveRightStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,distances,-distances, -distances);
+        runDistances();
+    }
+    public void driveLeftStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,-distances,distances, distances);
+        runDistances();
+    }
+    public void driveNWStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,-distances,distances, 0);
+        runDistances();
+    }
+    public void driveNEStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,0,0, -distances);
+        runDistances();
+    }
+    public void driveSEStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,distances,-distances, 0);
+        runDistances();
+    }
+    public void driveSWStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,0,0, distances);
+        runDistances();
+    }
+    //same with speed
+    public void driveForwardStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-5)*distance);
+        setDistances(distancesr,-distancesl,distancesl,-distancesr);
+        runDistances();
+    }
+    public void driveBackwardStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-5)*distance);
+        setDistances(-distancesr,distancesl,-distancesl, distancesr);
+        runDistances();
+    }
+    public void driveRightStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,distances,-distances, -distances);
+        runDistances();
+    }
+    public void driveLeftStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,-distances,distances, distances);
+        runDistances();
+    }
+    public void driveNWStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,-distances,distances, 0);
+        runDistances();
+    }
+    public void driveNEStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,0,0, -distances);
+        runDistances();
+    }
+    public void driveSEStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,distances,-distances, 0);
+        runDistances();
+    }
+    public void driveSWStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,0,0, distances);
+        runDistances();
+    }
+    public void driveForwardStraightTIME(double speed, long milliSec){}
+    public void driveBackwardStraightTIME(double speed, long milliSec){}
+    public void driveRightStraightTIME(double speed, long milliSec){}
+    public void driveLeftStraightTIME(double speed, long milliSec) {}
+    public void driveNWStraightTIME(double speed, long milliSec){}
+    public void driveNEStraightTIME(double speed, long milliSec){}
+    public void driveSEStraightTIME(double speed, long milliSec){}
+    public void driveSWStraightTIME(double speed, long milliSec){}
 
 
 
     //BEHIND THE SCENES METHODS
-    private void driveRobotTIME(double speed, long milliSec, double flPower, double frPower, double blPower, double brPower){
-        try{
-            powerMotors(speed,flPower,frPower,blPower,brPower);
-            Thread.sleep(milliSec);
-            powerMotors(0,0,0,0,0);
-        }catch(InterruptedException e){
-            throw new RuntimeException(e);
-        }
+    private void speed(double speed){
+        robot.frontLeftMotor.setPower(speed);
+        robot.frontRightMotor.setPower(speed);
+        robot.backLeftMotor.setPower(speed);
+        robot.backRightMotor.setPower(speed);
     }
-    /*private void driveRobotDISTANCE(double speed, double distance, double flPower, double frPower, double blPower, double brPower){
-
+    private void setDistances(int fl, int fr, int bl, int br){
+        frontLeftMotorPosition += fl;
+        frontRightMotorPosition += fr;
+        backLeftMotorPosition += bl;
+        backRightMotorPosition += br;
     }
-    public void reAlign(){
-
-    }*/
-    public void turnRobot(double speed, double degrees, int direction){
-        final double timeToSpin = 1500;
-        try{
-            //direction = 0: left   direction = 1: right
-            if (direction==0){powerMotors(speed,-1,-1,-1,-1);}
-            else {powerMotors(speed,1,1,1,1);}
-            Thread.sleep((long)(timeToSpin*degrees/360));
-            powerMotors(0,0,0,0,0);
-        }catch(InterruptedException e){throw new RuntimeException(e);}
-    }
-    private void powerMotors(double speed, double flPower, double frPower, double blPower, double brPower){
-        try {
-            robot.frontLeftMotor.setPower(flPower * speed);
-            robot.frontRightMotor.setPower(frPower * speed);
-            robot.backLeftMotor.setPower(blPower * speed);
-            robot.backRightMotor.setPower(brPower * speed);
-        } catch(NullPointerException e){
-            throw new NullPointerException(e.toString());
-        }
+    private void runDistances(){
+        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
+        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
+        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
+        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
 }
