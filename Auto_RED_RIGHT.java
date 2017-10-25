@@ -25,13 +25,20 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
 
         IMUandVu();
 
-        turnRobot(1,90,1);
-        turnRobot(1,90,0);
-        driveForwardStraightTIME(0.5,1500);
-        sleepTau(2000);
-        driveRightStraightTIME(0.75,1500);
-        driveLeftStraightTIME(1,1500);
-
+        //CALL WHATEVER METHODS HERE:
+        openClaw();
+        sleepTau(1000);
+        readEncoders();
+        driveForwardStraightDISTANCE(1.5);
+        closeClaw();
+        readEncoders();
+        sleepTau(4000);
+        driveBackwardStraightDISTANCE(1.5);
+        readEncoders();
+        sleepTau(4000);
+        openClaw();
+        readEncoders();
+        sleepTau(1000);
     }
 
 

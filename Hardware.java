@@ -33,6 +33,7 @@ public class Hardware {
     // Servo variable names
     public Servo leftLiftServo = null;
     public Servo rightLiftServo = null;
+    public Servo jewelServo = null;
 
     // Sensor variable names
     //VuForia**************************
@@ -113,14 +114,18 @@ public class Hardware {
         // Define servos
         leftLiftServo = hwMap.servo.get("left_servo");
         rightLiftServo = hwMap.servo.get("right_servo");
+        jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        leftLiftServo.scaleRange(0,1);
-        rightLiftServo.scaleRange(0,1);
+        leftLiftServo.scaleRange(0.1,1);
+        rightLiftServo.scaleRange(0,0.9);
+        jewelServo.scaleRange(0,1);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(1);
+        jewelServo.setDirection(Servo.Direction.FORWARD);
+        leftLiftServo.setPosition(0.9);
+        rightLiftServo.setPosition(0.85);
+        jewelServo.setPosition(0);
 
         // Define sensors
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
@@ -144,10 +149,6 @@ public class Hardware {
 
         // Initialize sensors
         imu.initialize(parameters);
-        
-        /*//Initialize color sensor
-        I2cDevice colori2c = hwMap.i2cDevice.get("color");
-        colorx = new ModernRoboticsI2cColorSensor2(colori2c.getI2cController(),colori2c.getPort());*/
 
     }
 
@@ -198,15 +199,17 @@ public class Hardware {
         // Define servos
         leftLiftServo = hwMap.servo.get("left_servo");
         rightLiftServo = hwMap.servo.get("right_servo");
+        jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        leftLiftServo.scaleRange(0,1);
-        rightLiftServo.scaleRange(0,1);
+        leftLiftServo.scaleRange(0.1,1);
+        rightLiftServo.scaleRange(0,0.9);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(1);
-
+        jewelServo.setDirection(Servo.Direction.FORWARD);
+        leftLiftServo.setPosition(0.9);
+        rightLiftServo.setPosition(0.85);
+        jewelServo.setPosition(0);
         // Define sensors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;

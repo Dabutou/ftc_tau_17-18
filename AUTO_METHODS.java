@@ -30,11 +30,7 @@ import java.util.Locale;
 class AUTO_METHODS extends LinearOpMode{
 
     Hardware robot = new Hardware();
-    /*
-        //VuForia**************************
-        OpenGLMatrix lastLocation = null;
-        private VuforiaLocalizer vuforia;
-    */
+
     //IMU******************************
     private BNO055IMU imu;
 
@@ -206,8 +202,14 @@ class AUTO_METHODS extends LinearOpMode{
     }
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(1);
+        robot.leftLiftServo.setPosition(0.75);
         robot.rightLiftServo.setPosition(0.65);
+    }
+    public void lowerJewelServo(){
+        robot.jewelServo.setPosition(1);
+    }
+    public void raiseJewelServo(){
+        robot.jewelServo.setPosition(0);
     }
 
     public void readEncoders(){
@@ -215,19 +217,20 @@ class AUTO_METHODS extends LinearOpMode{
         telemetry.addData("Front Right", "" + frontRightMotorPosition + " : " + robot.frontRightMotor.getCurrentPosition());
         telemetry.addData("Front Left", "" + backLeftMotorPosition + " : " + robot.backLeftMotor.getCurrentPosition());
         telemetry.addData("Front Left", "" + backRightMotorPosition + " : " + robot.backRightMotor.getCurrentPosition());
+        updateTelemetry(telemetry);
     }
 
     public void driveForwardStraightDISTANCE(double distance){
         speed(0.6);
         int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-5)*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(distancesr,-distancesl,distancesl,-distancesr);
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double distance){
         speed(0.6);
         int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-5)*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(-distancesr,distancesl,-distancesl, distancesr);
         runDistances();
     }
@@ -326,10 +329,7 @@ class AUTO_METHODS extends LinearOpMode{
     public void driveNEStraightTIME(double speed, long milliSec){}
     public void driveSEStraightTIME(double speed, long milliSec){}
     public void driveSWStraightTIME(double speed, long milliSec){}
-    
-    /*public boolen isRed(){
-        return robot.colorx.colorNumber() == 10;
-    }*/
+
 
 
     //BEHIND THE SCENES METHODS
