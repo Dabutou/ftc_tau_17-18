@@ -22,23 +22,44 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
 
     @Override//CALLS AUTO_METHODS TO RUN
     public void runOpMode() throws InterruptedException{
-
+        String vuValue = "";
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
-        openClaw();
-        sleepTau(1000);
-        readEncoders();
-        driveForwardStraightDISTANCE(1.5);
         closeClaw();
-        readEncoders();
-        sleepTau(4000);
-        driveBackwardStraightDISTANCE(1.5);
-        readEncoders();
-        sleepTau(4000);
-        openClaw();
-        readEncoders();
+        telemetry.addData("VuValue",getVu());
+        updateTelemetry(telemetry);
+        lowerJewelServo();
         sleepTau(1000);
+        if (getColor() == 10){
+            turnDegree(1,30);
+        }
+        else if(getColor() == 3){
+            turnDegree(1,-30);
+        }
+        else{
+            raiseJewelServoSlightly();
+            if (getColor() == 10){
+                turnDegree(1,30);
+            }
+            else if(getColor() == 3){
+                turnDegree(1,-30);
+            }
+
+        }
+        sleepTau(3000);
+        raiseJewelServo();
+        sleepTau(500);
+        realign(1);
+        sleepTau(1000);
+        driveLeftStraightDISTANCE(0.7,0.5);
+        sleepTau(3000);
+        driveForwardStraightDISTANCE(0.7,1);
+        sleepTau(1000);
+        openClaw();
+        sleepTau(1500);
+
+
     }
 
 

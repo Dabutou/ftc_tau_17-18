@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -42,6 +43,7 @@ class AUTO_METHODS extends LinearOpMode{
     private int frontLeftMotorPosition = 0;
     private int frontRightMotorPosition = 0;
     private final int distancetoBlock = 990;
+    private final int blockHeight = 750;
 
 
     public AUTO_METHODS(){}
@@ -181,33 +183,66 @@ class AUTO_METHODS extends LinearOpMode{
         robot.backRightMotor.setTargetPosition(backRightMotorPosition);
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
+    public void turnToDegree(double speed, double degree){
+        speed(speed);
+        float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        frontLeftMotorPosition += (int)(3520.0*heading/360);
+        frontRightMotorPosition += (int)(3520.0*heading/360);
+        backLeftMotorPosition += (int)(3520.0*heading/360);
+        backRightMotorPosition += (int)(3520.0*heading/360);
+        frontLeftMotorPosition += (int)(3520.0*degree/360);
+        frontRightMotorPosition += (int)(3520.0*degree/360);
+        backLeftMotorPosition += (int)(3520.0*degree/360);
+        backRightMotorPosition += (int)(3520.0*degree/360);
+        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
+        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
+        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
+        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
+    }
+    public String getVu(){
+        RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+        return vumark.toString();
+    }
+    public int getColor(){
+        return robot.color.colorNumber();
+    }
+    public void setLiftStage1(double speed){
+        liftSpeed(speed);
+        robot.leftLiftMotor.setTargetPosition(0);
+        robot.rightLiftMotor.setTargetPosition(0);
+    }
+    public void setLiftStage2(double speed){
+        liftSpeed(speed);
+        robot.leftLiftMotor.setTargetPosition(blockHeight);
+        robot.rightLiftMotor.setTargetPosition(blockHeight);
+    }
+    public void setLiftStage3(double speed){
+        liftSpeed(speed);
+        robot.leftLiftMotor.setTargetPosition(2*blockHeight);
+        robot.rightLiftMotor.setTargetPosition(2*blockHeight);
+    }
+    public void setLiftStage4(double speed){
+        liftSpeed(speed);
+        robot.leftLiftMotor.setTargetPosition(3*blockHeight);
+        robot.rightLiftMotor.setTargetPosition(3*blockHeight);
+    }
 
-    //probably don't need left90 and right90
-    public void left90(double speed){
-        speed(speed);
-        setDistances(-880,-880,-880,-880);
-        runDistances();
-    }
-    public void right90(double speed){
-        speed(speed);
-        setDistances(880,880,880,880);
-        runDistances();
-    }
 
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
     public void closeClaw(){
-        robot.leftLiftServo.setPosition(0.35);
+        robot.leftLiftServo.setPosition(0.15);
         robot.rightLiftServo.setPosition(0);
     }
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(0.75);
-        robot.rightLiftServo.setPosition(0.65);
+        robot.leftLiftServo.setPosition(1);
+        robot.rightLiftServo.setPosition(0.85);
     }
     public void lowerJewelServo(){
         robot.jewelServo.setPosition(1);
     }
+    public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.95);}
     public void raiseJewelServo(){
         robot.jewelServo.setPosition(0);
     }
@@ -321,19 +356,12 @@ class AUTO_METHODS extends LinearOpMode{
         setDistances(-distances,0,0, distances);
         runDistances();
     }
-    public void driveForwardStraightTIME(double speed, long milliSec){}
-    public void driveBackwardStraightTIME(double speed, long milliSec){}
-    public void driveRightStraightTIME(double speed, long milliSec){}
-    public void driveLeftStraightTIME(double speed, long milliSec) {}
-    public void driveNWStraightTIME(double speed, long milliSec){}
-    public void driveNEStraightTIME(double speed, long milliSec){}
-    public void driveSEStraightTIME(double speed, long milliSec){}
-    public void driveSWStraightTIME(double speed, long milliSec){}
-    
-    /*public boolen isRed(){
--        return robot.colorx.colorNumber() == 10;
--    }*/
-
+    public void testColor(){
+        while(1==1){
+            telemetry.addData("Color",""+ robot.color.colorNumber());
+            updateTelemetry(telemetry);
+        }
+    }
 
     //BEHIND THE SCENES METHODS
     private void speed(double speed){
@@ -342,6 +370,11 @@ class AUTO_METHODS extends LinearOpMode{
         robot.backLeftMotor.setPower(speed);
         robot.backRightMotor.setPower(speed);
     }
+    private void liftSpeed(double speed){
+        robot.leftLiftMotor.setPower(2*speed);
+        robot.rightLiftMotor.setPower(speed);
+    }
+
     private void setDistances(int fl, int fr, int bl, int br){
         frontLeftMotorPosition += fl;
         frontRightMotorPosition += fr;
