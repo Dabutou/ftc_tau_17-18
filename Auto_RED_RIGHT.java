@@ -18,17 +18,16 @@ import com.qualcomm.robotcore.util.ThreadPool;
 
 @Autonomous(name = "Auto Red Right", group = "Tau")
 //@Disabled
-public class Auto_RED_RIGHT extends AUTO_METHODS{
+public class Auto_RED_RIGHT extends AUTO_METHODSNL{
 
     @Override//CALLS AUTO_METHODS TO RUN
     public void runOpMode() throws InterruptedException{
-        String vuValue = "";
+        String vuValue = "CENTER";
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
-        closeClaw();
-        telemetry.addData("VuValue",getVu());
-        updateTelemetry(telemetry);
+        //closeClaw();
+        vuValue = getVu();
         lowerJewelServo();
         sleepTau(1000);
         if (getColor() == 10){
@@ -52,12 +51,37 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
         sleepTau(500);
         realign(1);
         sleepTau(1000);
-        driveLeftStraightDISTANCE(0.7,0.5);
-        sleepTau(3000);
+        if(vuValue.equals("CENTER")) {
+            telemetry.addData("VuMark", "CENTER");
+            updateTelemetry(telemetry);
+            driveLeftStraightDISTANCE(0.7,0.5);
+        }
+        else if(vuValue.equals("LEFT")){
+            telemetry.addData("VuMark", "LEFT");
+            updateTelemetry(telemetry);
+            driveLeftStraightDISTANCE(0.7,0.6);
+        }
+        else if(vuValue.equals("RIGHT")){
+            telemetry.addData("VuMark", "RIGHT");
+            updateTelemetry(telemetry);
+            driveLeftStraightDISTANCE(0.7,0.4);
+        }
+        else {
+            telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
+            updateTelemetry(telemetry);
+            driveForwardStraightDISTANCE(0.7,0.5);
+        }
+        sleepTau(2000);
         driveForwardStraightDISTANCE(0.7,1);
-        sleepTau(1000);
-        openClaw();
+        sleepTau(2000);
+        //openClaw();
+        sleepTau(250);
+        driveBackwardStraightDISTANCE(0.5,0.3);
         sleepTau(1500);
+        //closeClaw();
+        sleepTau(150);
+        driveForwardStraightDISTANCE(0.7,0.5);
+        sleepTau(2500);
 
 
     }

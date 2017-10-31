@@ -71,6 +71,7 @@ class AUTO_METHODS extends LinearOpMode{
 
         // Start the logging of measured acceleration
         //relicTrackables.activate();
+        robot.relicTrackables.activate();
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
@@ -199,9 +200,13 @@ class AUTO_METHODS extends LinearOpMode{
         robot.backRightMotor.setTargetPosition(backRightMotorPosition);
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
-    public String getVu(){
-        RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        return vumark.toString();
+    public void getVu(){
+
+        while(true) {
+            RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+            telemetry.addData("VuMark", vumark);
+            updateTelemetry(telemetry);
+        }
     }
     public int getColor(){
         return robot.color.colorNumber();

@@ -37,20 +37,19 @@ import java.util.Locale;
 
 @Autonomous(name = "Auto Red Left", group = "Tau")
 //@Disabled
-public class Auto_RED_LEFT extends AUTO_METHODS{
+public class Auto_RED_LEFT extends AUTO_METHODSNL{
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        String vuValue = "";
+        String vuValue = "CENTER";
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
-        closeClaw();
-        telemetry.addData("VuValue",getVu());
-        updateTelemetry(telemetry);
+        //closeClaw();
+        vuValue = getVu();
         lowerJewelServo();
-        sleepTau(1000);
+        sleepTau(5000);
         if (getColor() == 10){
             turnDegree(1,30);
         }
@@ -65,6 +64,10 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             else if(getColor() == 3){
                 turnDegree(1,-30);
             }
+            else{
+                telemetry.addData("Jewel", "Unknown");
+                updateTelemetry(telemetry);
+            }
 
         }
         sleepTau(3000);
@@ -72,15 +75,41 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         sleepTau(500);
         realign(1);
         sleepTau(1000);
-        driveLeftStraightDISTANCE(0.7,0.5);
-        sleepTau(3000);
-        driveForwardStraightDISTANCE(0.7,1);
-        sleepTau(1000);
-        openClaw();
+        if(vuValue.equals("CENTER")) {
+            telemetry.addData("VuMark", "CENTER");
+            updateTelemetry(telemetry);
+            driveForwardStraightDISTANCE(0.7, 1.5);
+        }
+        else if(vuValue.equals("LEFT")){
+            telemetry.addData("VuMark", "LEFT");
+            updateTelemetry(telemetry);
+            driveForwardStraightDISTANCE(0.7,1.6);
+        }
+        else if(vuValue.equals("RIGHT")){
+            telemetry.addData("VuMark", "RIGHT");
+            updateTelemetry(telemetry);
+            driveForwardStraightDISTANCE(0.7,1.4);
+        }
+        else {
+            telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
+            updateTelemetry(telemetry);
+            driveForwardStraightDISTANCE(0.7,1.5);
+        }
+        sleepTau(2500);
+        turnDegree(1,90.0);
         sleepTau(1500);
+        //openClaw();
+        sleepTau(250);
+        driveBackwardStraightDISTANCE(0.5,0.3);
+        sleepTau(1500);
+        //closeClaw();
+        sleepTau(150);
+        driveForwardStraightDISTANCE(0.5,0.5);
+        sleepTau(2500);
 
 
 
     }
+
 
 }

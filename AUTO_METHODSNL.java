@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -30,11 +31,7 @@ import java.util.Locale;
 class AUTO_METHODSNL extends LinearOpMode{
 
     HardwareNL robot = new HardwareNL();
-    /*
-        //VuForia**************************
-        OpenGLMatrix lastLocation = null;
-        private VuforiaLocalizer vuforia;
-    */
+
     //IMU******************************
     private BNO055IMU imu;
 
@@ -45,7 +42,9 @@ class AUTO_METHODSNL extends LinearOpMode{
     private int backRightMotorPosition = 0;
     private int frontLeftMotorPosition = 0;
     private int frontRightMotorPosition = 0;
-
+    private final int distancetoBlock = 990;
+    private double vuMarkStart = 0;
+    private double vuMarkEnd = 0;
 
 
     public AUTO_METHODSNL(){}
@@ -73,6 +72,7 @@ class AUTO_METHODSNL extends LinearOpMode{
 
         // Start the logging of measured acceleration
         //relicTrackables.activate();
+        robot.relicTrackables.activate();
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
@@ -186,65 +186,183 @@ class AUTO_METHODSNL extends LinearOpMode{
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
 
-    //probably don't need left90 and right90
-    public void left90(double speed){
+    //FIX 
+    public void turnToDegree(double speed, double degree){
         speed(speed);
-        frontLeftMotorPosition -= 880;
-        frontRightMotorPosition -= 880;
-        backLeftMotorPosition -= 880;
-        backRightMotorPosition -= 880;
+        float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        frontLeftMotorPosition += (int)(3520.0*heading/360);
+        frontRightMotorPosition += (int)(3520.0*heading/360);
+        backLeftMotorPosition += (int)(3520.0*heading/360);
+        backRightMotorPosition += (int)(3520.0*heading/360);
+        frontLeftMotorPosition += (int)(3520.0*degree/360);
+        frontRightMotorPosition += (int)(3520.0*degree/360);
+        backLeftMotorPosition += (int)(3520.0*degree/360);
+        backRightMotorPosition += (int)(3520.0*degree/360);
         robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
         robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
         robot.backRightMotor.setTargetPosition(backRightMotorPosition);
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
-    public void right90(double speed){
-        speed(speed);
-        frontLeftMotorPosition += 880;
-        frontRightMotorPosition += 880;
-        backLeftMotorPosition += 880;
-        backRightMotorPosition += 880;
-        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
-        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
-        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
-        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
+    public String getVu(){
+        RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+        vuMarkEnd = robot.getTime() + 5;
+        while(vuMarkEnd > robot.getTime()) {
+            if(vumark != RelicRecoveryVuMark.UNKNOWN) {
+                return "" + vumark;
+            }
+            else{
+                vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+            }
+        }
+        return "CG";
     }
+    public int getColor(){
+        return robot.color.colorNumber();
+    }
+
 
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
-
-
-    //distance by centimeters
-    //FIGURE OUT "number of encoder ticks" to reach 1 meter; follow my example for turndegrees
-    public void driveForwardStraightDISTANCE(double distance){
-
-        //FINISH ME
-
+    public void lowerJewelServo(){
+        robot.jewelServo.setPosition(1);
+    }
+    public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.95);}
+    public void raiseJewelServo(){
+        robot.jewelServo.setPosition(0);
     }
 
-    //USE similar setup from driveForward for the rest; you'll need to rename the methods & variables
-    public void driveBackwardStraightTIME(long milliSec){}
-    public void driveRightStraightTIME(long milliSec){}
-    public void driveLeftStraightTIME(long milliSec){}
-    public void driveNWStraightTIME(long milliSec){}
-    public void driveNEStraightTIME(long milliSec){}
-    public void driveSEStraightTIME(long milliSec){}
-    public void driveSWStraightTIME(long milliSec){}
-    public void driveForwardStraightTIME(double speed, long milliSec){}
-    public void driveBackwardStraightTIME(double speed, long milliSec){}
-    public void driveRightStraightTIME(double speed, long milliSec){}
-    public void driveLeftStraightTIME(double speed, long milliSec) {}
-    public void driveNWStraightTIME(double speed, long milliSec){}
-    public void driveNEStraightTIME(double speed, long milliSec){}
-    public void driveSEStraightTIME(double speed, long milliSec){}
-    public void driveSWStraightTIME(double speed, long milliSec){}
+    public void readEncoders(){
+        telemetry.addData("Front Left", "" + frontLeftMotorPosition + " : " + robot.frontLeftMotor.getCurrentPosition());
+        telemetry.addData("Front Right", "" + frontRightMotorPosition + " : " + robot.frontRightMotor.getCurrentPosition());
+        telemetry.addData("Front Left", "" + backLeftMotorPosition + " : " + robot.backLeftMotor.getCurrentPosition());
+        telemetry.addData("Front Left", "" + backRightMotorPosition + " : " + robot.backRightMotor.getCurrentPosition());
+        updateTelemetry(telemetry);
+    }
 
-
+    public void driveForwardStraightDISTANCE(double distance){
+        speed(0.6);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
+        setDistances(distancesr,-distancesl,distancesl,-distancesr);
+        runDistances();
+    }
+    public void driveBackwardStraightDISTANCE(double distance){
+        speed(0.6);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
+        setDistances(-distancesr,distancesl,-distancesl, distancesr);
+        runDistances();
+    }
+    public void driveRightStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,distances,-distances, -distances);
+        runDistances();
+    }
+    public void driveLeftStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,-distances,distances, distances);
+        runDistances();
+    }
+    public void driveNWStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,-distances,distances, 0);
+        runDistances();
+    }
+    public void driveNEStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,0,0, -distances);
+        runDistances();
+    }
+    public void driveSEStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,distances,-distances, 0);
+        runDistances();
+    }
+    public void driveSWStraightDISTANCE(double distance){
+        speed(0.6);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,0,0, distances);
+        runDistances();
+    }
+    //same with speed
+    public void driveForwardStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-5)*distance);
+        setDistances(distancesr,-distancesl,distancesl,-distancesr);
+        runDistances();
+    }
+    public void driveBackwardStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distancesr = (int)(distancetoBlock*distance);
+        int distancesl = (int)((distancetoBlock-5)*distance);
+        setDistances(-distancesr,distancesl,-distancesl, distancesr);
+        runDistances();
+    }
+    public void driveRightStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,distances,-distances, -distances);
+        runDistances();
+    }
+    public void driveLeftStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,-distances,distances, distances);
+        runDistances();
+    }
+    public void driveNWStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,-distances,distances, 0);
+        runDistances();
+    }
+    public void driveNEStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(distances,0,0, -distances);
+        runDistances();
+    }
+    public void driveSEStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(0,distances,-distances, 0);
+        runDistances();
+    }
+    public void driveSWStraightDISTANCE(double speed, double distance){
+        speed(speed);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,0,0, distances);
+        runDistances();
+    }
+    public void testColor(){
+        while(1==1){
+            telemetry.addData("Color",""+ robot.color.colorNumber());
+            updateTelemetry(telemetry);
+        }
+    }
 
     //BEHIND THE SCENES METHODS
     private void speed(double speed){
-            robot.frontLeftMotor.setPower(speed);
-            robot.frontRightMotor.setPower(speed);
-            robot.backLeftMotor.setPower(speed);
-            robot.backRightMotor.setPower(speed);
+        robot.frontLeftMotor.setPower(speed);
+        robot.frontRightMotor.setPower(speed);
+        robot.backLeftMotor.setPower(speed);
+        robot.backRightMotor.setPower(speed);
+    }
+    private void setDistances(int fl, int fr, int bl, int br){
+        frontLeftMotorPosition += fl;
+        frontRightMotorPosition += fr;
+        backLeftMotorPosition += bl;
+        backRightMotorPosition += br;
+    }
+    private void runDistances(){
+        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
+        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
+        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
+        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
 }
