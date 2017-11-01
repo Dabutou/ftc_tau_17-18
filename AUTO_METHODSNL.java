@@ -43,8 +43,8 @@ class AUTO_METHODSNL extends LinearOpMode{
     private int frontLeftMotorPosition = 0;
     private int frontRightMotorPosition = 0;
     private final int distancetoBlock = 990;
-    private double vuMarkStart = 0;
     private double vuMarkEnd = 0;
+    private boolean doneOnce = false;
 
 
     public AUTO_METHODSNL(){}
@@ -174,6 +174,7 @@ class AUTO_METHODSNL extends LinearOpMode{
     }
 
     //negative degree is left turn, positive is right turn
+    //turn a degree from current position
     public void turnDegree(double speed, double degree){
         speed(speed);
         frontLeftMotorPosition += (int)(3520.0*degree/360);
@@ -186,7 +187,7 @@ class AUTO_METHODSNL extends LinearOpMode{
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
 
-    //FIX 
+    //Turns to a specific degree according to turn 0
     public void turnToDegree(double speed, double degree){
         speed(speed);
         float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
@@ -203,6 +204,7 @@ class AUTO_METHODSNL extends LinearOpMode{
         robot.backRightMotor.setTargetPosition(backRightMotorPosition);
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
+
     public String getVu(){
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
         vuMarkEnd = robot.getTime() + 5;
@@ -211,11 +213,13 @@ class AUTO_METHODSNL extends LinearOpMode{
                 return "" + vumark;
             }
             else{
+                if(!doneOnce){turnDegree(0.1,25);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
         return "CG";
     }
+
     public int getColor(){
         return robot.color.colorNumber();
     }
@@ -292,14 +296,14 @@ class AUTO_METHODSNL extends LinearOpMode{
     public void driveForwardStraightDISTANCE(double speed, double distance){
         speed(speed);
         int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-5)*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(distancesr,-distancesl,distancesl,-distancesr);
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double speed, double distance){
         speed(speed);
         int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-5)*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(-distancesr,distancesl,-distancesl, distancesr);
         runDistances();
     }
@@ -339,6 +343,8 @@ class AUTO_METHODSNL extends LinearOpMode{
         setDistances(-distances,0,0, distances);
         runDistances();
     }
+
+    //infinite loop that reads colors
     public void testColor(){
         while(1==1){
             telemetry.addData("Color",""+ robot.color.colorNumber());

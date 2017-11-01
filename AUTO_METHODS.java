@@ -42,8 +42,12 @@ class AUTO_METHODS extends LinearOpMode{
     private int backRightMotorPosition = 0;
     private int frontLeftMotorPosition = 0;
     private int frontRightMotorPosition = 0;
+    private int leftLiftPosition = 0;
+    private int rightLiftPosition = 0;
     private final int distancetoBlock = 990;
     private final int blockHeight = 750;
+    private double vuMarkEnd = 0;
+    private boolean doneOnce = false;
 
 
     public AUTO_METHODS(){}
@@ -166,10 +170,7 @@ class AUTO_METHODS extends LinearOpMode{
         frontRightMotorPosition += (int)(3520.0*heading/360);
         backLeftMotorPosition += (int)(3520.0*heading/360);
         backRightMotorPosition += (int)(3520.0*heading/360);
-        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
-        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
-        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
-        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
+        runDistances();
     }
 
     //negative degree is left turn, positive is right turn
@@ -179,10 +180,7 @@ class AUTO_METHODS extends LinearOpMode{
         frontRightMotorPosition += (int)(3520.0*degree/360);
         backLeftMotorPosition += (int)(3520.0*degree/360);
         backRightMotorPosition += (int)(3520.0*degree/360);
-        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
-        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
-        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
-        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
+        runDistances();
     }
     public void turnToDegree(double speed, double degree){
         speed(speed);
@@ -195,41 +193,67 @@ class AUTO_METHODS extends LinearOpMode{
         frontRightMotorPosition += (int)(3520.0*degree/360);
         backLeftMotorPosition += (int)(3520.0*degree/360);
         backRightMotorPosition += (int)(3520.0*degree/360);
-        robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
-        robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
-        robot.backRightMotor.setTargetPosition(backRightMotorPosition);
-        robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
+        runDistances();
     }
-    public void getVu(){
+    public String getVu(){
 
-        while(true) {
-            RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-            telemetry.addData("VuMark", vumark);
-            updateTelemetry(telemetry);
+        RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+        vuMarkEnd = robot.getTime() + 5;
+        while(vuMarkEnd > robot.getTime()) {
+            if(vumark != RelicRecoveryVuMark.UNKNOWN) {
+                return "" + vumark;
+            }
+            else{
+                if(!doneOnce){turnDegree(0.1,25);doneOnce = !doneOnce;}
+                vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+            }
         }
+        return "CG";
     }
     public int getColor(){
         return robot.color.colorNumber();
     }
+
+    public void getLiftPosition(){
+        telemetry.addData("Left Lift Position", robot.leftLiftMotor.getCurrentPosition()+ " : " + leftLiftPosition);
+        telemetry.addData("Right Lift Position",  robot.rightLiftMotor.getCurrentPosition() + " : " + rightLiftPosition);
+        updateTelemetry(telemetry);
+    }
     public void setLiftStage1(double speed){
         liftSpeed(speed);
-        robot.leftLiftMotor.setTargetPosition(0);
-        robot.rightLiftMotor.setTargetPosition(0);
+        leftLiftPosition = 0;
+        rightLiftPosition = 0;
+        liftDistances();
     }
     public void setLiftStage2(double speed){
         liftSpeed(speed);
-        robot.leftLiftMotor.setTargetPosition(blockHeight);
-        robot.rightLiftMotor.setTargetPosition(blockHeight);
+        leftLiftPosition = blockHeight;
+        rightLiftPosition = blockHeight;
+        liftDistances();
     }
     public void setLiftStage3(double speed){
         liftSpeed(speed);
-        robot.leftLiftMotor.setTargetPosition(2*blockHeight);
-        robot.rightLiftMotor.setTargetPosition(2*blockHeight);
+        leftLiftPosition = 2*blockHeight;
+        rightLiftPosition = 2*blockHeight;
+        liftDistances();
     }
     public void setLiftStage4(double speed){
         liftSpeed(speed);
-        robot.leftLiftMotor.setTargetPosition(3*blockHeight);
-        robot.rightLiftMotor.setTargetPosition(3*blockHeight);
+        leftLiftPosition = 3*blockHeight;
+        rightLiftPosition = 3*blockHeight;
+        liftDistances();
+    }
+    public void raiseLiftStage(double speed){
+        liftSpeed(speed);
+        leftLiftPosition += blockHeight;
+        rightLiftPosition += blockHeight;
+        liftDistances();
+    }
+    public void lowerLiftStage(double speed){
+        liftSpeed(speed);
+        leftLiftPosition -= blockHeight;
+        rightLiftPosition -= blockHeight;
+        liftDistances();
     }
 
 
@@ -314,14 +338,14 @@ class AUTO_METHODS extends LinearOpMode{
     public void driveForwardStraightDISTANCE(double speed, double distance){
         speed(speed);
         int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-5)*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(distancesr,-distancesl,distancesl,-distancesr);
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double speed, double distance){
         speed(speed);
         int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-5)*distance);
+        int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(-distancesr,distancesl,-distancesl, distancesr);
         runDistances();
     }
@@ -378,6 +402,10 @@ class AUTO_METHODS extends LinearOpMode{
     private void liftSpeed(double speed){
         robot.leftLiftMotor.setPower(2*speed);
         robot.rightLiftMotor.setPower(speed);
+    }
+    private void liftDistances(){
+        robot.leftLiftMotor.setTargetPosition(leftLiftPosition);
+        robot.rightLiftMotor.setTargetPosition(rightLiftPosition);
     }
 
     private void setDistances(int fl, int fr, int bl, int br){
