@@ -23,10 +23,6 @@ public class Teleop extends OpMode {
 
     Hardware robot = new Hardware();
 
-    //PRE-GYRO
-    //---------------------------------------------------------------****
-    //PRE-GYRO
-
     //Drive Variables
 
     private double leftGP1Y = 0;
@@ -49,9 +45,9 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
-    private static final double LEFT_LIFT_OPEN = 1;
-    private static final double LEFT_LIFT_CLOSE = 0.35;
-    private static final double RIGHT_LIFT_OPEN = 0.65;
+    private static final double LEFT_LIFT_OPEN = 0.95;
+    private static final double LEFT_LIFT_CLOSE = 0.15;
+    private static final double RIGHT_LIFT_OPEN = 0.8;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
 
@@ -229,8 +225,8 @@ public class Teleop extends OpMode {
         leftGP2Y = gamepad2.left_stick_y;
 
         //Limit extension of lift
-        robot.leftLiftMotor.setPower(-leftGP2Y);
-        robot.rightLiftMotor.setPower(leftGP2Y);
+        robot.leftLiftMotor.setPower(0.6*-leftGP2Y);
+        robot.rightLiftMotor.setPower(0.3*leftGP2Y);
 
         //Open and close claw servos
         if (gamepad2.left_bumper){
@@ -242,6 +238,9 @@ public class Teleop extends OpMode {
             robot.rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
         }
 
+        if(gamepad2.a){
+            robot.jewelServo.setPosition(0);
+        }
 
     }
 
