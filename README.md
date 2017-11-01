@@ -1,4 +1,4 @@
 # The Tau Manifesto's Relic Recovery Code Page 2017-2018 #
 
-**Last updated 10/25/2017
+**Last updated 11/1/2017
 
