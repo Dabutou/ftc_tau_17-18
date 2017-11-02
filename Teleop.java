@@ -46,10 +46,11 @@ public class Teleop extends OpMode {
     //Lift Variables
 
     private static final double LEFT_LIFT_OPEN = 0.95;
-    private static final double LEFT_LIFT_CLOSE = 0.15;
+    private static final double LEFT_LIFT_CLOSE = 0.2;
     private static final double RIGHT_LIFT_OPEN = 0.8;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
+    private double liftLevel = 0;
 
 
 
@@ -225,9 +226,17 @@ public class Teleop extends OpMode {
         leftGP2Y = gamepad2.left_stick_y;
 
         //Limit extension of lift
-        robot.leftLiftMotor.setPower(0.6*-leftGP2Y);
-        robot.rightLiftMotor.setPower(0.3*leftGP2Y);
+        liftLevel -= leftGP2Y;
+        telemetry.addData("Lift Level",liftLevel);
+        updateTelemetry(telemetry);
 
+        if (leftGP2Y > 0 || liftLevel > 0) {
+            robot.leftLiftMotor.setPower(0.6 * leftGP2Y);
+            robot.rightLiftMotor.setPower(0.3 * leftGP2Y);
+        }
+        else{
+            liftLevel = 0;
+        }
         //Open and close claw servos
         if (gamepad2.left_bumper){
             robot.leftLiftServo.setPosition(LEFT_LIFT_OPEN);

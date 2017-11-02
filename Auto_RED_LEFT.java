@@ -50,7 +50,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         getLiftPosition();
         lowerJewelServo();
         sleepTau(1000);
-        setLiftStage2(1);
+        raiseLiftSlightly();
         if (getColor() == 10){
             turnDegree(0.5,30);
         }
@@ -72,7 +72,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
 
         }
         sleepTau(3000);
-        getLiftPosition();
+
         raiseJewelServo();
         sleepTau(500);
         realign(0.5);
@@ -98,7 +98,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         else if(vuValue.equals("RIGHT")){
             telemetry.addData("VuMark", "RIGHT");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.4);
+            driveForwardStraightDISTANCE(0.7,0.3);
         }
         else {
             telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
@@ -111,12 +111,10 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         openClaw();
         sleepTau(250);
         driveBackwardStraightDISTANCE(0.5,0.3);
-        setLiftStage1(0.7);
         sleepTau(1500);
-        getLiftPosition();
-        closeClaw();
-        sleepTau(150);
-        driveForwardStraightDISTANCE(0.5,0.75);
+        lowerLiftSlightly();
+        sleepTau(250);
+        driveForwardStraightDISTANCE(0.5,1);
         sleepTau(2500);
 
 

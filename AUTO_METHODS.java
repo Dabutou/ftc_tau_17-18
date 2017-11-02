@@ -45,7 +45,7 @@ class AUTO_METHODS extends LinearOpMode{
     private int leftLiftPosition = 0;
     private int rightLiftPosition = 0;
     private final int distancetoBlock = 990;
-    private final int blockHeight = 750;
+    private final int blockHeight = -750;
     private double vuMarkEnd = 0;
     private boolean doneOnce = false;
 
@@ -219,6 +219,16 @@ class AUTO_METHODS extends LinearOpMode{
         telemetry.addData("Right Lift Position",  robot.rightLiftMotor.getCurrentPosition() + " : " + rightLiftPosition);
         updateTelemetry(telemetry);
     }
+    public void raiseLiftSlightly(){
+        liftSpeed(-0.4);
+        sleepTau(250);
+        liftSpeed(0);
+    }
+    public void lowerLiftSlightly(){
+        liftSpeed(0.4);
+        sleepTau(150);
+        liftSpeed(0);
+    }
     public void setLiftStage1(double speed){
         liftSpeed(speed);
         leftLiftPosition = 0;
@@ -260,13 +270,13 @@ class AUTO_METHODS extends LinearOpMode{
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
     public void closeClaw(){
-        robot.leftLiftServo.setPosition(0.15);
+        robot.leftLiftServo.setPosition(0.2);
         robot.rightLiftServo.setPosition(0);
     }
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(1);
-        robot.rightLiftServo.setPosition(0.85);
+        robot.leftLiftServo.setPosition(0.95);
+        robot.rightLiftServo.setPosition(0.8);
     }
     public void lowerJewelServo(){
         robot.jewelServo.setPosition(1);

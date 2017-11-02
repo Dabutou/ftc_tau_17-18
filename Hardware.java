@@ -96,7 +96,7 @@ public class Hardware {
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftLiftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
@@ -117,8 +117,8 @@ public class Hardware {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
         leftLiftServo = hwMap.servo.get("left_servo");
@@ -126,13 +126,13 @@ public class Hardware {
         jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        leftLiftServo.scaleRange(0.1,1);
+        leftLiftServo.scaleRange(0,1);
         rightLiftServo.scaleRange(0,0.9);
         jewelServo.scaleRange(0,0.6);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.9);
+        leftLiftServo.setPosition(1);
         rightLiftServo.setPosition(0.85);
         jewelServo.setPosition(0);
 
@@ -193,7 +193,7 @@ public class Hardware {
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftLiftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
@@ -217,12 +217,12 @@ public class Hardware {
         jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        leftLiftServo.scaleRange(0.1,0.9);
+        leftLiftServo.scaleRange(0,1);
         rightLiftServo.scaleRange(0,0.9);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.9);
+        leftLiftServo.setPosition(1);
         rightLiftServo.setPosition(0.85);
         jewelServo.setPosition(0);
         // Define sensors
