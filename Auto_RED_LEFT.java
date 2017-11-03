@@ -98,7 +98,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         else if(vuValue.equals("RIGHT")){
             telemetry.addData("VuMark", "RIGHT");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.3);
+            driveForwardStraightDISTANCE(0.7,0.35);
         }
         else {
             telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
