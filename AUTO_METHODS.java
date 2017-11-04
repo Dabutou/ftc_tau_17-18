@@ -195,6 +195,8 @@ class AUTO_METHODS extends LinearOpMode{
         backRightMotorPosition += (int)(3520.0*degree/360);
         runDistances();
     }
+
+    //FIX: take in para depending on which side the vumark is on so it knows which way to turn if not immediately found
     public String getVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
@@ -204,7 +206,7 @@ class AUTO_METHODS extends LinearOpMode{
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.1,25);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.1,20);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -283,7 +285,7 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.95);}
     public void raiseJewelServo(){
-        robot.jewelServo.setPosition(0);
+        robot.jewelServo.setPosition(0.1);
     }
 
     public void readEncoders(){
