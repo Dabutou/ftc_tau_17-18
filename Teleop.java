@@ -46,7 +46,7 @@ public class Teleop extends OpMode {
     //Lift Variables
 
     private static final double LEFT_LIFT_OPEN = 0.95;
-    private static final double LEFT_LIFT_CLOSE = 0.2;
+    private static final double LEFT_LIFT_CLOSE = 0.35;
     private static final double RIGHT_LIFT_OPEN = 0.8;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
@@ -208,7 +208,7 @@ public class Teleop extends OpMode {
             robot.backRightMotor.setPower(backrightPOWER * maxPOWERConstant);
             robot.backLeftMotor.setPower(backleftPOWER * maxPOWERConstant);
 
-    }
+        }
         else
         {
             robot.frontLeftMotor.setPower(speedToggleMultiplier * (frontleftPOWER * maxPOWERConstant));
