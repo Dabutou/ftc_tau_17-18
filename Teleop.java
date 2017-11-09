@@ -49,6 +49,8 @@ public class Teleop extends OpMode {
     private static final double LEFT_LIFT_CLOSE = 0.35;
     private static final double RIGHT_LIFT_OPEN = 0.8;
     private static final double RIGHT_LIFT_CLOSE = 0;
+    private double clawPosLeft = LEFT_LIFT_OPEN;
+    private double clawPosRight = RIGHT_LIFT_OPEN;
     private double leftGP2Y = 0;
     private double liftLevel = 0;
 
@@ -241,11 +243,26 @@ public class Teleop extends OpMode {
         if (gamepad2.left_bumper){
             robot.leftLiftServo.setPosition(LEFT_LIFT_OPEN);
             robot.rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
+            clawPosLeft = LEFT_LIFT_OPEN;
+            clawPosRight = RIGHT_LIFT_OPEN;
         }
         if (gamepad2.right_bumper){
             robot.leftLiftServo.setPosition(LEFT_LIFT_CLOSE);
             robot.rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
+            clawPosLeft = LEFT_LIFT_CLOSE;
+            clawPosRight = RIGHT_LIFT_CLOSE;
         }
+        if(clawPosLeft <= 1) {
+            clawPosLeft += gamepad2.left_trigger / 100;
+            clawPosRight += gamepad2.left_trigger / 100;
+        }
+        if(clawPosRight >= 0) {
+            clawPosLeft -= gamepad2.right_trigger / 100;
+            clawPosRight -= gamepad2.right_trigger / 100;
+        }    
+        
+        robot.leftLiftServo.setPosition(clawPosLeft);
+        robot.rightLiftServo.setPosition(clawPosRight);
 
         if(gamepad2.a){
             robot.jewelServo.setPosition(0);
