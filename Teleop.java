@@ -24,7 +24,7 @@ public class Teleop extends OpMode {
     Hardware robot = new Hardware();
 
     //Drive Variables
-
+    private BNO055IMU imu;
     private double leftGP1Y = 0;
     private double leftGP1X = 0;
     private double frontleftPOWER = 0;
@@ -38,19 +38,23 @@ public class Teleop extends OpMode {
     //private double rightGP1 = 0; -- figure out something to do with right stick
     private boolean speedToggle = true;
     private double speedToggleMultiplier = 0.6; // Between 0.25 and 0.85
-    private double startTimeB = 0;
     private double endTimeB = 0;
-    private double startTimeS = 0;
     private double endTimeS = 0;
+    private double endTimeX = 0;
+    private double result = 0;
+    private double tempX = 0;
+    private double tempTrig = 0;
+    private double length = 0;
+    private double initAngle = 0;
+    private double angle = 0;
+    private boolean absoluteDrive = false;
 
     //Lift Variables
 
     private static final double LEFT_LIFT_OPEN = 0.95;
-    private static final double LEFT_LIFT_CLOSE = 0.35;
+    private static final double LEFT_LIFT_CLOSE = 0.2;
     private static final double RIGHT_LIFT_OPEN = 0.8;
     private static final double RIGHT_LIFT_CLOSE = 0;
-    private double clawPosLeft = LEFT_LIFT_OPEN;
-    private double clawPosRight = RIGHT_LIFT_OPEN;
     private double leftGP2Y = 0;
     private double liftLevel = 0;
 
@@ -76,6 +80,7 @@ public class Teleop extends OpMode {
         telemetry.addData("Readiness", "Press Play to start");
         telemetry.addData("If you notice this", "You are COOL!!!");
         updateTelemetry(telemetry);
+        imu = robot.getImu();
     }
 
     @Override
@@ -102,22 +107,54 @@ public class Teleop extends OpMode {
 
         //Read controller input
         //Left and right are opposite; front and back are same
-        leftGP1Y = gamepad1.left_stick_y;
+        leftGP1Y = -gamepad1.left_stick_y;
         leftGP1X = gamepad1.left_stick_x;
 
         //Remove slight touches
-        if(Math.abs(leftGP1Y) < 0.25) {
-            leftGP1Y = 0.0;
+        if(Math.abs(leftGP1Y) < 0.35) {
+            leftGP1Y = 0;
         }
-        if(Math.abs(leftGP1X) < 0.25) {
-            leftGP1X = 0.0;
+        if(Math.abs(leftGP1X) < 0.35) {
+            leftGP1X = 0;
+        }
+
+        //Check if absolute drive is on
+        if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
+
+            length = Math.sqrt(Math.pow(leftGP1X,2) + Math.pow(leftGP1Y,2));
+            if (leftGP1X == 0) {
+                if (leftGP1Y > 0){
+                    initAngle = 0;
+                }
+                else{
+                    initAngle = Math.toRadians(180);
+                }
+            }
+            else if (leftGP1Y == 0){
+                if (leftGP1X > 0){
+                    initAngle = Math.toRadians(90);
+                }
+                else{
+                    initAngle = Math.toRadians(-90);
+                }
+            }
+            else{
+                initAngle = Math.atan(leftGP1Y / leftGP1X);
+            }
+
+            angle = initAngle - Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-Math.toRadians(90);
+
+            leftGP1X = length*Math.cos(angle);
+            leftGP1Y = length*Math.sin(angle);
+
+
         }
 
         //Assign power to each motor based on X and Y vectors
-        backleftPOWER = -(leftGP1Y + leftGP1X);
-        backrightPOWER = (leftGP1Y - leftGP1X);
-        frontleftPOWER = -(leftGP1Y - leftGP1X);
-        frontrightPOWER = (leftGP1Y + leftGP1X);
+        backleftPOWER = leftGP1Y - leftGP1X;
+        backrightPOWER = -leftGP1Y - leftGP1X;
+        frontleftPOWER = leftGP1Y + leftGP1X;
+        frontrightPOWER = -leftGP1Y + leftGP1X;
 
         //Turning
         if (gamepad1.left_trigger > 0.05){
@@ -158,18 +195,32 @@ public class Teleop extends OpMode {
 
         //Speed Toggle
         if (gamepad1.b && (endTimeB == 0 || robot.getTime() >= endTimeB)) {
-            startTimeB = robot.getTime();
-            endTimeB = startTimeB + 0.1;
+            endTimeB = robot.getTime() + 0.1;
             speedToggle = !speedToggle;
         }
 
-
-        if (speedToggle){
-            telemetry.addData("Mode:", "Full Speed ahead!");
+        if (gamepad1.x && (endTimeX == 0 || robot.getTime() >= endTimeX)) {
+            endTimeX = robot.getTime() + 0.2;
+            absoluteDrive = !absoluteDrive;
+        }
+        if (speedToggle && absoluteDrive){
+            telemetry.addData("SpeedMode:", "Full Speed ahead!");
+            telemetry.addData("DriveMode:", "Absolute Drive");
+            updateTelemetry(telemetry);
+        }
+        else if(speedToggle && !absoluteDrive){
+            telemetry.addData("SpeedMode:", "Full Speed ahead!");
+            telemetry.addData("DriveMode:", "Regular Drive");
+            updateTelemetry(telemetry);
+        }
+        else if (!speedToggle && absoluteDrive){
+            telemetry.addData("SpeedMode:", "Speed Multiplier: " + speedToggleMultiplier);
+            telemetry.addData("DriveMode:", "Absolute Drive");
             updateTelemetry(telemetry);
         }
         else{
-            telemetry.addData("Mode:", "Speed Multiplier: " + speedToggleMultiplier);
+            telemetry.addData("SpeedMode:", "Speed Multiplier: " + speedToggleMultiplier);
+            telemetry.addData("DriveMode:", "Regular Drive");
             updateTelemetry(telemetry);
         }
 
@@ -182,23 +233,15 @@ public class Teleop extends OpMode {
         if (gamepad1.left_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS))
         {
             if (speedToggleMultiplier > 0.25){
-                startTimeS = robot.getTime();
-                endTimeS = startTimeS + 0.09;
+                endTimeS = robot.getTime() + 0.09;
                 speedToggleMultiplier = speedToggleMultiplier - 0.1;
             }
         }
         if (gamepad1.right_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS)) {
             if (speedToggleMultiplier < 0.95) {
-                startTimeS = robot.getTime();
-                endTimeS = startTimeS + 0.09;
+                endTimeS = robot.getTime() + 0.09;
                 speedToggleMultiplier = speedToggleMultiplier + 0.1;
             }
-        }
-
-        if (gamepad1.x){
-            BNO055IMU imu = robot.getImu();
-            telemetry.addData("FIRST_ANGLE",""+imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-            updateTelemetry(telemetry);
         }
 
 
@@ -210,7 +253,7 @@ public class Teleop extends OpMode {
             robot.backRightMotor.setPower(backrightPOWER * maxPOWERConstant);
             robot.backLeftMotor.setPower(backleftPOWER * maxPOWERConstant);
 
-        }
+    }
         else
         {
             robot.frontLeftMotor.setPower(speedToggleMultiplier * (frontleftPOWER * maxPOWERConstant));
@@ -225,44 +268,64 @@ public class Teleop extends OpMode {
         //*****************
 
         //Read controller input
-        leftGP2Y = gamepad2.left_stick_y;
+        leftGP2Y = -gamepad2.left_stick_y;
 
+        if(Math.abs(leftGP2Y) < 0.05) {
+            leftGP1Y = 0;
+        }
         //Limit extension of lift
-        liftLevel -= leftGP2Y;
-        telemetry.addData("Lift Level",liftLevel);
-        updateTelemetry(telemetry);
-
-        if (leftGP2Y > 0 || liftLevel > 0) {
+        //liftLevel = robot.leftLiftMotor.getCurrentPosition();
+        //upward
+        if (leftGP2Y > 0) {
             robot.leftLiftMotor.setPower(0.6 * leftGP2Y);
             robot.rightLiftMotor.setPower(0.3 * leftGP2Y);
+            robot.leftLiftMotor.setTargetPosition(5000);
+            robot.rightLiftMotor.setTargetPosition(5000);
+
+        }
+        //downward
+        else if (leftGP2Y < 0){
+            robot.leftLiftMotor.setPower(0.6 * leftGP2Y);
+            robot.rightLiftMotor.setPower(0.3 * leftGP2Y);
+            robot.leftLiftMotor.setTargetPosition(0);
+            robot.rightLiftMotor.setTargetPosition(0);
+
         }
         else{
-            liftLevel = 0;
+            robot.leftLiftMotor.setPower(0);
+            robot.rightLiftMotor.setPower(0);
+            robot.leftLiftMotor.setTargetPosition(robot.leftLiftMotor.getCurrentPosition());
+            robot.rightLiftMotor.setTargetPosition(robot.rightLiftMotor.getCurrentPosition());
         }
         //Open and close claw servos
         if (gamepad2.left_bumper){
             robot.leftLiftServo.setPosition(LEFT_LIFT_OPEN);
             robot.rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
-            clawPosLeft = LEFT_LIFT_OPEN;
-            clawPosRight = RIGHT_LIFT_OPEN;
         }
         if (gamepad2.right_bumper){
             robot.leftLiftServo.setPosition(LEFT_LIFT_CLOSE);
             robot.rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
-            clawPosLeft = LEFT_LIFT_CLOSE;
-            clawPosRight = RIGHT_LIFT_CLOSE;
         }
-        if(clawPosLeft <= 1) {
-            clawPosLeft += gamepad2.left_trigger / 100;
-            clawPosRight += gamepad2.left_trigger / 100;
+        if (gamepad2.left_trigger > 0.1){
+            if (robot.leftLiftServo.getPosition() >= 0.95 || robot.rightLiftServo.getPosition() >= 0.8){
+                robot.leftLiftServo.setPosition(0.95);
+                robot.rightLiftServo.setPosition(0.8);
+            }
+            else{
+                robot.leftLiftServo.setPosition(robot.leftLiftServo.getPosition() + 0.01);
+                robot.rightLiftServo.setPosition(robot.rightLiftServo.getPosition() + 0.01);
+            }
         }
-        if(clawPosRight >= 0) {
-            clawPosLeft -= gamepad2.right_trigger / 100;
-            clawPosRight -= gamepad2.right_trigger / 100;
-        }    
-        
-        robot.leftLiftServo.setPosition(clawPosLeft);
-        robot.rightLiftServo.setPosition(clawPosRight);
+        if (gamepad2.right_trigger > 0.1){
+            if (robot.leftLiftServo.getPosition() <= 0.2 || robot.rightLiftServo.getPosition() <= 0.01){
+                robot.leftLiftServo.setPosition(0.2);
+                robot.rightLiftServo.setPosition(0.01);
+            }
+            else{
+                robot.leftLiftServo.setPosition(robot.leftLiftServo.getPosition() - 0.01);
+                robot.rightLiftServo.setPosition(robot.rightLiftServo.getPosition() - 0.01);
+            }
+        }
 
         if(gamepad2.a){
             robot.jewelServo.setPosition(0);

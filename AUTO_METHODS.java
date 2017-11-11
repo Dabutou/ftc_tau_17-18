@@ -195,9 +195,7 @@ class AUTO_METHODS extends LinearOpMode{
         backRightMotorPosition += (int)(3520.0*degree/360);
         runDistances();
     }
-
-    //FIX: take in para depending on which side the vumark is on so it knows which way to turn if not immediately found
-    public String getVu(){
+    public String leftGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
         vuMarkEnd = robot.getTime() + 5;
@@ -206,7 +204,7 @@ class AUTO_METHODS extends LinearOpMode{
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.1,20);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.1,25);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -228,10 +226,10 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void lowerLiftSlightly(){
         liftSpeed(0.4);
-        sleepTau(150);
+        sleepTau(200);
         liftSpeed(0);
     }
-    public void setLiftStage1(double speed){
+   /* public void setLiftStage1(double speed){
         liftSpeed(speed);
         leftLiftPosition = 0;
         rightLiftPosition = 0;
@@ -266,7 +264,7 @@ class AUTO_METHODS extends LinearOpMode{
         leftLiftPosition -= blockHeight;
         rightLiftPosition -= blockHeight;
         liftDistances();
-    }
+    }*/
 
 
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
@@ -283,9 +281,9 @@ class AUTO_METHODS extends LinearOpMode{
     public void lowerJewelServo(){
         robot.jewelServo.setPosition(1);
     }
-    public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.95);}
+    public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.96);}
     public void raiseJewelServo(){
-        robot.jewelServo.setPosition(0.1);
+        robot.jewelServo.setPosition(0);
     }
 
     public void readEncoders(){
