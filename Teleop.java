@@ -254,7 +254,7 @@ public class Teleop extends OpMode {
             robot.backRightMotor.setPower(backrightPOWER * maxPOWERConstant);
             robot.backLeftMotor.setPower(backleftPOWER * maxPOWERConstant);
 
-    }
+        }
         else
         {
             robot.frontLeftMotor.setPower(speedToggleMultiplier * (frontleftPOWER * maxPOWERConstant));
@@ -281,41 +281,39 @@ public class Teleop extends OpMode {
 
 
         //Open and close claw servos
-        if (gamepad2.left_bumper){
-            robot.leftLiftServo.setPosition(LEFT_LIFT_OPEN);
-            robot.rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
+        if(gamepad1.right_bumper && clawStage < 3){clawStage++;}
+        if(gamepad1.left_bumper && clawStage > 1){clawStage--;}
+
+        if(clawStage == 1){
+            clawPosLeft = LEFT_LIFT_CLOSE;
+            clawPosRight = LEFT_LIFT_CLOSE;
+
         }
-        if (gamepad2.right_bumper){
-            robot.leftLiftServo.setPosition(LEFT_LIFT_CLOSE);
-            robot.rightLiftServo.setPosition(RIGHT_LIFT_CLOSE);
+        if(clawStage == 2){
+            clawPosLeft = LEFT_LIFT_CLOSE + 0.1;
+            clawPosRight = LEFT_LIFT_CLOSE + 0.1;
         }
-        if (gamepad2.left_trigger > 0.1){
-            if (robot.leftLiftServo.getPosition() >= 0.95 || robot.rightLiftServo.getPosition() >= 0.8){
-                robot.leftLiftServo.setPosition(0.95);
-                robot.rightLiftServo.setPosition(0.8);
-            }
-            else{
-                robot.leftLiftServo.setPosition(robot.leftLiftServo.getPosition() + 0.01);
-                robot.rightLiftServo.setPosition(robot.rightLiftServo.getPosition() + 0.01);
-            }
-        }
-        if (gamepad2.right_trigger > 0.1){
-            if (robot.leftLiftServo.getPosition() <= 0.2 || robot.rightLiftServo.getPosition() <= 0.01){
-                robot.leftLiftServo.setPosition(0.2);
-                robot.rightLiftServo.setPosition(0.01);
-            }
-            else{
-                robot.leftLiftServo.setPosition(robot.leftLiftServo.getPosition() - 0.01);
-                robot.rightLiftServo.setPosition(robot.rightLiftServo.getPosition() - 0.01);
-            }
+        if(clawStage == 3){
+            clawPosLeft = LEFT_LIFT_OPEN;
+            clawPosRight = LEFT_LIFT_OPEN;
         }
 
-        if(gamepad2.a){
-            robot.jewelServo.setPosition(0);
+        if (gamepad2.left_trigger > 0.1 && robot.leftLiftServo.getPosition() <= 0.95 && robot.rightLiftServo.getPosition() < 0.8){
+            clawPosLeft -= gamepad2.left_trigger / 40;
+            clawPosRight -= gamepad2.left_trigger / 40;
+        }
+        if (gamepad2.right_trigger > 0.1 && robot.leftLiftServo.getPosition() >= 0.2 && robot.rightLiftServo.getPosition() >= 0.01){
+            clawPosLeft += gamepad2.right_trigger / 40;
+            clawPosRight += gamepad2.right_trigger / 40;
         }
 
+        robot.leftLiftServo.setPosition(clawPosLeft);
+        robot.rightLiftServo.setPosition(clawPosRight);
+
+        if(gamepad2.a){robot.jewelServo.setPosition(0);}
+        if(gamepad2.b){robot.jewelServo.setPosition(1);}
     }
-
+    
     @Override
     public void stop()
     {
