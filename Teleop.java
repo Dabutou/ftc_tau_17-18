@@ -34,16 +34,11 @@ public class Teleop extends OpMode {
     private double maxPOWER = 0;
     private final double triggerConstant = 0.75;
     private final double maxPOWERConstant = 0.8;
-    private double Lift_POS = 0;
-    //private double rightGP1 = 0; -- figure out something to do with right stick
     private boolean speedToggle = true;
     private double speedToggleMultiplier = 0.6; // Between 0.25 and 0.85
     private double endTimeB = 0;
     private double endTimeS = 0;
     private double endTimeX = 0;
-    private double result = 0;
-    private double tempX = 0;
-    private double tempTrig = 0;
     private double length = 0;
     private double initAngle = 0;
     private double angle = 0;
@@ -72,7 +67,7 @@ public class Teleop extends OpMode {
     public void init()
     {
         telemetry.addData("Readiness", "NOT READY TO START, PLEASE WAIT");
-        telemetry.update();
+        updateTelemetry(telemetry);
 
         robot.initTeleOp(hardwareMap);
 
@@ -111,10 +106,10 @@ public class Teleop extends OpMode {
         leftGP1X = gamepad1.left_stick_x;
 
         //Remove slight touches
-        if(Math.abs(leftGP1Y) < 0.35) {
+        if(Math.abs(leftGP1Y) < 0.40) {
             leftGP1Y = 0;
         }
-        if(Math.abs(leftGP1X) < 0.35) {
+        if(Math.abs(leftGP1X) < 0.40) {
             leftGP1X = 0;
         }
 
@@ -127,7 +122,13 @@ public class Teleop extends OpMode {
                     initAngle = 0;
                 }
                 else{
-                    initAngle = Math.toRadians(180);
+                    if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > 0){
+                        initAngle = Math.toRadians(180);
+                    }
+                    else{
+                        initAngle = Math.toRadians(-180);
+                    }
+
                 }
             }
             else if (leftGP1Y == 0){
@@ -145,7 +146,7 @@ public class Teleop extends OpMode {
             angle = initAngle - Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-Math.toRadians(90);
 
             leftGP1X = length*Math.cos(angle);
-            leftGP1Y = length*Math.sin(angle);
+            leftGP1Y = -length*Math.sin(angle);
 
 
         }
@@ -274,29 +275,11 @@ public class Teleop extends OpMode {
             leftGP1Y = 0;
         }
         //Limit extension of lift
-        //liftLevel = robot.leftLiftMotor.getCurrentPosition();
-        //upward
-        if (leftGP2Y > 0) {
-            robot.leftLiftMotor.setPower(0.6 * leftGP2Y);
-            robot.rightLiftMotor.setPower(0.3 * leftGP2Y);
-            robot.leftLiftMotor.setTargetPosition(5000);
-            robot.rightLiftMotor.setTargetPosition(5000);
 
-        }
-        //downward
-        else if (leftGP2Y < 0){
-            robot.leftLiftMotor.setPower(0.6 * leftGP2Y);
-            robot.rightLiftMotor.setPower(0.3 * leftGP2Y);
-            robot.leftLiftMotor.setTargetPosition(0);
-            robot.rightLiftMotor.setTargetPosition(0);
+        robot.leftLiftMotor.setPower(0.3 * leftGP2Y);
+        robot.rightLiftMotor.setPower(0.3 * leftGP2Y);
 
-        }
-        else{
-            robot.leftLiftMotor.setPower(0);
-            robot.rightLiftMotor.setPower(0);
-            robot.leftLiftMotor.setTargetPosition(robot.leftLiftMotor.getCurrentPosition());
-            robot.rightLiftMotor.setTargetPosition(robot.rightLiftMotor.getCurrentPosition());
-        }
+
         //Open and close claw servos
         if (gamepad2.left_bumper){
             robot.leftLiftServo.setPosition(LEFT_LIFT_OPEN);

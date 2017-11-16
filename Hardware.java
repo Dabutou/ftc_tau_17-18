@@ -219,6 +219,7 @@ public class Hardware {
         // Initialize servos
         leftLiftServo.scaleRange(0,1);
         rightLiftServo.scaleRange(0,0.9);
+        jewelServo.scaleRange(0,0.65);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);

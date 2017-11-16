@@ -105,7 +105,7 @@ public class HardwareNL {
         jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        jewelServo.scaleRange(0,0.6);
+        jewelServo.scaleRange(0,0.65);
         jewelServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setPosition(0);
 
@@ -166,20 +166,17 @@ public class HardwareNL {
         backRightMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
         jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        jewelServo.scaleRange(0,0.6);
+        jewelServo.scaleRange(0,0.65);
         jewelServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setPosition(0);
 

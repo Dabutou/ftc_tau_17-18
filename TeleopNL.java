@@ -24,12 +24,8 @@ public class TeleopNL extends OpMode {
 
     HardwareNL robot = new HardwareNL();
 
-    //PRE-GYRO
-    //---------------------------------------------------------------****
-    //PRE-GYRO
-
     //Drive Variables
-
+    private BNO055IMU imu;
     private double leftGP1Y = 0;
     private double leftGP1X = 0;
     private double frontleftPOWER = 0;
@@ -39,23 +35,17 @@ public class TeleopNL extends OpMode {
     private double maxPOWER = 0;
     private final double triggerConstant = 0.75;
     private final double maxPOWERConstant = 0.8;
-    private double Lift_POS = 0;
-    //private double rightGP1 = 0; -- figure out something to do with right stick
     private boolean speedToggle = true;
     private double speedToggleMultiplier = 0.6; // Between 0.25 and 0.85
-    private double startTimeB = 0;
     private double endTimeB = 0;
-    private double startTimeS = 0;
     private double endTimeS = 0;
+    private double endTimeX = 0;
+    private double length = 0;
+    private double initAngle = 0;
+    private double angle = 0;
+    private boolean absoluteDrive = false;
 
     //Lift Variables
-
-    private static final double LEFT_LIFT_OPEN = 0;
-    private static final double LEFT_LIFT_CLOSE = 1;
-    private static final double RIGHT_LIFT_OPEN = 1;
-    private static final double RIGHT_LIFT_CLOSE = 0;
-    private double leftGP2Y = 0;
-    private double liftLevel = 750;
 
 
     /*
@@ -70,13 +60,14 @@ public class TeleopNL extends OpMode {
     public void init()
     {
         telemetry.addData("Readiness", "NOT READY TO START, PLEASE WAIT");
-        telemetry.update();
+        updateTelemetry(telemetry);
 
         robot.initTeleOp(hardwareMap);
 
         // Set up our telemetry dashboard
         telemetry.addData("Readiness", "Press Play to start");
         telemetry.addData("If you notice this", "You are COOL!!!");
+        imu = robot.getImu();
         updateTelemetry(telemetry);
     }
 
@@ -104,22 +95,73 @@ public class TeleopNL extends OpMode {
 
         //Read controller input
         //Left and right are opposite; front and back are same
-        leftGP1Y = gamepad1.left_stick_y;
+        leftGP1Y = -gamepad1.left_stick_y;
         leftGP1X = gamepad1.left_stick_x;
 
         //Remove slight touches
-        if(Math.abs(leftGP1Y) < 0.25) {
-            leftGP1Y = 0.0;
+        if(Math.abs(leftGP1Y) < 0.15) {
+            leftGP1Y = 0;
         }
-        if(Math.abs(leftGP1X) < 0.25) {
-            leftGP1X = 0.0;
+        if(Math.abs(leftGP1X) < 0.15) {
+            leftGP1X = 0;
+        }
+
+        //Check if absolute drive is on
+        if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
+
+            length = Math.sqrt(Math.pow(leftGP1X,2) + Math.pow(leftGP1Y,2));
+            if (leftGP1X == 0) {
+                if (leftGP1Y > 0){
+                    initAngle = 0;
+                }
+                else{
+                    if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > 0){
+                        initAngle = Math.toRadians(-180);
+                    }
+                    else{
+                        initAngle = Math.toRadians(180);
+                    }
+
+                }
+            }
+            else if (leftGP1Y == 0){
+                if (leftGP1X > 0){
+                    initAngle = Math.toRadians(90);
+                }
+                else{
+                    initAngle = Math.toRadians(-90);
+                }
+            }
+            else{
+                if (leftGP1Y > 0) {
+                    initAngle = Math.atan(leftGP1Y / leftGP1X);
+                }
+                else{
+                    if (leftGP1X > 0){
+                        initAngle = Math.atan(leftGP1Y / leftGP1X) + Math.toRadians(180);
+                    }
+                    else{
+                        initAngle = Math.atan(leftGP1Y / leftGP1X) - Math.toRadians(180);
+                    }
+                }
+
+            }
+
+            angle = initAngle + Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+            telemetry.addData("Angles","Joystick: " + leftGP1X +  " : " + leftGP1Y + "; imu: " + Math.toRadians(imu.getAngularOrientation().firstAngle) + " & " + imu.getAngularOrientation().firstAngle);
+            telemetry.addData("Length", "" + length);
+            leftGP1X = length*Math.sin(angle);
+            leftGP1Y = length*Math.cos(angle);
+            telemetry.addData("NewJoyStick",leftGP1X + " : " + leftGP1Y);
+
+
         }
 
         //Assign power to each motor based on X and Y vectors
-        backleftPOWER = -(leftGP1Y + leftGP1X);
-        backrightPOWER = (leftGP1Y - leftGP1X);
-        frontleftPOWER = -(leftGP1Y - leftGP1X);
-        frontrightPOWER = (leftGP1Y + leftGP1X);
+        backleftPOWER = leftGP1Y - leftGP1X;
+        backrightPOWER = -leftGP1Y - leftGP1X;
+        frontleftPOWER = leftGP1Y + leftGP1X;
+        frontrightPOWER = -leftGP1Y + leftGP1X;
 
         //Turning
         if (gamepad1.left_trigger > 0.05){
@@ -160,18 +202,32 @@ public class TeleopNL extends OpMode {
 
         //Speed Toggle
         if (gamepad1.b && (endTimeB == 0 || robot.getTime() >= endTimeB)) {
-            startTimeB = robot.getTime();
-            endTimeB = startTimeB + 0.1;
+            endTimeB = robot.getTime() + 0.1;
             speedToggle = !speedToggle;
         }
 
-
-        if (speedToggle){
-            telemetry.addData("Mode:", "Full Speed ahead!");
+        if (gamepad1.x && (endTimeX == 0 || robot.getTime() >= endTimeX)) {
+            endTimeX = robot.getTime() + 0.2;
+            absoluteDrive = !absoluteDrive;
+        }
+        if (speedToggle && absoluteDrive){
+            telemetry.addData("SpeedMode:", "Full Speed ahead!");
+            telemetry.addData("DriveMode:", "Absolute Drive");
+            updateTelemetry(telemetry);
+        }
+        else if(speedToggle && !absoluteDrive){
+            telemetry.addData("SpeedMode:", "Full Speed ahead!");
+            telemetry.addData("DriveMode:", "Regular Drive");
+            updateTelemetry(telemetry);
+        }
+        else if (!speedToggle && absoluteDrive){
+            telemetry.addData("SpeedMode:", "Speed Multiplier: " + speedToggleMultiplier);
+            telemetry.addData("DriveMode:", "Absolute Drive");
             updateTelemetry(telemetry);
         }
         else{
-            telemetry.addData("Mode:", "Speed Multiplier: " + speedToggleMultiplier);
+            telemetry.addData("SpeedMode:", "Speed Multiplier: " + speedToggleMultiplier);
+            telemetry.addData("DriveMode:", "Regular Drive");
             updateTelemetry(telemetry);
         }
 
@@ -184,27 +240,15 @@ public class TeleopNL extends OpMode {
         if (gamepad1.left_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS))
         {
             if (speedToggleMultiplier > 0.25){
-                startTimeS = robot.getTime();
-                endTimeS = startTimeS + 0.09;
+                endTimeS = robot.getTime() + 0.09;
                 speedToggleMultiplier = speedToggleMultiplier - 0.1;
             }
         }
         if (gamepad1.right_bumper && !speedToggle && (endTimeS == 0 || robot.getTime() >= endTimeS)) {
             if (speedToggleMultiplier < 0.95) {
-                startTimeS = robot.getTime();
-                endTimeS = startTimeS + 0.09;
+                endTimeS = robot.getTime() + 0.09;
                 speedToggleMultiplier = speedToggleMultiplier + 0.1;
             }
-        }
-
-        if (gamepad1.x){
-            BNO055IMU imu = robot.getImu();
-            telemetry.addData("FIRST_ANGLE",""+imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-            telemetry.addData("FrontLeft", robot.frontLeftMotor.getCurrentPosition());
-            telemetry.addData("FrontRight", robot.frontRightMotor.getCurrentPosition());
-            telemetry.addData("BackLeft", robot.backLeftMotor.getCurrentPosition());
-            telemetry.addData("BackRight", robot.backRightMotor.getCurrentPosition());
-            updateTelemetry(telemetry);
         }
 
 
