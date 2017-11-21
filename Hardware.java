@@ -128,12 +128,12 @@ public class Hardware {
         // Initialize servos
         leftLiftServo.scaleRange(0,1);
         rightLiftServo.scaleRange(0,0.9);
-        jewelServo.scaleRange(0,0.65);
+        jewelServo.scaleRange(0,0.70);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(0.85);
+        leftLiftServo.setPosition(0.2);
+        rightLiftServo.setPosition(0);
         jewelServo.setPosition(0);
 
         // Define sensors
@@ -219,12 +219,12 @@ public class Hardware {
         // Initialize servos
         leftLiftServo.scaleRange(0,1);
         rightLiftServo.scaleRange(0,0.9);
-        jewelServo.scaleRange(0,0.65);
+        jewelServo.scaleRange(0,0.70);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(0.85);
+        leftLiftServo.setPosition(0.2);
+        rightLiftServo.setPosition(0);
         jewelServo.setPosition(0);
         // Define sensors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

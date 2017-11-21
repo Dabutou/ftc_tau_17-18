@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 /**
  * Created by LH on 11/8/2017.
  */
-
+@Autonomous(name = "Auto Blue Left Middle Glyph", group = "Tau")
+//@Disable
 public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -14,7 +17,7 @@ public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
         closeClaw();
         getLiftPosition();
         lowerJewelServo();
-        sleepTau(1500);
+        sleepTau(1750);
         raiseLiftSlightly();
         if (getColor() == 10){
             turnDegree(0.5,30);
@@ -24,6 +27,7 @@ public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
         }
         else{
             raiseJewelServoSlightly();
+            sleepTau(150);
             if (getColor() == 10){
                 turnDegree(0.5,30);
             }
@@ -53,22 +57,22 @@ public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
         if(vuValue.equals("CENTER")) {
             telemetry.addData("VuMark", "CENTER");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7, 0.65);
+            driveForwardStraightDISTANCE(0.7, 0.60);
         }
         else if(vuValue.equals("LEFT")){
             telemetry.addData("VuMark", "LEFT");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,1);
+            driveForwardStraightDISTANCE(0.7,0.92);
         }
         else if(vuValue.equals("RIGHT")){
             telemetry.addData("VuMark", "RIGHT");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.3);
+            driveForwardStraightDISTANCE(0.7,0.31);
         }
         else {
             telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.65);
+            driveForwardStraightDISTANCE(0.7,0.60);
         }
         sleepTau(1500);
         turnToDegree(1,90.0);
@@ -76,13 +80,13 @@ public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
         openClaw();
         sleepTau(150);
         driveBackwardStraightDISTANCE(0.5,0.3);
-        sleepTau(500);
+        sleepTau(700);
         lowerLiftSlightly();
         sleepTau(150);
-        driveForwardStraightDISTANCE(0.5,0.55);
-        sleepTau(1200);
-        driveBackwardStraightDISTANCE(0.5,0.25);
-        sleepTau(750);
+        driveForwardStraightDISTANCE(0.5,0.63);
+        sleepTau(1500);
+        driveBackwardStraightDISTANCE(0.5,0.30);
+        sleepTau(850);
         turnToDegree(1,-90);
         sleepTau(750);
         driveBackwardStraightDISTANCE(0.5,0.1);

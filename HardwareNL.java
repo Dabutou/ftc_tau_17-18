@@ -105,7 +105,7 @@ public class HardwareNL {
         jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        jewelServo.scaleRange(0,0.65);
+        jewelServo.scaleRange(0,0.70);
         jewelServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setPosition(0);
 
@@ -176,7 +176,7 @@ public class HardwareNL {
         jewelServo = hwMap.servo.get("jewel_servo");
 
         // Initialize servos
-        jewelServo.scaleRange(0,0.65);
+        jewelServo.scaleRange(0,0.70);
         jewelServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setPosition(0);
 
