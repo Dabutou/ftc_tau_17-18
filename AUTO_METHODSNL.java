@@ -45,12 +45,11 @@ class AUTO_METHODSNL extends LinearOpMode{
     private final int distancetoBlock = 990;
     private double vuMarkEnd = 0;
     private boolean doneOnce = false;
-
+    private double jewelEnd = 0;
 
     public AUTO_METHODSNL(){}
 
 
-    //private void initialize(){robot.init(hardwareMap);}
 
     public void runOpMode() throws InterruptedException{}
 
@@ -205,15 +204,15 @@ class AUTO_METHODSNL extends LinearOpMode{
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
 
-    public String getVu(){
+    public String leftGetVu(){
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        vuMarkEnd = robot.getTime() + 5;
+        vuMarkEnd = robot.getTime() + 4;
         while(vuMarkEnd > robot.getTime()) {
             if(vumark != RelicRecoveryVuMark.UNKNOWN) {
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.1,25);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.08,30);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -232,6 +231,21 @@ class AUTO_METHODSNL extends LinearOpMode{
     public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.95);}
     public void raiseJewelServo(){
         robot.jewelServo.setPosition(0);
+    }
+
+    public int getJewel(){
+        jewelEnd = robot.getTime() + 3;
+        int jewelValue = 0;
+        while(jewelEnd > robot.getTime() && robot.jewelServo.getPosition() > 0.9) {
+            jewelValue = getColor();
+            if(jewelValue == 3 || jewelValue == 10) {
+                return jewelValue;
+            }
+            else{
+                robot.jewelServo.setPosition(robot.jewelServo.getPosition() - 0.001);
+            }
+        }
+        return 69;
     }
 
     public void readEncoders(){

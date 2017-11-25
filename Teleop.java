@@ -48,9 +48,9 @@ public class Teleop extends OpMode {
     //Lift Variables
 
     private static final double LEFT_LIFT_CLOSE = 0.95;
-    private static final double LEFT_LIFT_OPEN = 0.2;
+    private static final double LEFT_LIFT_OPEN = 0.18;
     private static final double RIGHT_LIFT_CLOSE = 0.7;
-    private static final double RIGHT_LIFT_OPEN = 0;
+    private static final double RIGHT_LIFT_OPEN = 0.035;
     private double leftGP2Y = 0;
     private double endTime2B = 0;
     private int clawStage = 2;

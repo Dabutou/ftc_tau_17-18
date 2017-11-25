@@ -48,6 +48,7 @@ class AUTO_METHODS extends LinearOpMode{
     private final int blockHeight = -750;
     private double vuMarkEnd = 0;
     private boolean doneOnce = false;
+    private double jewelEnd = 0;
 
 
     public AUTO_METHODS(){}
@@ -198,7 +199,7 @@ class AUTO_METHODS extends LinearOpMode{
     public String leftGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        vuMarkEnd = robot.getTime() + 5;
+        vuMarkEnd = robot.getTime() + 4;
         while(vuMarkEnd > robot.getTime()) {
             if(vumark != RelicRecoveryVuMark.UNKNOWN) {
                 return "" + vumark;
@@ -226,8 +227,22 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void lowerLiftSlightly(){
         liftSpeed(0.45);
-        sleepTau(200);
+        sleepTau(248);
         liftSpeed(0);
+    }
+    public void autoReposition(String vuMark){
+        if (vuMark.equals("CENTER")){
+            driveForwardStraightDISTANCE(0.5,0.05);
+        }
+        else if (vuMark.equals("LEFT")){
+            driveNEStraightDISTANCE(0.5,0.05);
+        }
+        else if (vuMark.equals("RIGHT")){
+            driveNWStraightDISTANCE(0.5,0.05);
+        }
+        else{
+            driveForwardStraightDISTANCE(0.5,0.05);
+        }
     }
    /* public void setLiftStage1(double speed){
         liftSpeed(speed);
@@ -270,14 +285,29 @@ class AUTO_METHODS extends LinearOpMode{
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(0.2);
-        robot.rightLiftServo.setPosition(0);
+        robot.leftLiftServo.setPosition(0.18);
+        robot.rightLiftServo.setPosition(0.035);
     }
 
     public void closeClaw(){
         robot.leftLiftServo.setPosition(0.95);
         robot.rightLiftServo.setPosition(0.8);
     }
+    public int getJewel(){
+        jewelEnd = robot.getTime() + 3;
+        int jewelValue = 0;
+        while(jewelEnd > robot.getTime() && robot.jewelServo.getPosition() > 0.9) {
+            jewelValue = getColor();
+            if(jewelValue == 3 || jewelValue == 10) {
+                return jewelValue;
+            }
+            else{
+                robot.jewelServo.setPosition(robot.jewelServo.getPosition() - 0.001);
+            }
+        }
+        return 69;
+    }
+
     public void lowerJewelServo(){
         robot.jewelServo.setPosition(1);
     }

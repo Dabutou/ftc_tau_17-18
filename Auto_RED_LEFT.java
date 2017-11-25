@@ -43,41 +43,38 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
     @Override
     public void runOpMode() throws InterruptedException {
         String vuValue = "";
+        int jewelValue = 0;
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
         closeClaw();
         getLiftPosition();
         lowerJewelServo();
-        sleepTau(1750);
+        sleepTau(1500);
         raiseLiftSlightly();
-        if (getColor() == 3){
+        jewelValue = getJewel();
+        if (jewelValue == 3){
             turnDegree(0.5,30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.5);
+            sleepTau(500);
         }
-        else if(getColor() == 10){
+        else if(jewelValue == 10){
             turnDegree(0.5,-30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.5);
+            sleepTau(500);
         }
         else{
-            raiseJewelServoSlightly();
-            sleepTau(150);
-            if (getColor() == 3){
-                turnDegree(0.5,30);
-            }
-            else if(getColor() == 10){
-                turnDegree(0.5,-30);
-            }
-            else{
-                telemetry.addData("Jewel", "Unknown");
-                updateTelemetry(telemetry);
-            }
-
+            telemetry.addData("Jewel", "Unknown");
+            updateTelemetry(telemetry);
+            raiseJewelServo();
+            sleepTau(450);
         }
-        sleepTau(1500);
-
-        raiseJewelServo();
-        sleepTau(150);
-        realign(0.5);
-        sleepTau(500);
         driveForwardStraightDISTANCE(0.7,0.8);
         sleepTau(1500);
         realign(0.5);
@@ -94,7 +91,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         else if(vuValue.equals("LEFT")){
             telemetry.addData("VuMark", "LEFT");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.92);
+            driveForwardStraightDISTANCE(0.7,0.89);
         }
         else if(vuValue.equals("RIGHT")){
             telemetry.addData("VuMark", "RIGHT");
@@ -104,7 +101,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         else {
             telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
             updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.60);
+            driveForwardStraightDISTANCE(0.7,0.89);
         }
         sleepTau(1500);
         turnToDegree(1,90.0);
@@ -122,7 +119,9 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         turnToDegree(1,-90);
         sleepTau(750);
         driveBackwardStraightDISTANCE(0.5,0.1);
-        sleep(1500);
+        sleepTau(700);
+        autoReposition(vuValue);
+        sleepTau(1500);
 
 
 
