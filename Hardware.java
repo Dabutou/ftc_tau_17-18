@@ -225,7 +225,7 @@ public class Hardware {
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
         leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(1);
+        rightLiftServo.setPosition(0.76);
         jewelServo.setPosition(0);
         // Define sensors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
