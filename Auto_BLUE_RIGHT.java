@@ -36,95 +36,48 @@ import java.util.Locale;
  */
 
 @Autonomous(name = "Auto Blue Right", group = "Tau")
-//@Disabled
+@Disabled
 public class Auto_BLUE_RIGHT extends AUTO_METHODS{
-
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //rough draft
 
-        String vuValue = "";
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
         closeClaw();
-        getLiftPosition();
         lowerJewelServo();
         sleepTau(1000);
-        raiseLiftSlightly();
-        sleepTau(100);
         if (getColor() == 10){
-            turnDegree(0.5,30);
+            turnDegree(1,30);
         }
         else if(getColor() == 3){
-            turnDegree(0.5,-30);
+            turnDegree(1,-30);
         }
         else{
             raiseJewelServoSlightly();
             if (getColor() == 10){
-                turnDegree(0.5,30);
+                turnDegree(1,30);
             }
             else if(getColor() == 3){
-                turnDegree(0.5,-30);
-            }
-            else{
-                telemetry.addData("Jewel", "Unknown");
-                updateTelemetry(telemetry);
+                turnDegree(1,-30);
             }
 
         }
         sleepTau(3000);
-
         raiseJewelServo();
         sleepTau(500);
-        realign(0.5);
+        realign(1);
         sleepTau(1000);
-        //driveForwardStraightDISTANCE(0.7,0.8);
-        turnDegree(0.25, 15);
+        driveLeftStraightDISTANCE(0.7,0.5);
+        sleepTau(3000);
+        driveForwardStraightDISTANCE(0.7,1);
         sleepTau(1000);
-        //fix getVu para right/left
-        vuValue = getVu();
-        sleepTau(1000);
-        realign(0.5);
-        sleepTau(500);
-        turnDegree(0.5,180);
-        sleepTau(2000);
-        if(vuValue.equals("CENTER")) {
-            telemetry.addData("VuMark", "CENTER");
-            updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7, 0.85);
-        }
-        else if(vuValue.equals("LEFT")){
-            telemetry.addData("VuMark", "LEFT");
-            updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.55);
-        }
-        else if(vuValue.equals("RIGHT")){
-            telemetry.addData("VuMark", "RIGHT");
-            updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,1.2);
-        }
-        else {
-            telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
-            updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.85);
-        }
-        sleepTau(2500);
-        turnToDegree(1, 90.0);
-        sleepTau(1500);
         openClaw();
-        sleepTau(250);
-        driveBackwardStraightDISTANCE(0.5,0.3);
         sleepTau(1500);
-        lowerLiftSlightly();
-        sleepTau(250);
-        driveForwardStraightDISTANCE(0.5,1);
-        sleepTau(2500);
 
 
 
     }
-
 
 }

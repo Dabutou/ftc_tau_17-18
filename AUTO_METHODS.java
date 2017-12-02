@@ -230,18 +230,28 @@ class AUTO_METHODS extends LinearOpMode{
         sleepTau(248);
         liftSpeed(0);
     }
+    public void raiseLiftMoreSlightly(){
+        liftSpeed(-0.45);
+        sleepTau(500);
+        liftSpeed(0);
+    }
+    public void lowerLiftMoreSlightly(){
+        liftSpeed(0.45);
+        sleepTau(498);
+        liftSpeed(0);
+    }
     public void autoReposition(String vuMark){
         if (vuMark.equals("CENTER")){
-            driveForwardStraightDISTANCE(0.5,0.05);
+            driveForwardStraightDISTANCE(0.5,0.07);
         }
         else if (vuMark.equals("LEFT")){
-            driveNEStraightDISTANCE(0.5,0.05);
+            driveNEStraightDISTANCE(0.5,0.15);
         }
         else if (vuMark.equals("RIGHT")){
-            driveNWStraightDISTANCE(0.5,0.05);
+            driveNWStraightDISTANCE(0.5,0.15);
         }
         else{
-            driveForwardStraightDISTANCE(0.5,0.05);
+            driveForwardStraightDISTANCE(0.5,0.07);
         }
     }
    /* public void setLiftStage1(double speed){
@@ -285,13 +295,13 @@ class AUTO_METHODS extends LinearOpMode{
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(0.18);
-        robot.rightLiftServo.setPosition(0.035);
+        robot.leftLiftServo.setPosition(0.96);
+        robot.rightLiftServo.setPosition(0.72);
     }
 
     public void closeClaw(){
-        robot.leftLiftServo.setPosition(0.95);
-        robot.rightLiftServo.setPosition(0.8);
+        robot.leftLiftServo.setPosition(0.27);
+        robot.rightLiftServo.setPosition(0);
     }
     public int getJewel(){
         jewelEnd = robot.getTime() + 3;

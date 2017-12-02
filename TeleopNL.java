@@ -110,28 +110,8 @@ public class TeleopNL extends OpMode {
         if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
 
             length = Math.sqrt(Math.pow(leftGP1X,2) + Math.pow(leftGP1Y,2));
-            if (leftGP1X == 0) {
-                if (leftGP1Y > 0){
-                    initAngle = 0;
-                }
-                else{
-                    if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > 0){
-                        initAngle = Math.toRadians(-180);
-                    }
-                    else{
-                        initAngle = Math.toRadians(180);
-                    }
-
-                }
-            }
-            else if (leftGP1Y == 0){
-                if (leftGP1X > 0){
-                    initAngle = Math.toRadians(90);
-                }
-                else{
-                    initAngle = Math.toRadians(-90);
-                }
-            }
+            if (leftGP1X == 0) {if (leftGP1Y > 0){initAngle = 0;} else{if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > 0){initAngle = Math.toRadians(-180);} else{initAngle = Math.toRadians(180);}}}
+            else if (leftGP1Y == 0){if (leftGP1X > 0){initAngle = Math.toRadians(90);} else{initAngle = Math.toRadians(-90);}}
             else{
                 if (leftGP1Y > 0) {
                     initAngle = Math.atan(leftGP1Y / leftGP1X);

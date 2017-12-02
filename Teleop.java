@@ -47,13 +47,15 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
-    private static final double LEFT_LIFT_CLOSE = 0.95;
-    private static final double LEFT_LIFT_OPEN = 0.18;
-    private static final double RIGHT_LIFT_CLOSE = 0.7;
-    private static final double RIGHT_LIFT_OPEN = 0.035;
+    private static final double LEFT_LIFT_OPEN = 0.96;
+    private static final double LEFT_LIFT_CLOSE = 0.27;
+    private static final double RIGHT_LIFT_OPEN = 0.72;
+    private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
-    private double endTime2B = 0;
-    private int clawStage = 2;
+    private double leftLiftPos = LEFT_LIFT_OPEN;
+    private double rightLiftPos = RIGHT_LIFT_OPEN;
+    //private double endTime2B = 0;
+    //private int clawStage = 2;
 
 
 
@@ -116,6 +118,7 @@ public class Teleop extends OpMode {
         }
 
         //Check if absolute drive is on
+        //Check if absolute drive is on
         if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
 
             length = Math.sqrt(Math.pow(leftGP1X,2) + Math.pow(leftGP1Y,2));
@@ -125,10 +128,10 @@ public class Teleop extends OpMode {
                 }
                 else{
                     if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > 0){
-                        initAngle = Math.toRadians(180);
+                        initAngle = Math.toRadians(-180);
                     }
                     else{
-                        initAngle = Math.toRadians(-180);
+                        initAngle = Math.toRadians(180);
                     }
 
                 }
@@ -142,13 +145,26 @@ public class Teleop extends OpMode {
                 }
             }
             else{
-                initAngle = Math.atan(leftGP1Y / leftGP1X);
+                if (leftGP1Y > 0) {
+                    initAngle = Math.atan(leftGP1Y / leftGP1X);
+                }
+                else{
+                    if (leftGP1X > 0){
+                        initAngle = Math.atan(leftGP1Y / leftGP1X) + Math.toRadians(180);
+                    }
+                    else{
+                        initAngle = Math.atan(leftGP1Y / leftGP1X) - Math.toRadians(180);
+                    }
+                }
+
             }
 
-            angle = initAngle - Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle)-Math.toRadians(90);
-
-            leftGP1X = length*Math.cos(angle);
-            leftGP1Y = -length*Math.sin(angle);
+            angle = initAngle + Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+            telemetry.addData("Angles","Joystick: " + leftGP1X +  " : " + leftGP1Y + "; imu: " + Math.toRadians(imu.getAngularOrientation().firstAngle) + " & " + imu.getAngularOrientation().firstAngle);
+            telemetry.addData("Length", "" + length);
+            leftGP1X = length*Math.sin(angle);
+            leftGP1Y = length*Math.cos(angle);
+            telemetry.addData("NewJoyStick",leftGP1X + " : " + leftGP1Y);
 
 
         }
@@ -203,7 +219,7 @@ public class Teleop extends OpMode {
         }
 
         if (gamepad1.x && (endTimeX == 0 || robot.getTime() >= endTimeX)) {
-            endTimeX = robot.getTime() + 0.2;
+            endTimeX = robot.getTime() + 0.25;
             absoluteDrive = !absoluteDrive;
         }
         if (speedToggle && absoluteDrive){
@@ -282,8 +298,16 @@ public class Teleop extends OpMode {
         robot.rightLiftMotor.setPower(0.45 * leftGP2Y);
 
 
+        if (gamepad2.left_bumper){
+            leftLiftPos = LEFT_LIFT_CLOSE;
+            rightLiftPos = RIGHT_LIFT_CLOSE;
+        }
+        if (gamepad2.right_bumper){
+            leftLiftPos = LEFT_LIFT_OPEN;
+            rightLiftPos = RIGHT_LIFT_OPEN;
+        }
         //Open and close claw servos
-        if (gamepad2.left_bumper && clawStage < 3 && (endTime2B == 0 || robot.getTime() >= endTime2B)) {
+        /*if (gamepad2.left_bumper && clawStage < 3 && (endTime2B == 0 || robot.getTime() >= endTime2B)) {
             endTime2B = robot.getTime() + 0.15;
             clawStage++;
             clawStage %= 3;
@@ -312,63 +336,31 @@ public class Teleop extends OpMode {
         else{
             telemetry.addData("CLAW STAGE","OUT OF BOUNDS: " + clawStage);
             updateTelemetry(telemetry);
-        }
+        }*/
 
         //Slight Adjust of CLAW
         if (gamepad2.left_trigger > 0.1){
-            if (robot.leftLiftServo.getPosition() >= 0.95 || robot.rightLiftServo.getPosition() >= 0.8){
-                robot.leftLiftServo.setPosition(0.95);
-                robot.rightLiftServo.setPosition(0.8);
+            if (robot.leftLiftServo.getPosition() <= LEFT_LIFT_CLOSE || robot.rightLiftServo.getPosition() <= RIGHT_LIFT_CLOSE){
+                leftLiftPos = LEFT_LIFT_CLOSE;
+                rightLiftPos = RIGHT_LIFT_CLOSE;
             }
             else{
-                robot.leftLiftServo.setPosition(robot.leftLiftServo.getPosition() + 0.01);
-                robot.rightLiftServo.setPosition(robot.rightLiftServo.getPosition() + 0.01);
+                leftLiftPos -= 0.015;
+                rightLiftPos -= 0.015;
             }
         }
         if (gamepad2.right_trigger > 0.1){
-            if (robot.leftLiftServo.getPosition() <= 0.2 || robot.rightLiftServo.getPosition() <= 0.01){
-                robot.leftLiftServo.setPosition(0.2);
-                robot.rightLiftServo.setPosition(0.01);
+            if (robot.leftLiftServo.getPosition() >= LEFT_LIFT_OPEN || robot.rightLiftServo.getPosition() >= RIGHT_LIFT_OPEN){
+                leftLiftPos = LEFT_LIFT_OPEN;
+                rightLiftPos = RIGHT_LIFT_OPEN;
             }
             else{
-                robot.leftLiftServo.setPosition(robot.leftLiftServo.getPosition() - 0.01);
-                robot.rightLiftServo.setPosition(robot.rightLiftServo.getPosition() - 0.01);
+                leftLiftPos += 0.015;
+                rightLiftPos += 0.015;
             }
         }
-
-        //Open and close claw servos
-        /*if(gamepad1.right_bumper && clawStage > 1){clawStage--;}
-        if(gamepad1.left_bumper && clawStage < 3){clawStage++;}
-
-        if(clawStage == 1){
-            clawPosLeft = LEFT_LIFT_CLOSE;
-            clawPosRight = RIGHT_LIFT_CLOSE;
-
-        }
-        else if(clawStage == 2){
-            clawPosLeft = LEFT_LIFT_CLOSE + 0.15;
-            clawPosRight = RIGHT_LIFT_CLOSE + 0.15;
-        }
-        else if(clawStage == 3){
-            clawPosLeft = LEFT_LIFT_OPEN;
-            clawPosRight = LEFT_LIFT_OPEN;
-        }
-        else{
-            telemetry.addData("Mark","URBBADADADAD");
-            updateTelemetry(telemetry);
-        }
-
-        if (gamepad2.left_trigger > 0.1 && robot.leftLiftServo.getPosition() < 0.95 && robot.rightLiftServo.getPosition() < 0.8){
-            clawPosLeft += gamepad2.left_trigger / 40;
-            clawPosRight += gamepad2.left_trigger / 40;
-        }
-        if (gamepad2.right_trigger > 0.1 && robot.leftLiftServo.getPosition() > 0.2 && robot.rightLiftServo.getPosition() >= 0.01){
-            clawPosLeft -= gamepad2.right_trigger / 40;
-            clawPosRight -= gamepad2.right_trigger / 40;
-        }
-
-        robot.leftLiftServo.setPosition(clawPosLeft);
-        robot.rightLiftServo.setPosition(clawPosRight);*/
+        robot.leftLiftServo.setPosition(leftLiftPos);
+        robot.rightLiftServo.setPosition(rightLiftPos);
 
         if(gamepad2.y){robot.jewelServo.setPosition(0);}
         if(gamepad2.a){robot.jewelServo.setPosition(1);}

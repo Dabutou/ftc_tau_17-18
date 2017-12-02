@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+
 /**
  * Created by Lance He on 9/16/2017.
  */
@@ -127,13 +128,13 @@ public class Hardware {
 
         // Initialize servos
         leftLiftServo.scaleRange(0,1);
-        rightLiftServo.scaleRange(0.05,0.9);
+        rightLiftServo.scaleRange(0,1);
         jewelServo.scaleRange(0,0.70);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.18);
-        rightLiftServo.setPosition(0.035);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(0.76);
         jewelServo.setPosition(0);
 
         // Define sensors
@@ -218,13 +219,13 @@ public class Hardware {
 
         // Initialize servos
         leftLiftServo.scaleRange(0,1);
-        rightLiftServo.scaleRange(0.05,0.9);
+        rightLiftServo.scaleRange(0,1);
         jewelServo.scaleRange(0,0.70);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.18);
-        rightLiftServo.setPosition(0.035);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(1);
         jewelServo.setPosition(0);
         // Define sensors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
