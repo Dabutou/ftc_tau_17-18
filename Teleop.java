@@ -47,9 +47,9 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
-    private static final double LEFT_LIFT_OPEN = 0.96;
-    private static final double LEFT_LIFT_CLOSE = 0.27;
-    private static final double RIGHT_LIFT_OPEN = 0.72;
+    private static final double LEFT_LIFT_OPEN = 0.93;
+    private static final double LEFT_LIFT_CLOSE = 0.03;
+    private static final double RIGHT_LIFT_OPEN = 0.88;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
     private double leftLiftPos = LEFT_LIFT_OPEN;
@@ -267,12 +267,25 @@ public class Teleop extends OpMode {
         //Fast or precision movement
         if (speedToggle)
         {
-            robot.frontLeftMotor.setPower(frontleftPOWER * maxPOWERConstant);
-            robot.frontRightMotor.setPower(frontrightPOWER * maxPOWERConstant);
-            robot.backRightMotor.setPower(backrightPOWER * maxPOWERConstant);
-            robot.backLeftMotor.setPower(backleftPOWER * maxPOWERConstant);
-
-    }
+            if (gamepad1.a){
+                robot.frontLeftMotor.setPower(0.6*frontleftPOWER * maxPOWERConstant);
+                robot.frontRightMotor.setPower(0.6*frontrightPOWER * maxPOWERConstant);
+                robot.backRightMotor.setPower(0.6*backrightPOWER * maxPOWERConstant);
+                robot.backLeftMotor.setPower(0.6*backleftPOWER * maxPOWERConstant);
+            }
+            else if (gamepad1.y){
+                robot.frontLeftMotor.setPower(frontleftPOWER);
+                robot.frontRightMotor.setPower(frontrightPOWER);
+                robot.backRightMotor.setPower(backrightPOWER);
+                robot.backLeftMotor.setPower(backleftPOWER);
+            }
+            else {
+                robot.frontLeftMotor.setPower(frontleftPOWER * maxPOWERConstant);
+                robot.frontRightMotor.setPower(frontrightPOWER * maxPOWERConstant);
+                robot.backRightMotor.setPower(backrightPOWER * maxPOWERConstant);
+                robot.backLeftMotor.setPower(backleftPOWER * maxPOWERConstant);
+            }
+        }
         else
         {
             robot.frontLeftMotor.setPower(speedToggleMultiplier * (frontleftPOWER * maxPOWERConstant));
@@ -345,8 +358,8 @@ public class Teleop extends OpMode {
                 rightLiftPos = RIGHT_LIFT_CLOSE;
             }
             else{
-                leftLiftPos -= 0.015;
-                rightLiftPos -= 0.015;
+                leftLiftPos -= 0.025*gamepad2.left_trigger;
+                rightLiftPos -= 0.015*gamepad2.left_trigger;
             }
         }
         if (gamepad2.right_trigger > 0.1){
@@ -355,8 +368,8 @@ public class Teleop extends OpMode {
                 rightLiftPos = RIGHT_LIFT_OPEN;
             }
             else{
-                leftLiftPos += 0.015;
-                rightLiftPos += 0.015;
+                leftLiftPos += 0.015*gamepad2.right_trigger;
+                rightLiftPos += 0.015*gamepad2.right_trigger;
             }
         }
         robot.leftLiftServo.setPosition(leftLiftPos);
@@ -365,6 +378,10 @@ public class Teleop extends OpMode {
         if(gamepad2.y){robot.jewelServo.setPosition(0);}
         if(gamepad2.a){robot.jewelServo.setPosition(1);}
 
+        /*telemetry.addData("Left Servo", robot.leftLiftServo.getPosition());
+        telemetry.addData("Right Servo", robot.rightLiftServo.getPosition());
+        updateTelemetry(telemetry);
+        */
 
     }
 

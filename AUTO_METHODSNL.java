@@ -257,51 +257,51 @@ class AUTO_METHODSNL extends LinearOpMode{
     }
 
     public void driveForwardStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distancesr = (int)(distancetoBlock*distance);
         int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(distancesr,-distancesl,distancesl,-distancesr);
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distancesr = (int)(distancetoBlock*distance);
         int distancesl = (int)((distancetoBlock-13)*distance);
         setDistances(-distancesr,distancesl,-distancesl, distancesr);
         runDistances();
     }
     public void driveRightStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distances = (int)(distancetoBlock*distance);
         setDistances(distances,distances,-distances, -distances);
         runDistances();
     }
     public void driveLeftStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distances = (int)(distancetoBlock*distance);
         setDistances(-distances,-distances,distances, distances);
         runDistances();
     }
     public void driveNWStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distances = (int)(distancetoBlock*distance);
         setDistances(0,-distances,distances, 0);
         runDistances();
     }
     public void driveNEStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distances = (int)(distancetoBlock*distance);
         setDistances(distances,0,0, -distances);
         runDistances();
     }
     public void driveSEStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distances = (int)(distancetoBlock*distance);
         setDistances(0,distances,-distances, 0);
         runDistances();
     }
     public void driveSWStraightDISTANCE(double distance){
-        speed(0.6);
+        speed(0.7);
         int distances = (int)(distancetoBlock*distance);
         setDistances(-distances,0,0, distances);
         runDistances();

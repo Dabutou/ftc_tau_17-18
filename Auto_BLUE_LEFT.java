@@ -49,7 +49,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         closeClaw();
         getLiftPosition();
         lowerJewelServo();
-        sleepTau(1500);
+        sleepTau(1000);
         raiseLiftMoreSlightly();
         jewelValue = getJewel();
         if (jewelValue == 10){
@@ -58,7 +58,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(150);
             realign(0.5);
-            sleepTau(500);
+            sleepTau(1000);
         }
         else if(jewelValue == 3){
             turnDegree(0.5,-30);
@@ -66,7 +66,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(150);
             realign(0.5);
-            sleepTau(500);
+            sleepTau(1000);
         }
         else{
             telemetry.addData("Jewel", "Unknown");
@@ -74,47 +74,48 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(450);
         }
-        driveForwardStraightDISTANCE(0.7,0.8);
+        driveForwardStraightDISTANCE(0.97);
         sleepTau(1500);
         realign(0.5);
         sleepTau(200);
         vuValue = leftGetVu();
+        telemetry.addData("VuMark", vuValue);
+        updateTelemetry(telemetry);
         sleepTau(100);
-        realign(0.6);
-        sleepTau(700);
-        driveForwardStraightDISTANCE(0.7,0.1);
-        sleepTau(300);
-        driveLeftStraightDISTANCE(0.7, 0.95);
-        sleepTau(1500);
+        realign(0.5);
+        sleepTau(1000);
+        driveForwardStraightDISTANCE(0.08);
+        sleepTau(500);
+        driveLeftStraightDISTANCE(1.03);
+        sleepTau(1750);
         turnDegree(1, 180);
         sleepTau(1500);
-        driveForwardStraightDISTANCE(0.7, 2.1);
-        sleepTau(1500);
+        driveForwardStraightDISTANCE(0.65, 2.1);
+        sleepTau(2500);
         if(vuValue.equals("CENTER")) {
-            telemetry.addData("VuMark", "CENTER");
-            updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7, 0.34);
+            driveLeftStraightDISTANCE(0.5,0.39);
         }
         else if(vuValue.equals("LEFT")){
-            telemetry.addData("VuMark", "LEFT");
-            updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7,0.63);
+            driveLeftStraightDISTANCE(0.5,0.68);
         }
         else if(vuValue.equals("RIGHT")){
-            telemetry.addData("VuMark", "RIGHT");
-            updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7,0.05);
+            driveLeftStraightDISTANCE(0.5,0.1);
         }
         else {
-            telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
-            updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7,0.34);
+            driveLeftStraightDISTANCE(0.5,0.39);
         }
-        sleepTau(1500);
+        sleepTau(1600);
         lowerLiftMoreSlightly();
         sleepTau(500);
         openClaw();
-        sleepTau(1500);
+        sleepTau(300);
+        driveForwardStraightDISTANCE(0.7);
+        sleepTau(1000);
+        driveBackwardStraightDISTANCE(0.3);
+        sleepTau(700);
+        turnToDegree(1, -90);
+        sleepTau(700);
+        autoRepositionSideBLUE(vuValue);
     }
 
 }

@@ -36,43 +36,67 @@ import java.util.Locale;
  */
 
 @Autonomous(name = "Auto Blue Right", group = "Tau")
-@Disabled
+//@Disabled
 public class Auto_BLUE_RIGHT extends AUTO_METHODS{
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        String vuValue = "";
+        int jewelValue = 0;
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
         closeClaw();
+        getLiftPosition();
         lowerJewelServo();
-        sleepTau(1000);
-        if (getColor() == 10){
-            turnDegree(1,30);
+        sleepTau(1500);
+        raiseLiftSlightly();
+        jewelValue = getJewel();
+        if (jewelValue == 10){
+            turnDegree(0.5,30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.5);
+            sleepTau(500);
         }
-        else if(getColor() == 3){
-            turnDegree(1,-30);
+        else if(jewelValue == 3){
+            turnDegree(0.5,-30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.5);
+            sleepTau(500);
         }
         else{
-            raiseJewelServoSlightly();
-            if (getColor() == 10){
-                turnDegree(1,30);
-            }
-            else if(getColor() == 3){
-                turnDegree(1,-30);
-            }
-
+            telemetry.addData("Jewel", "Unknown");
+            updateTelemetry(telemetry);
+            raiseJewelServo();
+            sleepTau(450);
         }
-        sleepTau(3000);
-        raiseJewelServo();
-        sleepTau(500);
-        realign(1);
-        sleepTau(1000);
-        driveLeftStraightDISTANCE(0.7,0.5);
-        sleepTau(3000);
-        driveForwardStraightDISTANCE(0.7,1);
-        sleepTau(1000);
+        driveLeftStraightDISTANCE(0.75);
+        sleepTau(1500);
+        realign(0.5);
+        sleepTau(200);
+        vuValue = rightGetVu();
+        telemetry.addData("VuMark", vuValue);
+        updateTelemetry(telemetry);
+        turnToDegree(1,-180);
+        if(vuValue.equals("CENTER")) {
+            driveForwardStraightDISTANCE(1.10);
+        }
+        else if(vuValue.equals("LEFT")){
+            driveForwardStraightDISTANCE(1.39);
+        }
+        else if(vuValue.equals("RIGHT")){
+            driveForwardStraightDISTANCE(0.81);
+        }
+        else {
+            driveForwardStraightDISTANCE(1.10);
+        }
+        sleepTau(1500);
+        turnToDegree(1,90);
+        sleepTau(750);
         openClaw();
         sleepTau(1500);
 

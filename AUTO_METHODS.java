@@ -205,12 +205,29 @@ class AUTO_METHODS extends LinearOpMode{
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.1,30);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.1,35);doneOnce = !doneOnce;}
+                vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+            }
+        }
+        return "UNKNOWN AND PROGRAMMERS BAD";
+    }
+
+    public String rightGetVu(){
+
+        RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
+        vuMarkEnd = robot.getTime() + 4;
+        while(vuMarkEnd > robot.getTime()) {
+            if(vumark != RelicRecoveryVuMark.UNKNOWN) {
+                return "" + vumark;
+            }
+            else{
+                if(!doneOnce){turnDegree(0.1,-35);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
         return "CG";
     }
+
     public int getColor(){
         return robot.color.colorNumber();
     }
@@ -241,18 +258,55 @@ class AUTO_METHODS extends LinearOpMode{
         liftSpeed(0);
     }
     public void autoReposition(String vuMark){
+        driveBackwardStraightDISTANCE(0.5,0.1);
+        sleepTau(700);
         if (vuMark.equals("CENTER")){
-            driveForwardStraightDISTANCE(0.5,0.07);
+            driveForwardStraightDISTANCE(0.5,0.1);
         }
         else if (vuMark.equals("LEFT")){
-            driveNEStraightDISTANCE(0.5,0.15);
+            driveNWStraightDISTANCE(0.5,0.2);
         }
         else if (vuMark.equals("RIGHT")){
-            driveNWStraightDISTANCE(0.5,0.15);
+            driveNEStraightDISTANCE(0.5,0.2);
         }
         else{
-            driveForwardStraightDISTANCE(0.5,0.07);
+            driveForwardStraightDISTANCE(0.5,0.1);
         }
+        sleepTau(1500);
+    }
+    public void autoRepositionSideBLUE(String vuMark){
+        driveLeftStraightDISTANCE(0.5,0.1);
+        sleepTau(700);
+        if (vuMark.equals("CENTER")){
+            driveRightStraightDISTANCE(0.5,0.1);
+        }
+        else if (vuMark.equals("LEFT")){
+            driveNEStraightDISTANCE(0.5,0.2);
+        }
+        else if (vuMark.equals("RIGHT")){
+            driveSEStraightDISTANCE(0.5,0.2);
+        }
+        else{
+            driveRightStraightDISTANCE(0.5,0.1);
+        }
+        sleepTau(1500);
+    }
+    public void autoRepositionSideRED(String vuMark){
+        driveRightStraightDISTANCE(0.5,0.1);
+        sleepTau(700);
+        if (vuMark.equals("CENTER")){
+            driveLeftStraightDISTANCE(0.5,0.1);
+        }
+        else if (vuMark.equals("LEFT")){
+            driveSWStraightDISTANCE(0.5,0.2);
+        }
+        else if (vuMark.equals("RIGHT")){
+            driveNWStraightDISTANCE(0.5,0.2);
+        }
+        else{
+            driveLeftStraightDISTANCE(0.5,0.1);
+        }
+        sleepTau(1500);
     }
    /* public void setLiftStage1(double speed){
         liftSpeed(speed);
@@ -295,12 +349,12 @@ class AUTO_METHODS extends LinearOpMode{
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(0.96);
-        robot.rightLiftServo.setPosition(0.72);
+        robot.leftLiftServo.setPosition(0.93);
+        robot.rightLiftServo.setPosition(0.88);
     }
 
     public void closeClaw(){
-        robot.leftLiftServo.setPosition(0.27);
+        robot.leftLiftServo.setPosition(0.03);
         robot.rightLiftServo.setPosition(0);
     }
     public int getJewel(){
@@ -319,9 +373,9 @@ class AUTO_METHODS extends LinearOpMode{
     }
 
     public void lowerJewelServo(){
-        robot.jewelServo.setPosition(1);
+        robot.jewelServo.setPosition(0.97);
     }
-    public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.94);}
+    public void raiseJewelServoSlightly(){robot.jewelServo.setPosition(0.93);}
     public void raiseJewelServo(){
         robot.jewelServo.setPosition(0);
     }

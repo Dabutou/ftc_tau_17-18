@@ -17,71 +17,78 @@ import com.qualcomm.robotcore.util.ThreadPool;
  */
 
 @Autonomous(name = "Auto Red Right", group = "Tau")
-@Disabled
+//@Disabled
 public class Auto_RED_RIGHT extends AUTO_METHODS{
 
     @Override//CALLS AUTO_METHODS TO RUN
     public void runOpMode() throws InterruptedException{
-        String vuValue = "CENTER";
+        String vuValue = "";
+        int jewelValue = 0;
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
-        //closeClaw();
-        //vuValue = getVu();
+        closeClaw();
+        getLiftPosition();
         lowerJewelServo();
-        sleepTau(2000);
-        if (getColor() == 10){
-            turnDegree(1,30);
+        sleepTau(1500);
+        raiseLiftSlightly();
+        jewelValue = getJewel();
+        if (jewelValue == 3){
+            turnDegree(0.5,30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.5);
+            sleepTau(500);
         }
-        else if(getColor() == 3){
-            turnDegree(1,-30);
+        else if(jewelValue == 10){
+            turnDegree(0.5,-30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.5);
+            sleepTau(500);
         }
         else{
-            raiseJewelServoSlightly();
-            if (getColor() == 10){
-                turnDegree(1,30);
-            }
-            else if(getColor() == 3){
-                turnDegree(1,-30);
-            }
-
-        }
-        sleepTau(3000);
-        raiseJewelServo();
-        sleepTau(500);
-        realign(1);
-        sleepTau(1000);
-        if(vuValue.equals("CENTER")) {
-            telemetry.addData("VuMark", "CENTER");
+            telemetry.addData("Jewel", "Unknown");
             updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7,0.5);
+            raiseJewelServo();
+            sleepTau(450);
+        }
+        driveForwardStraightDISTANCE(0.8);
+        sleepTau(1500);
+        realign(0.5);
+        sleepTau(200);
+        vuValue = leftGetVu();
+        telemetry.addData("VuMark", vuValue);
+        updateTelemetry(telemetry);
+        sleepTau(100);
+        realign(0.6);
+        sleepTau(700);
+        driveForwardStraightDISTANCE(0.5);
+        if(vuValue.equals("CENTER")) {
+            driveLeftStraightDISTANCE(0.5);
         }
         else if(vuValue.equals("LEFT")){
-            telemetry.addData("VuMark", "LEFT");
-            updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7,0.6);
+           driveLeftStraightDISTANCE(0.79);
         }
         else if(vuValue.equals("RIGHT")){
-            telemetry.addData("VuMark", "RIGHT");
-            updateTelemetry(telemetry);
-            driveLeftStraightDISTANCE(0.7,0.4);
+            driveLeftStraightDISTANCE(0.21);
         }
         else {
-            telemetry.addData("VuMark", "UNKNOWN AND PROGRAMMERS BAD");
-            updateTelemetry(telemetry);
-            driveForwardStraightDISTANCE(0.7,0.5);
+            driveForwardStraightDISTANCE(0.5);
         }
-        sleepTau(2000);
-        driveForwardStraightDISTANCE(0.7,1);
-        sleepTau(2000);
-        //openClaw();
+        sleepTau(1200);
+        driveForwardStraightDISTANCE(0.5);
+        sleepTau(1000);
+        openClaw();
         sleepTau(250);
-        driveBackwardStraightDISTANCE(0.5,0.3);
-        sleepTau(1500);
-        //closeClaw();
-        sleepTau(150);
-        driveForwardStraightDISTANCE(0.7,0.5);
+        lowerLiftSlightly();
+        driveBackwardStraightDISTANCE(0.5,0.2);
+        sleepTau(500);
+        driveForwardStraightDISTANCE(0.5);
         sleepTau(2500);
+
 
 
     }
