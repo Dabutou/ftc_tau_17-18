@@ -84,35 +84,36 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         updateTelemetry(telemetry);
         sleepTau(100);
         realign(0.5);
-        sleepTau(1000);
+        sleepTau(1200);
         if(vuValue.equals("CENTER")) {
-            driveForwardStraightDISTANCE(0.60);
+            driveForwardStraightDISTANCE(0.66);
         }
         else if(vuValue.equals("LEFT")){
-            driveForwardStraightDISTANCE(0.89);
+            driveForwardStraightDISTANCE(0.95);
         }
         else if(vuValue.equals("RIGHT")){
-            driveForwardStraightDISTANCE(0.31);
+            driveForwardStraightDISTANCE(0.35);
         }
         else {
-           driveForwardStraightDISTANCE(0.89);
+           driveForwardStraightDISTANCE(0.66);
         }
         sleepTau(1500);
-        turnToDegree(1,90.0);
+        turnToDegree(1, 90.0);
         sleepTau(750);
+        driveForwardStraightDISTANCE(0.4,0.48);
+        sleepTau(1200);
         openClaw();
-        sleepTau(150);
-        driveBackwardStraightDISTANCE(0.5,0.3);
-        sleepTau(700);
+        sleepTau(250);
+        driveBackwardStraightDISTANCE(0.5,0.5);
+        sleepTau(1000);
         lowerLiftSlightly();
         sleepTau(150);
-        driveForwardStraightDISTANCE(0.5,0.63);
-        sleepTau(1500);
-        driveBackwardStraightDISTANCE(0.5,0.30);
-        sleepTau(850);
         turnToDegree(1,-90);
-        sleepTau(750);
+        sleepTau(1000);
         autoReposition(vuValue);
+        sleepTau(150);
+        turnToDegree(0.5,-90);
+        sleepTau(2500);
 
 
 

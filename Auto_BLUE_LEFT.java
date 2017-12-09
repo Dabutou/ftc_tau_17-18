@@ -50,7 +50,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         getLiftPosition();
         lowerJewelServo();
         sleepTau(1000);
-        raiseLiftMoreSlightly();
+        raiseLiftSlightly();
         jewelValue = getJewel();
         if (jewelValue == 10){
             turnDegree(0.5,30);
@@ -83,39 +83,46 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         updateTelemetry(telemetry);
         sleepTau(100);
         realign(0.5);
-        sleepTau(1000);
+        sleepTau(900);
         driveForwardStraightDISTANCE(0.08);
         sleepTau(500);
         driveLeftStraightDISTANCE(1.03);
-        sleepTau(1750);
-        turnDegree(1, 180);
-        sleepTau(1500);
+        sleepTau(1550);
+        turnDegree(1,5);
+        sleepTau(100);
+        turnToDegree(1, 180);
+        sleepTau(1600);
         driveForwardStraightDISTANCE(0.65, 2.1);
         sleepTau(2500);
+        turnToDegree(0.5,-180);
+        sleep(400);
         if(vuValue.equals("CENTER")) {
-            driveLeftStraightDISTANCE(0.5,0.39);
+            driveLeftStraightDISTANCE(0.5,0.54);
         }
         else if(vuValue.equals("LEFT")){
-            driveLeftStraightDISTANCE(0.5,0.68);
+            driveLeftStraightDISTANCE(0.5,0.83);
         }
         else if(vuValue.equals("RIGHT")){
-            driveLeftStraightDISTANCE(0.5,0.1);
+            driveLeftStraightDISTANCE(0.5,0.20);
         }
         else {
-            driveLeftStraightDISTANCE(0.5,0.39);
+            driveLeftStraightDISTANCE(0.5,0.54);
         }
         sleepTau(1600);
-        lowerLiftMoreSlightly();
-        sleepTau(500);
-        openClaw();
-        sleepTau(300);
         driveForwardStraightDISTANCE(0.7);
         sleepTau(1000);
-        driveBackwardStraightDISTANCE(0.3);
-        sleepTau(700);
+        openClaw();
+        sleepTau(250);
+        driveBackwardStraightDISTANCE(0.5);
+        sleepTau(1000);
+        lowerLiftSlightly();
+        sleepTau(500);
         turnToDegree(1, -90);
         sleepTau(700);
         autoRepositionSideBLUE(vuValue);
+        sleepTau(150);
+        turnToDegree(0.5,-90);
+        sleepTau(1500);
     }
 
 }

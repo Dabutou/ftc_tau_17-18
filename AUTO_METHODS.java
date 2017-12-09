@@ -163,49 +163,112 @@ class AUTO_METHODS extends LinearOpMode{
 
     //METHODS YOU CALL FOR AUTO
 
+    //IMU clockwise is negative
+        //counter-clockwise is positive
+
     //realigns to initial setup
     public void realign(double speed){
         float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        telemetry.addData("IMU", "" + heading);
+        updateTelemetry(telemetry);
         speed(speed);
         frontLeftMotorPosition += (int)(3520.0*heading/360);
         frontRightMotorPosition += (int)(3520.0*heading/360);
         backLeftMotorPosition += (int)(3520.0*heading/360);
         backRightMotorPosition += (int)(3520.0*heading/360);
         runDistances();
+
     }
 
     //negative degree is left turn, positive is right turn
     public void turnDegree(double speed, double degree){
         speed(speed);
+        telemetry.addData("IMU", "" + imu.getAngularOrientation().firstAngle);
+        updateTelemetry(telemetry);
         frontLeftMotorPosition += (int)(3520.0*degree/360);
         frontRightMotorPosition += (int)(3520.0*degree/360);
         backLeftMotorPosition += (int)(3520.0*degree/360);
         backRightMotorPosition += (int)(3520.0*degree/360);
         runDistances();
     }
+    public float getImuHeading(){
+        return imu.getAngularOrientation().firstAngle;
+    }
     public void turnToDegree(double speed, double degree){
         speed(speed);
         float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        frontLeftMotorPosition += (int)(3520.0*heading/360);
-        frontRightMotorPosition += (int)(3520.0*heading/360);
-        backLeftMotorPosition += (int)(3520.0*heading/360);
-        backRightMotorPosition += (int)(3520.0*heading/360);
-        frontLeftMotorPosition += (int)(3520.0*degree/360);
-        frontRightMotorPosition += (int)(3520.0*degree/360);
-        backLeftMotorPosition += (int)(3520.0*degree/360);
-        backRightMotorPosition += (int)(3520.0*degree/360);
+        telemetry.addData("IMU", "" + imu.getAngularOrientation().firstAngle);
+        updateTelemetry(telemetry);
+
+        if (heading == degree){
+            return;
+        }
+        else if (heading == 0){
+            turnDegree(speed,degree);
+            return;
+        }
+        else if (degree == 0){
+            realign(speed);
+            return;
+        }
+        degree = -degree;
+        double totaldistance = heading - degree;
+        double finaldistance;
+        if ((heading > 0 && degree > 0) || (heading < 0 && degree < 0)){
+
+            frontLeftMotorPosition += (int)(3520.0*totaldistance/360);
+            frontRightMotorPosition += (int)(3520.0*totaldistance/360);
+            backLeftMotorPosition += (int)(3520.0*totaldistance/360);
+            backRightMotorPosition += (int)(3520.0*totaldistance/360);
+        }
+        else if (heading > 0 && degree < 0){
+            finaldistance = Math.min(totaldistance, 360-totaldistance);
+            if (finaldistance == totaldistance){
+                frontLeftMotorPosition += (int)(3520.0*finaldistance/360);
+                frontRightMotorPosition += (int)(3520.0*finaldistance/360);
+                backLeftMotorPosition += (int)(3520.0*finaldistance/360);
+                backRightMotorPosition += (int)(3520.0*finaldistance/360);
+            }
+            else{
+                frontLeftMotorPosition -= (int)(3520.0*finaldistance/360);
+                frontRightMotorPosition -= (int)(3520.0*finaldistance/360);
+                backLeftMotorPosition -= (int)(3520.0*finaldistance/360);
+                backRightMotorPosition -= (int)(3520.0*finaldistance/360);
+            }
+        }
+        else if (heading < 0 && degree > 0){
+            totaldistance = Math.abs(totaldistance);
+            finaldistance = Math.min(totaldistance, 360-totaldistance);
+            if (finaldistance == totaldistance){
+                frontLeftMotorPosition -= (int)(3520.0*finaldistance/360);
+                frontRightMotorPosition -= (int)(3520.0*finaldistance/360);
+                backLeftMotorPosition -= (int)(3520.0*finaldistance/360);
+                backRightMotorPosition -= (int)(3520.0*finaldistance/360);
+            }
+            else{
+                frontLeftMotorPosition += (int)(3520.0*finaldistance/360);
+                frontRightMotorPosition += (int)(3520.0*finaldistance/360);
+                backLeftMotorPosition += (int)(3520.0*finaldistance/360);
+                backRightMotorPosition += (int)(3520.0*finaldistance/360);
+            }
+        }
+        else{
+            telemetry.addData("ERROR","SOME INPUT IN TURN TO DEGREE IS BAD");
+            updateTelemetry(telemetry);
+        }
+
         runDistances();
     }
     public String leftGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        vuMarkEnd = robot.getTime() + 4;
+        vuMarkEnd = robot.getTime() + 5;
         while(vuMarkEnd > robot.getTime()) {
             if(vumark != RelicRecoveryVuMark.UNKNOWN) {
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.1,35);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.06,33);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -215,13 +278,13 @@ class AUTO_METHODS extends LinearOpMode{
     public String rightGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        vuMarkEnd = robot.getTime() + 4;
+        vuMarkEnd = robot.getTime() + 5;
         while(vuMarkEnd > robot.getTime()) {
             if(vumark != RelicRecoveryVuMark.UNKNOWN) {
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.1,-35);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.06,-33);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -258,8 +321,8 @@ class AUTO_METHODS extends LinearOpMode{
         liftSpeed(0);
     }
     public void autoReposition(String vuMark){
-        driveBackwardStraightDISTANCE(0.5,0.1);
-        sleepTau(700);
+        driveBackwardStraightDISTANCE(0.5,0.25);
+        sleepTau(800);
         if (vuMark.equals("CENTER")){
             driveForwardStraightDISTANCE(0.5,0.1);
         }
@@ -275,8 +338,8 @@ class AUTO_METHODS extends LinearOpMode{
         sleepTau(1500);
     }
     public void autoRepositionSideBLUE(String vuMark){
-        driveLeftStraightDISTANCE(0.5,0.1);
-        sleepTau(700);
+        driveLeftStraightDISTANCE(0.5,0.25);
+        sleepTau(800);
         if (vuMark.equals("CENTER")){
             driveRightStraightDISTANCE(0.5,0.1);
         }
@@ -292,8 +355,8 @@ class AUTO_METHODS extends LinearOpMode{
         sleepTau(1500);
     }
     public void autoRepositionSideRED(String vuMark){
-        driveRightStraightDISTANCE(0.5,0.1);
-        sleepTau(700);
+        driveRightStraightDISTANCE(0.5,0.25);
+        sleepTau(800);
         if (vuMark.equals("CENTER")){
             driveLeftStraightDISTANCE(0.5,0.1);
         }
