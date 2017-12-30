@@ -44,7 +44,7 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         String vuValue = "";
         int jewelValue = 0;
         IMUandVu();
-
+/*
         //CALL WHATEVER METHODS HERE:
         closeClaw();
         getLiftPosition();
@@ -100,8 +100,21 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         openClaw();
         sleepTau(1500);
 
-
-
+*/
+        turnToDegree(1,0);
+        sleepTau(2500);
+        turnToDegree(1,90);
+        sleepTau(2500);
+        turnToDegree(1,-45);
+        sleepTau(2500);
+        turnToDegree(1, 180);
+        sleepTau(2500);
+        turnToDegree(1,0);
+        sleepTau(2500);
+        turnDegree(1,-90);
+        sleepTau(2500);
+        turnDegree(1,90);
+        sleepTau(2500);
     }
 
 }

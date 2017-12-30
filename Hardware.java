@@ -231,7 +231,7 @@ public class Hardware {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibrafion sample opmode
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibrafion sample opmode
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -240,6 +240,69 @@ public class Hardware {
 
         // Initialize sensors
         imu.initialize(parameters);
+    }
+
+    public void initTeleOpNOIMU(HardwareMap hwMap){
+        // Save reference to Hardware map
+        this.hwMap = hwMap;
+        period.reset();
+
+        // Define Motors
+        frontLeftMotor = hwMap.dcMotor.get("left_front");
+        frontRightMotor = hwMap.dcMotor.get("right_front");
+        backLeftMotor = hwMap.dcMotor.get("left_back");
+        backRightMotor = hwMap.dcMotor.get("right_back");
+        leftLiftMotor = hwMap.dcMotor.get("left_lift");
+        rightLiftMotor = hwMap.dcMotor.get("right_lift");
+
+        // Initialize Motors
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        // ******MAY CHANGE *******  Fix Forward/Reverse under testing
+        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftLiftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        leftLiftMotor.setPower(0);
+        rightLiftMotor.setPower(0);
+
+        // May use RUN_USING_ENCODERS if encoders are installed
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Define servos
+        leftLiftServo = hwMap.servo.get("left_servo");
+        rightLiftServo = hwMap.servo.get("right_servo");
+        jewelServo = hwMap.servo.get("jewel_servo");
+
+        // Initialize servos
+        //leftLiftServo.scaleRange(0,1);
+        //rightLiftServo.scaleRange(0,1);
+        jewelServo.scaleRange(0,0.70);
+        leftLiftServo.setDirection(Servo.Direction.REVERSE);
+        rightLiftServo.setDirection(Servo.Direction.FORWARD);
+        jewelServo.setDirection(Servo.Direction.FORWARD);
+        leftLiftServo.setPosition(0.99);
+        rightLiftServo.setPosition(0.94);
+        jewelServo.setPosition(0);
+
     }
 
     public double getTime(){

@@ -1,30 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
- * Created by Lance He on 9/16/2017.
+ * Created by LH on 12/30/2017.
  */
-@TeleOp(name = "Tau: Teleop", group="Tau")
+@TeleOp(name = "Tau: Teleop No IMU", group="Tau")
 //Uncomment below to show up after run
 //@Disabled
-public class Teleop extends OpMode {
+public class TeleopNIMU extends OpMode {
 
     Hardware robot = new Hardware();
 
     //Drive Variables
-    private BNO055IMU imu;
     private double leftGP1Y = 0;
     private double leftGP1X = 0;
     private double frontleftPOWER = 0;
@@ -73,13 +62,12 @@ public class Teleop extends OpMode {
         telemetry.addData("Readiness", "NOT READY TO START, PLEASE WAIT");
         updateTelemetry(telemetry);
 
-        robot.initTeleOp(hardwareMap);
+        robot.initTeleOpNOIMU(hardwareMap);
 
         // Set up our telemetry dashboard
         telemetry.addData("Readiness", "Press Play to start");
         telemetry.addData("If you notice this", "You are COOL!!!");
         updateTelemetry(telemetry);
-        imu = robot.getImu();
     }
 
     @Override
@@ -117,59 +105,7 @@ public class Teleop extends OpMode {
             leftGP1X = 0;
         }
 
-        //Check if absolute drive is on
 
-        if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
-
-            length = Math.sqrt(Math.pow(leftGP1X,2) + Math.pow(leftGP1Y,2));
-            if (leftGP1X == 0) {
-                if (leftGP1Y > 0){
-                    initAngle = 0;
-                }
-                else{
-                    if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > 0){
-                        initAngle = Math.toRadians(-180);
-                    }
-                    else{
-                        initAngle = Math.toRadians(180);
-                    }
-
-                }
-            }
-            else if (leftGP1Y == 0){
-                if (leftGP1X > 0){
-                    initAngle = Math.toRadians(90);
-                }
-                else{
-                    initAngle = Math.toRadians(-90);
-                }
-            }
-            else{
-                if (leftGP1Y > 0) {
-                    initAngle = Math.atan(leftGP1Y / leftGP1X);
-                }
-                else{
-                    if (leftGP1X > 0){
-                        initAngle = Math.atan(leftGP1Y / leftGP1X) + Math.toRadians(180);
-                    }
-                    else{
-                        initAngle = Math.atan(leftGP1Y / leftGP1X) - Math.toRadians(180);
-                    }
-                }
-
-            }
-
-
-            //DEBUGGING
-           /* angle = initAngle + Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-            telemetry.addData("Angles","Joystick: " + leftGP1X +  " : " + leftGP1Y + "; imu: " + Math.toRadians(imu.getAngularOrientation().firstAngle) + " & " + imu.getAngularOrientation().firstAngle);
-            telemetry.addData("Length", "" + length);
-            leftGP1X = length*Math.sin(angle);
-            leftGP1Y = length*Math.cos(angle);
-            telemetry.addData("NewJoyStick",leftGP1X + " : " + leftGP1Y);
-*/
-
-        }
 
         //Assign power to each motor based on X and Y vectors
         backleftPOWER = leftGP1Y - leftGP1X;
