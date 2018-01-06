@@ -47,11 +47,12 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
-    private static final double LEFT_LIFT_OPEN = 0.93;
-    private static final double LEFT_LIFT_CLOSE = 0.03;
-    private static final double RIGHT_LIFT_OPEN = 0.88;
+    private static final double LEFT_LIFT_OPEN = 0.95;
+    private static final double LEFT_LIFT_CLOSE = 0.10;
+    private static final double RIGHT_LIFT_OPEN = 0.85;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
+    private double rightGP2Y = 0;
     private double leftLiftPos = LEFT_LIFT_OPEN;
     private double rightLiftPos = RIGHT_LIFT_OPEN;
     //private double endTime2B = 0;
@@ -161,13 +162,13 @@ public class Teleop extends OpMode {
 
 
             //DEBUGGING
-           /* angle = initAngle + Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+            angle = initAngle + Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
             telemetry.addData("Angles","Joystick: " + leftGP1X +  " : " + leftGP1Y + "; imu: " + Math.toRadians(imu.getAngularOrientation().firstAngle) + " & " + imu.getAngularOrientation().firstAngle);
             telemetry.addData("Length", "" + length);
             leftGP1X = length*Math.sin(angle);
             leftGP1Y = length*Math.cos(angle);
             telemetry.addData("NewJoyStick",leftGP1X + " : " + leftGP1Y);
-*/
+
 
         }
 
@@ -299,14 +300,20 @@ public class Teleop extends OpMode {
 
         //Read controller input
         leftGP2Y = gamepad2.left_stick_y;
+        rightGP2Y = gamepad2.right_stick_y;
 
         if(Math.abs(leftGP2Y) < 0.05) {
             leftGP1Y = 0;
+        }
+        if(Math.abs(rightGP2Y) < 0.05) {
+            rightGP2Y = 0;
         }
         //Limit extension of lift
 
         robot.leftLiftMotor.setPower(0.45 * leftGP2Y);
         robot.rightLiftMotor.setPower(0.45 * leftGP2Y);
+
+        robot.relicMotor.setPower(rightGP2Y);
 
 
         if (gamepad2.left_bumper){
@@ -316,6 +323,16 @@ public class Teleop extends OpMode {
         if (gamepad2.right_bumper){
             leftLiftPos = LEFT_LIFT_OPEN;
             rightLiftPos = RIGHT_LIFT_OPEN;
+        }
+
+        if (gamepad2.dpad_up){
+            robot.relicServo.setPosition(1);
+        }
+        else if (gamepad2.dpad_down){
+            robot.relicServo.setPosition(0);
+        }
+        else{
+            robot.relicServo.setPosition(0.5);
         }
         //Open and close claw servos
         /*if (gamepad2.left_bumper && clawStage < 3 && (endTime2B == 0 || robot.getTime() >= endTime2B)) {

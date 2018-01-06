@@ -412,12 +412,12 @@ class AUTO_METHODS extends LinearOpMode{
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(0.93);
-        robot.rightLiftServo.setPosition(0.88);
+        robot.leftLiftServo.setPosition(0.95);
+        robot.rightLiftServo.setPosition(0.85);
     }
 
     public void closeClaw(){
-        robot.leftLiftServo.setPosition(0.03);
+        robot.leftLiftServo.setPosition(0.10);
         robot.rightLiftServo.setPosition(0);
     }
     public int getJewel(){

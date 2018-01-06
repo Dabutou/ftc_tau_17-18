@@ -28,9 +28,6 @@ public class TeleopNIMU extends OpMode {
     private double endTimeB = 0;
     private double endTimeS = 0;
     private double endTimeX = 0;
-    private double length = 0;
-    private double initAngle = 0;
-    private double angle = 0;
     private boolean absoluteDrive = false;
 
 
@@ -41,6 +38,7 @@ public class TeleopNIMU extends OpMode {
     private static final double RIGHT_LIFT_OPEN = 0.88;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
+    private double rightGP2Y = 0;
     private double leftLiftPos = LEFT_LIFT_OPEN;
     private double rightLiftPos = RIGHT_LIFT_OPEN;
     //private double endTime2B = 0;
@@ -235,14 +233,20 @@ public class TeleopNIMU extends OpMode {
 
         //Read controller input
         leftGP2Y = gamepad2.left_stick_y;
+        rightGP2Y = gamepad2.right_stick_y;
 
         if(Math.abs(leftGP2Y) < 0.05) {
             leftGP1Y = 0;
+        }
+        if(Math.abs(rightGP2Y) < 0.05) {
+            rightGP2Y = 0;
         }
         //Limit extension of lift
 
         robot.leftLiftMotor.setPower(0.45 * leftGP2Y);
         robot.rightLiftMotor.setPower(0.45 * leftGP2Y);
+
+        robot.relicMotor.setPower(rightGP2Y);
 
 
         if (gamepad2.left_bumper){
@@ -253,6 +257,17 @@ public class TeleopNIMU extends OpMode {
             leftLiftPos = LEFT_LIFT_OPEN;
             rightLiftPos = RIGHT_LIFT_OPEN;
         }
+
+        if (gamepad2.dpad_up){
+            robot.relicServo.setPosition(0.7);
+        }
+        else if (gamepad2.dpad_down){
+            robot.relicServo.setPosition(0.3);
+        }
+        else{
+            robot.relicServo.setPosition(0.5);
+        }
+
         //Open and close claw servos
         /*if (gamepad2.left_bumper && clawStage < 3 && (endTime2B == 0 || robot.getTime() >= endTime2B)) {
             endTime2B = robot.getTime() + 0.15;

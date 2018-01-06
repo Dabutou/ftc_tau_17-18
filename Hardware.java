@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -35,15 +36,18 @@ public class Hardware {
     public DcMotor backRightMotor = null;
     public DcMotor leftLiftMotor = null;
     public DcMotor rightLiftMotor = null;
+    public DcMotor relicMotor = null;
 
     // Servo variable names
     public Servo leftLiftServo = null;
     public Servo rightLiftServo = null;
     public Servo jewelServo = null;
+    public Servo relicServo = null;
 
     // Sensor variable names
     public I2cDevice colori2C = null;
     public ModernRoboticsI2cColorSensor2 color = null;
+
     //VuForia**************************
     OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia;
@@ -82,6 +86,7 @@ public class Hardware {
         backRightMotor = hwMap.dcMotor.get("right_back");
         leftLiftMotor = hwMap.dcMotor.get("left_lift");
         rightLiftMotor = hwMap.dcMotor.get("right_lift");
+        relicMotor = hwMap.dcMotor.get("relic_motor");
 
         // Initialize Motors
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -90,6 +95,7 @@ public class Hardware {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        relicMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // ******MAY CHANGE *******  Fix Forward/Reverse under testing
@@ -99,6 +105,7 @@ public class Hardware {
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         leftLiftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        relicMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
@@ -106,6 +113,7 @@ public class Hardware {
         backRightMotor.setPower(0);
         leftLiftMotor.setPower(0);
         rightLiftMotor.setPower(0);
+        relicMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -114,28 +122,34 @@ public class Hardware {
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        relicMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        relicMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Define servos
         leftLiftServo = hwMap.servo.get("left_servo");
         rightLiftServo = hwMap.servo.get("right_servo");
         jewelServo = hwMap.servo.get("jewel_servo");
+        relicServo = hwMap.servo.get("relic_servo");
 
         // Initialize servos
         //leftLiftServo.scaleRange(0,1);
         //rightLiftServo.scaleRange(0,1);
         jewelServo.scaleRange(0,0.70);
+        relicServo.setDirection(Servo.Direction.FORWARD);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.99);
-        rightLiftServo.setPosition(0.94);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(0.90);
         jewelServo.setPosition(0);
+        relicServo.setPosition(0.5);
 
         // Define sensors
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
@@ -179,6 +193,7 @@ public class Hardware {
         backRightMotor = hwMap.dcMotor.get("right_back");
         leftLiftMotor = hwMap.dcMotor.get("left_lift");
         rightLiftMotor = hwMap.dcMotor.get("right_lift");
+        relicMotor = hwMap.dcMotor.get("relic_motor");
 
         // Initialize Motors
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -187,6 +202,7 @@ public class Hardware {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        relicMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // ******MAY CHANGE *******  Fix Forward/Reverse under testing
@@ -196,6 +212,7 @@ public class Hardware {
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         leftLiftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        relicMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
@@ -203,6 +220,7 @@ public class Hardware {
         backRightMotor.setPower(0);
         leftLiftMotor.setPower(0);
         rightLiftMotor.setPower(0);
+        relicMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -211,22 +229,27 @@ public class Hardware {
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        relicMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
         leftLiftServo = hwMap.servo.get("left_servo");
         rightLiftServo = hwMap.servo.get("right_servo");
         jewelServo = hwMap.servo.get("jewel_servo");
+        relicServo = hwMap.servo.get("relic_servo");
 
         // Initialize servos
         //leftLiftServo.scaleRange(0,1);
         //rightLiftServo.scaleRange(0,1);
         jewelServo.scaleRange(0,0.70);
+        relicServo.setDirection(Servo.Direction.FORWARD);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.99);
-        rightLiftServo.setPosition(0.94);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(0.90);
         jewelServo.setPosition(0);
+        relicServo.setPosition(0.5);
+
         // Define sensors
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -254,6 +277,7 @@ public class Hardware {
         backRightMotor = hwMap.dcMotor.get("right_back");
         leftLiftMotor = hwMap.dcMotor.get("left_lift");
         rightLiftMotor = hwMap.dcMotor.get("right_lift");
+        relicMotor = hwMap.dcMotor.get("relic_motor");
 
         // Initialize Motors
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -262,6 +286,7 @@ public class Hardware {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        relicMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // ******MAY CHANGE *******  Fix Forward/Reverse under testing
@@ -271,6 +296,7 @@ public class Hardware {
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         leftLiftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightLiftMotor.setDirection(DcMotor.Direction.FORWARD);
+        relicMotor.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
@@ -278,6 +304,7 @@ public class Hardware {
         backRightMotor.setPower(0);
         leftLiftMotor.setPower(0);
         rightLiftMotor.setPower(0);
+        relicMotor.setPower(0);
 
         // May use RUN_USING_ENCODERS if encoders are installed
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -286,23 +313,26 @@ public class Hardware {
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        relicMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define servos
         leftLiftServo = hwMap.servo.get("left_servo");
         rightLiftServo = hwMap.servo.get("right_servo");
         jewelServo = hwMap.servo.get("jewel_servo");
+        relicServo = hwMap.servo.get("relic_servo");
 
         // Initialize servos
         //leftLiftServo.scaleRange(0,1);
         //rightLiftServo.scaleRange(0,1);
         jewelServo.scaleRange(0,0.70);
+        relicServo.setDirection(Servo.Direction.FORWARD);
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(0.99);
-        rightLiftServo.setPosition(0.94);
+        leftLiftServo.setPosition(1);
+        rightLiftServo.setPosition(0.90);
         jewelServo.setPosition(0);
-
+        relicServo.setPosition(0.5);
     }
 
     public double getTime(){
