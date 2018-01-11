@@ -100,7 +100,7 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         openClaw();
         sleepTau(1500);
 
-*/
+*//*
         turnToDegree(1,0);
         sleepTau(2500);
         turnToDegree(1,90);
@@ -114,7 +114,64 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         turnDegree(1,-90);
         sleepTau(2500);
         turnDegree(1,90);
-        sleepTau(2500);
+        sleepTau(2500);*/
+        //getPositions();
+
+        getPositions();
+        driveForwardStraightDISTANCE(1);
+        sleepTauCheck(2500);
+        driveBackwardStraightDISTANCE(1);
+        sleepTauCheck(2500);
+        getPositions();
+        realign(0.6);
+        sleepTauCheck(500);
+        getPositions();
+        driveForwardStraightDISTANCE(0.5,1);
+        sleepTauCheck(2500);
+        getPositions();
+        driveBackwardStraightDISTANCE(0.5,1);
+        sleepTauCheck(2500);
+        getPositions();
+        realign(0.6);
+        sleepTau(500);
+        getPositions();
+        driveForwardStraightDISTANCE(0.25,1);
+        sleepTauCheck(2500);
+        getPositions();
+        driveBackwardStraightDISTANCE(0.25,1);
+        sleepTauCheck(2500);
+        getPositions();
+        realign(0.6);
+        sleepTau(500);
+        getPositions();
+        driveLeftStraightDISTANCE(1);
+        sleepTauCheck(2500);
+        getPositions();
+        driveRightStraightDISTANCE(1);
+        sleepTauCheck(2500);
+        getPositions();
+        realign(0.6);
+        sleepTau(500);
+        getPositions();
+        driveLeftStraightDISTANCE(0.5,1);
+        sleepTauCheck(2500);
+        getPositions();
+        driveRightStraightDISTANCE(0.5,1);
+        sleepTauCheck(2500);
+        getPositions();
+        realign(0.6);
+        sleepTau(500);
+        getPositions();
+        driveLeftStraightDISTANCE(0.25,1);
+        sleepTauCheck(2500);
+        getPositions();
+        driveRightStraightDISTANCE(0.25,1);
+        sleepTauCheck(2500);
+        getPositions();
+        realign(0.6);
+        sleepTau(500);
+        getPositions();
+
     }
 
 }

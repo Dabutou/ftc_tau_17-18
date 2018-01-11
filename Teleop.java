@@ -326,10 +326,10 @@ public class Teleop extends OpMode {
         }
 
         if (gamepad2.dpad_up){
-            robot.relicServo.setPosition(1);
+            robot.relicServo.setPosition(0);
         }
         else if (gamepad2.dpad_down){
-            robot.relicServo.setPosition(0);
+            robot.relicServo.setPosition(1);
         }
         else{
             robot.relicServo.setPosition(0.5);

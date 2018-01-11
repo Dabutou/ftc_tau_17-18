@@ -45,7 +45,7 @@ public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
             sleepTau(450);
         }
         driveForwardStraightDISTANCE(0.8);
-        sleepTau(1500);
+        sleepTauCheck(1500);
         realign(0.5);
         sleepTau(200);
         vuValue = leftGetVu();
@@ -61,20 +61,20 @@ public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
             driveForwardStraightDISTANCE(0.95);
         }
         else if(vuValue.equals("RIGHT")){
-            driveForwardStraightDISTANCE(0.37);
+            driveForwardStraightDISTANCE(0.35);
         }
         else {
             driveForwardStraightDISTANCE(0.66);
         }
-        sleepTau(1500);
+        sleepTauCheck(1500);
         turnToDegree(1, 90.0);
         sleepTau(750);
         driveForwardStraightDISTANCE(0.4,0.48);
-        sleepTau(1200);
+        sleepTauCheck(1200);
         openClaw();
         sleepTau(250);
         driveBackwardStraightDISTANCE(0.5,0.5);
-        sleepTau(1000);
+        sleepTauCheck(1000);
         lowerLiftSlightly();
         sleepTau(150);
         turnToDegree(1,-90);

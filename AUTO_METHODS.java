@@ -42,6 +42,14 @@ class AUTO_METHODS extends LinearOpMode{
     private int backRightMotorPosition = 0;
     private int frontLeftMotorPosition = 0;
     private int frontRightMotorPosition = 0;
+    private int frontLeftMotorPositionGradiant = 0;
+    private int frontRightMotorPositionGradiant = 0;
+    private int backLeftMotorPositionGradiant = 0;
+    private int backRightMotorPositionGradiant = 0;
+    private boolean frontLeftGradiantSign;
+    private boolean frontRightGradiantSign;
+    private boolean backLeftGradiantSign;
+    private boolean backRightGradiantSign;
     private int leftLiftPosition = 0;
     private int rightLiftPosition = 0;
     private final int distancetoBlock = 990;
@@ -49,6 +57,7 @@ class AUTO_METHODS extends LinearOpMode{
     private double vuMarkEnd = 0;
     private boolean doneOnce = false;
     private double jewelEnd = 0;
+    private double speed = 0;
 
 
     public AUTO_METHODS(){}
@@ -322,7 +331,7 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void autoReposition(String vuMark){
         driveBackwardStraightDISTANCE(0.5,0.25);
-        sleepTau(800);
+        sleepTau(1000);
         if (vuMark.equals("CENTER")){
             driveForwardStraightDISTANCE(0.5,0.1);
         }
@@ -339,7 +348,7 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void autoRepositionSideBLUE(String vuMark){
         driveLeftStraightDISTANCE(0.5,0.25);
-        sleepTau(800);
+        sleepTau(1000);
         if (vuMark.equals("CENTER")){
             driveRightStraightDISTANCE(0.5,0.1);
         }
@@ -356,7 +365,7 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void autoRepositionSideRED(String vuMark){
         driveRightStraightDISTANCE(0.5,0.25);
-        sleepTau(800);
+        sleepTau(1000);
         if (vuMark.equals("CENTER")){
             driveLeftStraightDISTANCE(0.5,0.1);
         }
@@ -410,6 +419,26 @@ class AUTO_METHODS extends LinearOpMode{
 
 
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
+    public void sleepTauCheck(long milliSec)
+    {
+        long time = 0;
+        try{
+            while (time < milliSec){
+                Thread.sleep(3);
+                if (checkGradiants()){
+                    speed(0.20);
+                    runDistances();
+                    break;
+                }
+                time+=3;
+            }
+            if (time < milliSec){
+                Thread.sleep(milliSec-time);
+            }
+        }catch(InterruptedException e){
+            throw new RuntimeException(e);
+        }
+    }
 
     public void openClaw(){
         robot.leftLiftServo.setPosition(0.95);
@@ -443,38 +472,59 @@ class AUTO_METHODS extends LinearOpMode{
         robot.jewelServo.setPosition(0);
     }
 
-    public void readEncoders(){
-        telemetry.addData("Front Left", "" + frontLeftMotorPosition + " : " + robot.frontLeftMotor.getCurrentPosition());
-        telemetry.addData("Front Right", "" + frontRightMotorPosition + " : " + robot.frontRightMotor.getCurrentPosition());
-        telemetry.addData("Front Left", "" + backLeftMotorPosition + " : " + robot.backLeftMotor.getCurrentPosition());
-        telemetry.addData("Front Left", "" + backRightMotorPosition + " : " + robot.backRightMotor.getCurrentPosition());
-        updateTelemetry(telemetry);
-    }
 
     public void driveForwardStraightDISTANCE(double distance){
         speed(0.6);
-        int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-13)*distance);
-        setDistances(distancesr,-distancesl,distancesl,-distancesr);
+        resetGradiants();
+        int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = true;
+        frontRightGradiantSign = false;
+        backLeftGradiantSign = true;
+        backRightGradiantSign = false;
+        setDistances(distances,-distances,distances,-distances);
+        setGradiants(distancegradiant,-distancegradiant,distancegradiant,-distancegradiant);
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double distance){
         speed(0.6);
-        int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-13)*distance);
-        setDistances(-distancesr,distancesl,-distancesl, distancesr);
+        resetGradiants();
+        int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = false;
+        frontRightGradiantSign = true;
+        backLeftGradiantSign = false;
+        backRightGradiantSign = true;
+        setDistances(-distances,distances,-distances, distances);
+        setGradiants(-distancegradiant,distancegradiant,-distancegradiant,distancegradiant);
         runDistances();
+
     }
     public void driveRightStraightDISTANCE(double distance){
         speed(0.6);
+        resetGradiants();
         int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = true;
+        frontRightGradiantSign = true;
+        backLeftGradiantSign = false;
+        backRightGradiantSign = false;
         setDistances(distances,distances,-distances, -distances);
+        setGradiants(distancegradiant,distancegradiant,-distancegradiant,-distancegradiant);
         runDistances();
+
     }
     public void driveLeftStraightDISTANCE(double distance){
         speed(0.6);
+        resetGradiants();
         int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = false;
+        frontRightGradiantSign = false;
+        backLeftGradiantSign = true;
+        backRightGradiantSign = true;
         setDistances(-distances,-distances,distances, distances);
+        setGradiants(-distancegradiant,-distancegradiant,distancegradiant,distancegradiant);
         runDistances();
     }
     public void driveNWStraightDISTANCE(double distance){
@@ -497,35 +547,61 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void driveSWStraightDISTANCE(double distance){
         speed(0.6);
-        int distances = (int)(distancetoBlock*distance);
-        setDistances(-distances,0,0, distances);
-        runDistances();
-    }
+    int distances = (int)(distancetoBlock*distance);
+    setDistances(-distances,0,0, distances);
+    runDistances();
+}
     //same with speed
     public void driveForwardStraightDISTANCE(double speed, double distance){
         speed(speed);
-        int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-13)*distance);
-        setDistances(distancesr,-distancesl,distancesl,-distancesr);
+        resetGradiants();
+        int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = true;
+        frontRightGradiantSign = false;
+        backLeftGradiantSign = true;
+        backRightGradiantSign = false;
+        setDistances(distances,-distances,distances,-distances);
+        setGradiants(distancegradiant,-distancegradiant,distancegradiant,-distancegradiant);
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double speed, double distance){
         speed(speed);
-        int distancesr = (int)(distancetoBlock*distance);
-        int distancesl = (int)((distancetoBlock-13)*distance);
-        setDistances(-distancesr,distancesl,-distancesl, distancesr);
+        resetGradiants();
+        int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = false;
+        frontRightGradiantSign = true;
+        backLeftGradiantSign = false;
+        backRightGradiantSign = true;
+        setDistances(-distances,distances,-distances, distances);
+        setGradiants(-distancegradiant,distancegradiant,-distancegradiant,distancegradiant);
         runDistances();
     }
     public void driveRightStraightDISTANCE(double speed, double distance){
         speed(speed);
+        resetGradiants();
         int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = true;
+        frontRightGradiantSign = true;
+        backLeftGradiantSign = false;
+        backRightGradiantSign = false;
         setDistances(distances,distances,-distances, -distances);
+        setGradiants(distancegradiant,distancegradiant,-distancegradiant,-distancegradiant);
         runDistances();
     }
     public void driveLeftStraightDISTANCE(double speed, double distance){
         speed(speed);
+        resetGradiants();
         int distances = (int)(distancetoBlock*distance);
+        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        frontLeftGradiantSign = false;
+        frontRightGradiantSign = false;
+        backLeftGradiantSign = true;
+        backRightGradiantSign = true;
         setDistances(-distances,-distances,distances, distances);
+        setGradiants(-distancegradiant,-distancegradiant,distancegradiant,distancegradiant);
         runDistances();
     }
     public void driveNWStraightDISTANCE(double speed, double distance){
@@ -558,6 +634,23 @@ class AUTO_METHODS extends LinearOpMode{
             updateTelemetry(telemetry);
         }
     }
+    public void getPositions(){
+        telemetry.addData("FRONT LEFT", frontLeftMotorPosition +" : " + robot.frontLeftMotor.getCurrentPosition());
+        telemetry.addData("FRONT RIGHT", frontRightMotorPosition +" : " + robot.frontRightMotor.getCurrentPosition());
+        telemetry.addData("BACK LEFT", backLeftMotorPosition +" : " + robot.backLeftMotor.getCurrentPosition());
+        telemetry.addData("BACK RIGHT", backRightMotorPosition +" : " + robot.backRightMotor.getCurrentPosition());
+        updateTelemetry(telemetry);
+    }
+    public void resetEncoders(){
+        robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     //BEHIND THE SCENES METHODS
     private void speed(double speed){
@@ -581,10 +674,69 @@ class AUTO_METHODS extends LinearOpMode{
         backLeftMotorPosition += bl;
         backRightMotorPosition += br;
     }
+    private void setGradiants(int fl, int fr, int bl, int br){
+        frontLeftMotorPositionGradiant += fl;
+        frontRightMotorPositionGradiant += fr;
+        backLeftMotorPositionGradiant += bl;
+        backRightMotorPositionGradiant += br;
+    }
+    private void resetGradiants(){
+        frontLeftMotorPositionGradiant = frontLeftMotorPosition;
+        frontRightMotorPositionGradiant = frontRightMotorPosition;
+        backLeftMotorPositionGradiant = backLeftMotorPosition;
+        backRightMotorPositionGradiant = backRightMotorPosition;
+    }
+    private boolean checkGradiants(){
+        if (frontLeftGradiantSign){
+            if (robot.frontLeftMotor.getCurrentPosition() < frontLeftMotorPositionGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.frontLeftMotor.getCurrentPosition() > frontLeftMotorPositionGradiant){
+                return false;
+            }
+        }
+        if (frontRightGradiantSign){
+            if (robot.frontRightMotor.getCurrentPosition() < frontRightMotorPositionGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.frontRightMotor.getCurrentPosition() > frontRightMotorPositionGradiant){
+                return false;
+            }
+        }
+        if (backLeftGradiantSign){
+            if (robot.backLeftMotor.getCurrentPosition() < backLeftMotorPositionGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.backLeftMotor.getCurrentPosition() > backLeftMotorPositionGradiant){
+                return false;
+            }
+        }
+        if (backRightGradiantSign){
+            if (robot.backRightMotor.getCurrentPosition() < backRightMotorPositionGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.backRightMotor.getCurrentPosition() > backRightMotorPositionGradiant){
+                return false;
+            }
+        }
+
+
+        return true;
+
+    }
     private void runDistances(){
         robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
         robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
         robot.backRightMotor.setTargetPosition(backRightMotorPosition);
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
+
 }

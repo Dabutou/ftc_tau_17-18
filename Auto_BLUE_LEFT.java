@@ -59,6 +59,8 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             sleepTau(150);
             realign(0.5);
             sleepTau(1000);
+            realign(0.1);
+            sleepTau(500);
         }
         else if(jewelValue == 3){
             turnDegree(0.5,-30);
@@ -67,6 +69,8 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             sleepTau(150);
             realign(0.5);
             sleepTau(1000);
+            realign(0.1);
+            sleepTau(500);
         }
         else{
             telemetry.addData("Jewel", "Unknown");
@@ -75,7 +79,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             sleepTau(450);
         }
         driveForwardStraightDISTANCE(0.97);
-        sleepTau(1500);
+        sleepTauCheck(1500);
         realign(0.5);
         sleepTau(200);
         vuValue = leftGetVu();
@@ -85,36 +89,40 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         realign(0.5);
         sleepTau(900);
         driveForwardStraightDISTANCE(0.08);
-        sleepTau(500);
-        driveLeftStraightDISTANCE(1.03);
-        sleepTau(1550);
+        sleepTauCheck(500);
+        driveLeftStraightDISTANCE(1.10);
+        sleepTauCheck(1550);
         turnDegree(1,5);
-        sleepTau(100);
+        sleepTau(250);
         turnToDegree(1, 180);
         sleepTau(1600);
+        turnToDegree(0.2,180);
+        sleepTau(500);
         driveForwardStraightDISTANCE(0.65, 2.1);
-        sleepTau(2500);
+        sleepTauCheck(2500);
         turnToDegree(0.5,-180);
         sleep(400);
         if(vuValue.equals("CENTER")) {
-            driveLeftStraightDISTANCE(0.5,0.54);
+            driveLeftStraightDISTANCE(0.5,0.40);
         }
         else if(vuValue.equals("LEFT")){
-            driveLeftStraightDISTANCE(0.5,0.83);
+            driveLeftStraightDISTANCE(0.5,0.74);
         }
         else if(vuValue.equals("RIGHT")){
-            driveLeftStraightDISTANCE(0.5,0.20);
+            driveLeftStraightDISTANCE(0.5,0.08);
         }
         else {
-            driveLeftStraightDISTANCE(0.5,0.54);
+            driveLeftStraightDISTANCE(0.5,0.40);
         }
-        sleepTau(1600);
+        sleepTauCheck(1600);
+        turnToDegree(0.3,-180);
+        sleepTau(500);
         driveForwardStraightDISTANCE(0.7);
-        sleepTau(1000);
+        sleepTauCheck(1000);
         openClaw();
         sleepTau(250);
         driveBackwardStraightDISTANCE(0.5);
-        sleepTau(1000);
+        sleepTauCheck(1000);
         lowerLiftSlightly();
         sleepTau(500);
         turnToDegree(1, -90);

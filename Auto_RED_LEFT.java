@@ -60,6 +60,8 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             sleepTau(150);
             realign(0.5);
             sleepTau(1000);
+            realign(0.1);
+            sleepTau(500);
         }
         else if(jewelValue == 10){
             turnDegree(0.5,-30);
@@ -68,6 +70,8 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             sleepTau(150);
             realign(0.5);
             sleepTau(1000);
+            realign(0.1);
+            sleepTau(500);
         }
         else{
             telemetry.addData("Jewel", "Unknown");
@@ -75,8 +79,9 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(450);
         }
-        driveForwardStraightDISTANCE(0.8);
-        sleepTau(1500);
+
+        driveForwardStraightDISTANCE(0.97);
+        sleepTauCheck(1500);
         realign(0.5);
         sleepTau(200);
         vuValue = leftGetVu();
@@ -86,26 +91,26 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         realign(0.5);
         sleepTau(1200);
         if(vuValue.equals("CENTER")) {
-            driveForwardStraightDISTANCE(0.66);
+            driveForwardStraightDISTANCE(0.56);
         }
         else if(vuValue.equals("LEFT")){
-            driveForwardStraightDISTANCE(0.95);
+            driveForwardStraightDISTANCE(0.85);
         }
         else if(vuValue.equals("RIGHT")){
-            driveForwardStraightDISTANCE(0.35);
+            driveForwardStraightDISTANCE(0.18);
         }
         else {
-           driveForwardStraightDISTANCE(0.66);
+            driveForwardStraightDISTANCE(0.56);
         }
-        sleepTau(1500);
+        sleepTauCheck(1500);
         turnToDegree(1, 90.0);
         sleepTau(750);
         driveForwardStraightDISTANCE(0.4,0.48);
-        sleepTau(1200);
+        sleepTauCheck(1200);
         openClaw();
         sleepTau(250);
         driveBackwardStraightDISTANCE(0.5,0.5);
-        sleepTau(1000);
+        sleepTauCheck(1000);
         lowerLiftSlightly();
         sleepTau(150);
         turnToDegree(1,-90);
@@ -114,8 +119,6 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         sleepTau(150);
         turnToDegree(0.5,-90);
         sleepTau(2500);
-
-
 
 
     }
