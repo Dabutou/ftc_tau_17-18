@@ -57,6 +57,7 @@ public class Teleop extends OpMode {
     private double rightLiftPos = RIGHT_LIFT_OPEN;
     //private double endTime2B = 0;
     //private int clawStage = 2;
+    int relicSpeedMultiple = 1;
 
 
 
@@ -313,7 +314,12 @@ public class Teleop extends OpMode {
         robot.leftLiftMotor.setPower(0.45 * leftGP2Y);
         robot.rightLiftMotor.setPower(0.45 * leftGP2Y);
 
-        robot.relicMotor.setPower(rightGP2Y);
+        if (gamepad2.dpad_right && relicSpeedMultiple <= 1){relicSpeedMultiple += 0.1;}
+
+        if (gamepad2.dpad_left && relicSpeedMultiple >= 0){relicSpeedMultiple -= 0.1;}
+
+        telemetry.addData("Relic Speed Multiplier: ", "" + relicSpeedMultiple);
+        robot.relicMotor.setPower(Math.pow(rightGP2Y, 3) * relicSpeedMultiple);
 
 
         if (gamepad2.left_bumper){
@@ -334,6 +340,10 @@ public class Teleop extends OpMode {
         else{
             robot.relicServo.setPosition(0.5);
         }
+
+
+
+
         //Open and close claw servos
         /*if (gamepad2.left_bumper && clawStage < 3 && (endTime2B == 0 || robot.getTime() >= endTime2B)) {
             endTime2B = robot.getTime() + 0.15;
