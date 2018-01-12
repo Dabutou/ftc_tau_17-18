@@ -94,10 +94,10 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         sleepTauCheck(1550);
         turnDegree(1,5);
         sleepTau(250);
-        turnToDegree(1, 180);
-        sleepTau(1600);
-        turnToDegree(0.2,180);
-        sleepTau(500);
+        turnToDegree(0.3, 180);
+        sleepTau(2600);
+        //turnToDegree(0.2,180);
+        //sleepTau(500);
         driveForwardStraightDISTANCE(0.65, 2.1);
         sleepTauCheck(2500);
         turnToDegree(0.5,-180);
@@ -106,16 +106,16 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             driveLeftStraightDISTANCE(0.5,0.40);
         }
         else if(vuValue.equals("LEFT")){
-            driveLeftStraightDISTANCE(0.5,0.74);
+            driveLeftStraightDISTANCE(0.5,0.82);
         }
         else if(vuValue.equals("RIGHT")){
-            driveLeftStraightDISTANCE(0.5,0.08);
+            driveLeftStraightDISTANCE(0.5,0.0);
         }
         else {
             driveLeftStraightDISTANCE(0.5,0.40);
         }
         sleepTauCheck(1600);
-        turnToDegree(0.3,-180);
+        turnToDegree(0.3,-181);
         sleepTau(500);
         driveForwardStraightDISTANCE(0.7);
         sleepTauCheck(1000);
