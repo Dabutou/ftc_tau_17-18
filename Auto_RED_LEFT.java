@@ -61,7 +61,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             realign(0.5);
             sleepTau(1000);
             realign(0.1);
-            sleepTau(500);
+            sleepTau(700);
         }
         else if(jewelValue == 10){
             turnDegree(0.5,-30);
@@ -71,7 +71,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             realign(0.5);
             sleepTau(1000);
             realign(0.1);
-            sleepTau(500);
+            sleepTau(700);
         }
         else{
             telemetry.addData("Jewel", "Unknown");
@@ -80,8 +80,8 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             sleepTau(450);
         }
 
-        driveForwardStraightDISTANCE(0.97);
-        sleepTauCheck(1500);
+        driveForwardStraightDISTANCE(0.4,0.97);
+        sleepTauCheck(1750);
         realign(0.5);
         sleepTau(200);
         vuValue = leftGetVu();
@@ -94,17 +94,17 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             driveForwardStraightDISTANCE(0.56);
         }
         else if(vuValue.equals("LEFT")){
-            driveForwardStraightDISTANCE(0.85);
+            driveForwardStraightDISTANCE(0.90);
         }
         else if(vuValue.equals("RIGHT")){
-            driveForwardStraightDISTANCE(0.18);
+            driveForwardStraightDISTANCE(0.23);
         }
         else {
             driveForwardStraightDISTANCE(0.56);
         }
-        sleepTauCheck(1500);
-        turnToDegree(1, 90.0);
-        sleepTau(750);
+        sleepTauCheck(1700);
+        turnToDegree(0.5, 90.0);
+        sleepTau(1500);
         driveForwardStraightDISTANCE(0.4,0.48);
         sleepTauCheck(1200);
         openClaw();
@@ -117,6 +117,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         sleepTau(1000);
         autoReposition(vuValue);
         sleepTau(150);
+        getImu();
         turnToDegree(0.5,-90);
         sleepTau(2500);
 

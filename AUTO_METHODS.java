@@ -641,6 +641,10 @@ class AUTO_METHODS extends LinearOpMode{
         telemetry.addData("BACK RIGHT", backRightMotorPosition +" : " + robot.backRightMotor.getCurrentPosition());
         updateTelemetry(telemetry);
     }
+    public void getImu(){
+        telemetry.addData("IMU HEADING", getImuHeading());
+        updateTelemetry(telemetry);
+    }
     public void resetEncoders(){
         robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
