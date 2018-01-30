@@ -119,7 +119,7 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         openClaw();
         sleepTau(150);
         //getPositions();
-        driveForwardStraightDISTANCE(1);
+        /*driveForwardStraightDISTANCE(1);
         sleepTauCheck(2500);
         getImuHeading();
         driveBackwardStraightDISTANCE(1);
@@ -169,10 +169,12 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         getPositions();
         driveRightStraightDISTANCE(0.25,1);
         sleepTauCheck(2500);
-        getImuHeading();
+        getImuHeading();*/
         //getPositions();
         //getPositions();
         //glideFindSpot();
+        glideFindRightWall();
+
 
         /*driveLeftStraightDISTANCE(0.5,10);
         sleepTauCheck(20000);

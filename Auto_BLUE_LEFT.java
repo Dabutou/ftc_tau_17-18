@@ -129,6 +129,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         sleepTau(150);
         turnToDegree(0.5,-90);
         sleepTau(1500);
+
     }
 
 }

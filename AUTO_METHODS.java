@@ -88,7 +88,7 @@ class AUTO_METHODS extends LinearOpMode{
 
         robot.init(hardwareMap);
         imu = robot.getImu();
-        //frontRangeSensor = robot.frontRangeSensor;
+        frontRangeSensor = robot.frontRangeSensor;
         rightRangeSensor = robot.rightRangeSensor;
         // Set up our telemetry dashboard
         telemetry.addData("Readiness", "Press Play to start");
@@ -286,18 +286,128 @@ class AUTO_METHODS extends LinearOpMode{
 
         runDistances();
     }
-    public void glideFindSpot(){
-        double glideEnd = robot.getTime() + 5.0;
+    public void glideFindSpot(String vuMark){
+        double glideEnd = robot.getTime() + 6.0;
         int cryptoCounter = 0;
-        driveForwardStraightDISTANCE(0.15,1);
+        double distValues = rightGetRange();
+        double tempValues = rightGetRange();
+        driveForwardStraightDISTANCE(0.088,0.98);
+        boolean done = false;
+
+
         while (glideEnd > robot.getTime()){
-            /*if (frontGetRange() < 15){
+
+            if (rightGetRange() < 1000 ){
+            tempValues = rightGetRange();
+            if (distValues - tempValues > 2){
                 cryptoCounter++;
-            }*/
-            telemetry.addData("RANGE","RIGHT: " + rightGetRange());
+            }
+            distValues = rightGetRange();}
+            telemetry.addData("RANGE","RIGHT: " + rightGetRange()+" FRONT: " + frontGetRange() + " CRYPTO: " + cryptoCounter);
             updateTelemetry(telemetry);
+            if (vuMark.equals("RIGHT") && cryptoCounter>=1 &&  !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1500);
+                    turnToDegree(0.45,90);
+                    sleepTau(1000);
+                    driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                stopRobot();
+                openClaw();
+                driveBackwardStraightDISTANCE(0.3,0.35);
+                sleepTau(1500);
+                turnToDegree(0.6,-90);
+                sleepTau(1500);
+                done = true;
+                break;
+            }
+            if (vuMark.equals("CENTER") && cryptoCounter >= 2 && !done){
+                stopRobot();
+                sleepTau(250);
+                driveLeftStraightDISTANCE(0.3,0.25);
+                sleepTau(1500);
+                turnToDegree(0.45,90);
+                sleepTau(1000);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                stopRobot();
+                openClaw();
+                driveBackwardStraightDISTANCE(0.3,0.35);
+                sleepTau(1500);
+                turnToDegree(0.6,-90);
+                sleepTau(1500);
+                done = true;
+                break;
+            }
+            if (vuMark.equals("LEFT") && cryptoCounter >= 3 && !done){
+                stopRobot();
+                sleepTau(250);
+                driveForwardStraightDISTANCE(0.15,0.09);
+                sleepTau(1000);
+                driveLeftStraightDISTANCE(0.3,0.25);
+                sleepTau(1500);
+                turnToDegree(0.45,90);
+                sleepTau(1000);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                stopRobot();
+                openClaw();
+                driveBackwardStraightDISTANCE(0.3,0.35);
+                sleepTau(1500);
+                turnToDegree(0.6,-90);
+                sleepTau(1500);
+                done = true;
+                break;
+            }
 
         }
+        if (!done) {
+            driveLeftStraightDISTANCE(0.3, 0.2);
+            sleepTau(1500);
+            turnToDegree(0.35, -90);
+            sleepTau(1000);
+        }
+
+    }
+    public void glideFindFrontWall(){
+        double glideEnd = robot.getTime() + 10;
+        driveForwardStraightDISTANCE(0.13,3);
+        while (glideEnd > robot.getTime()){
+            if (frontGetRange() < 20){
+                break;
+            }
+        }
+        stopRobot();
+
+    }
+    public void glideFindRightWall(){
+        double glideEnd = robot.getTime() + 10;
+        driveRightStraightDISTANCE(0.11,3);
+        //try{
+            while (glideEnd > robot.getTime()){
+                if (rightGetRange() <= 22){
+                    break;
+                }
+                telemetry.addData("RIGHT RANGE",rightGetRange());
+                updateTelemetry(telemetry);
+                //Thread.sleep(1);
+            }
+            if (glideEnd-robot.getTime() > 8.9){
+                driveBackwardStraightDISTANCE(0.15,0.06);
+                sleepTau(1000);
+                double glideEnd2 = robot.getTime() + 3;
+                while (glideEnd2 > robot.getTime()){
+                    if (rightGetRange() <= 22){
+                        break;
+                    }
+                    telemetry.addData("RIGHT RANGE",rightGetRange());
+                    updateTelemetry(telemetry);
+                }
+            }
+            stopRobot();
+        //}catch(InterruptedException e){telemetry.addData("NOOO","BUGGY");updateTelemetry(telemetry);}
     }
     public String leftGetVu(){
 
@@ -317,13 +427,13 @@ class AUTO_METHODS extends LinearOpMode{
     public String rightGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        vuMarkEnd = robot.getTime() + 5;
+        vuMarkEnd = robot.getTime() + 4;
         while(vuMarkEnd > robot.getTime()) {
             if(vumark != RelicRecoveryVuMark.UNKNOWN) {
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.06,-24);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.14,-17.5);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -469,7 +579,7 @@ class AUTO_METHODS extends LinearOpMode{
         robot.rightLiftServo.setPosition(0.15);
     }
     public int getJewel(){
-        jewelEnd = robot.getTime() + 3;
+        jewelEnd = robot.getTime() + 2.5;
         int jewelValue = 0;
         while(jewelEnd > robot.getTime() && robot.jewelServo.getPosition() > 0.63) {
             jewelValue = getColor();
@@ -686,6 +796,10 @@ class AUTO_METHODS extends LinearOpMode{
         robot.backLeftMotor.setPower(speed);
         robot.backRightMotor.setPower(speed);
     }
+    private void stopRobot(){
+        speed(0);
+        resetEncoderToReal();
+    }
     private void speedNoChange(double speed){
         robot.frontLeftMotor.setPower(speed);
         robot.frontRightMotor.setPower(speed);
@@ -700,9 +814,7 @@ class AUTO_METHODS extends LinearOpMode{
         robot.leftLiftMotor.setTargetPosition(leftLiftPosition);
         robot.rightLiftMotor.setTargetPosition(rightLiftPosition);
     }
-    /*private double frontGetRange(){
-        return frontRangeSensor.getDistance(DistanceUnit.CM);
-    }*/
+    private double frontGetRange(){return frontRangeSensor.getDistance(DistanceUnit.CM);}
     private double rightGetRange(){
         return rightRangeSensor.getDistance(DistanceUnit.CM);
     }

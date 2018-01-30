@@ -56,8 +56,8 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         updateTelemetry(telemetry);
         realign(0.2);
         sleepTau(1000);
-        driveForwardStraightDISTANCE(0.2,0.05);
-        sleepTau(1500);
+        realign(0.1);
+        sleepTau(750);
         lowerJewelServo();
         sleepTau(450);
         jewelValue = getJewel();
@@ -67,9 +67,9 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(150);
             realign(0.2);
-            sleepTau(1000);
+            sleepTau(1100);
             realign(0.1);
-            sleepTau(300);
+            sleepTau(600);
         }
         else if(jewelValue == 10){
             turnDegree(0.2,-30);
@@ -77,9 +77,9 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(150);
             realign(0.2);
-            sleepTau(1000);
+            sleepTau(1100);
             realign(0.1);
-            sleepTau(300);
+            sleepTau(600);
         }
         else{
             telemetry.addData("Jewel", "Unknown");
@@ -87,13 +87,16 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
             raiseJewelServo();
             sleepTau(450);
         }
-        driveForwardStraightDISTANCE(0.4,1);
-        sleepTauCheck(1500);
-        driveRightStraightDISTANCE(0.3,0.25);
-        sleepTau(1500);
-        realign(0.2);
+        driveForwardStraightDISTANCE(0.3,1.08);
+        sleepTauCheck(1400);
+        realign(0.15);
+        sleepTau(500);
+        glideFindRightWall();
         sleepTau(400);
-        glideFindSpot();
+        realign(0.15);
+        sleepTau(400);
+        glideFindSpot(vuValue);
+        lowerLiftSlightly();
         sleepTau(2000);
 
         /*closeClaw();
