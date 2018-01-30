@@ -48,7 +48,7 @@ public class Hardware {
     // Sensor variable names
     public I2cDevice colori2C = null;
     public ModernRoboticsI2cColorSensor2 color = null;
-    //public ModernRoboticsI2cRangeSensor frontRangeSensor = null;
+    public ModernRoboticsI2cRangeSensor frontRangeSensor = null;
     public ModernRoboticsI2cRangeSensor rightRangeSensor = null;
 
     //VuForia**************************
@@ -178,9 +178,10 @@ public class Hardware {
         color = new ModernRoboticsI2cColorSensor2(colori2C.getI2cController(),colori2C.getPort());
         color.setI2cAddress(I2cAddr.create8bit(0x4C));
 
-        //frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
+        frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
         rightRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class,"range_right");
 
+        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x30));
 
         // Initialize sensors
         imu.initialize(parameters);

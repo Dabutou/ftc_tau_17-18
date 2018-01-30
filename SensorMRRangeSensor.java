@@ -33,6 +33,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -58,19 +59,20 @@ public class SensorMRRangeSensor extends LinearOpMode {
         // get a reference to our compass
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
         rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_right");
+        rangeSensor.setI2cAddress(I2cAddr.create8bit(0x30));
 
         // wait for the start button to be pressed
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("roymoore ultrasonic", rangeSensor.rawUltrasonic());
+            /*telemetry.addData("roymoore ultrasonic", rangeSensor.rawUltrasonic());
             telemetry.addData("raw optical", rangeSensor.rawOptical());
-            telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
+            telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());*/
             telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
             /*telemetry.addData("roymoore ultrasonic", rangeSensor2.rawUltrasonic());
             telemetry.addData("raw optical", rangeSensor2.rawOptical());
-            telemetry.addData("cm optical", "%.2f cm", rangeSensor2.cmOptical());
-            telemetry.addData("cm", "%.2f cm", rangeSensor2.getDistance(DistanceUnit.CM));*/
+            telemetry.addData("cm optical", "%.2f cm", rangeSensor2.cmOptical());*/
+            telemetry.addData("cm", "%.2f cm", rangeSensor2.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
     }
