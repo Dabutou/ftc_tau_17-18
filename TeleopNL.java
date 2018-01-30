@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  */
 @TeleOp(name = "Tau: Teleop No Lift", group="Tau")
 //Uncomment below to show up after run
-//@Disabled
+@Disabled
 public class TeleopNL extends OpMode {
 
     HardwareNL robot = new HardwareNL();

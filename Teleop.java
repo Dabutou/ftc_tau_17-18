@@ -47,9 +47,9 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
-    private static final double LEFT_LIFT_OPEN = 0.95;
+    private static final double LEFT_LIFT_OPEN = 0.85;
     private static final double LEFT_LIFT_CLOSE = 0.10;
-    private static final double RIGHT_LIFT_OPEN = 0.85;
+    private static final double RIGHT_LIFT_OPEN = 0.75;
     private static final double RIGHT_LIFT_CLOSE = 0;
     private double leftGP2Y = 0;
     private double rightGP2Y = 0;
@@ -111,11 +111,20 @@ public class Teleop extends OpMode {
         leftGP1X = gamepad1.left_stick_x;
 
         //Remove slight touches
-        if(Math.abs(leftGP1Y) < 0.40) {
-            leftGP1Y = 0;
-        }
-        if(Math.abs(leftGP1X) < 0.40) {
-            leftGP1X = 0;
+        if (!absoluteDrive) {
+            if (Math.abs(leftGP1Y) < 0.40) {
+                leftGP1Y = 0;
+            }
+            if (Math.abs(leftGP1X) < 0.40) {
+                leftGP1X = 0;
+            }
+        }else{
+            if (Math.abs(leftGP1Y) < 0.05) {
+                leftGP1Y = 0;
+            }
+            if (Math.abs(leftGP1X) < 0.05) {
+                leftGP1X = 0;
+            }
         }
 
         //Check if absolute drive is on
@@ -325,10 +334,10 @@ public class Teleop extends OpMode {
         }
         //Limit extension of lift
 
-        robot.leftLiftMotor.setPower(0.45 * leftGP2Y);
-        robot.rightLiftMotor.setPower(0.45 * leftGP2Y);
+        robot.leftLiftMotor.setPower(0.7 * Math.pow(leftGP2Y,3));
+        robot.rightLiftMotor.setPower(0.7 * Math.pow(leftGP2Y,3));
 
-        robot.relicMotor.setPower(Math.pow(rightGP2Y,3));
+        robot.relicMotor.setPower(-Math.pow(rightGP2Y,3));
 
 
         if (gamepad2.left_bumper){

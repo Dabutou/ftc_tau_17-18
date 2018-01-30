@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.ThreadPool;
  */
 
 @Autonomous(name = "Auto Red Right", group = "Tau")
-//@Disabled
+@Disabled
 public class Auto_RED_RIGHT extends AUTO_METHODS{
 
     @Override//CALLS AUTO_METHODS TO RUN

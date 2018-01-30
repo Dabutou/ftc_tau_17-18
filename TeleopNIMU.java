@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 /**
  * Created by LH on 12/30/2017.
  */
 @TeleOp(name = "Tau: Teleop No IMU", group="Tau")
 //Uncomment below to show up after run
-//@Disabled
+@Disabled
 public class TeleopNIMU extends OpMode {
 
     Hardware robot = new Hardware();

@@ -47,7 +47,56 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         IMUandVu();
 
         //CALL WHATEVER METHODS HERE:
+
         closeClaw();
+        sleepTau(400);
+        raiseLiftSlightly();
+        vuValue = rightGetVu();
+        telemetry.addData("VuMark", vuValue);
+        updateTelemetry(telemetry);
+        realign(0.2);
+        sleepTau(1000);
+        driveForwardStraightDISTANCE(0.2,0.05);
+        sleepTau(1500);
+        lowerJewelServo();
+        sleepTau(450);
+        jewelValue = getJewel();
+        if (jewelValue == 3){
+            turnDegree(0.2,30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.2);
+            sleepTau(1000);
+            realign(0.1);
+            sleepTau(300);
+        }
+        else if(jewelValue == 10){
+            turnDegree(0.2,-30);
+            sleepTau(1200);
+            raiseJewelServo();
+            sleepTau(150);
+            realign(0.2);
+            sleepTau(1000);
+            realign(0.1);
+            sleepTau(300);
+        }
+        else{
+            telemetry.addData("Jewel", "Unknown");
+            updateTelemetry(telemetry);
+            raiseJewelServo();
+            sleepTau(450);
+        }
+        driveForwardStraightDISTANCE(0.4,1);
+        sleepTauCheck(1500);
+        driveRightStraightDISTANCE(0.3,0.25);
+        sleepTau(1500);
+        realign(0.2);
+        sleepTau(400);
+        glideFindSpot();
+        sleepTau(2000);
+
+        /*closeClaw();
         getLiftPosition();
         lowerJewelServo();
         sleepTau(1000);
@@ -117,9 +166,9 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         sleepTau(1000);
         autoReposition(vuValue);
         sleepTau(150);
-        getImu();
+        //getImu();
         turnToDegree(0.5,-90);
-        sleepTau(2500);
+        sleepTau(2500);*/
 
 
     }

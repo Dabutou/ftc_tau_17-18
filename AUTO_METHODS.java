@@ -2,16 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -22,6 +25,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -38,6 +45,9 @@ class AUTO_METHODS extends LinearOpMode{
     private Orientation angles;
     private Acceleration gravity;
 
+    private ModernRoboticsI2cRangeSensor frontRangeSensor;
+    private ModernRoboticsI2cRangeSensor rightRangeSensor;
+
     private int backLeftMotorPosition = 0;
     private int backRightMotorPosition = 0;
     private int frontLeftMotorPosition = 0;
@@ -46,13 +56,17 @@ class AUTO_METHODS extends LinearOpMode{
     private int frontRightMotorPositionGradiant = 0;
     private int backLeftMotorPositionGradiant = 0;
     private int backRightMotorPositionGradiant = 0;
+    private int frontLeftMotorPositionFirstGradiant = 0;
+    private int frontRightMotorPositionFirstGradiant = 0;
+    private int backLeftMotorPositionFirstGradiant = 0;
+    private int backRightMotorPositionFirstGradiant = 0;
     private boolean frontLeftGradiantSign;
     private boolean frontRightGradiantSign;
     private boolean backLeftGradiantSign;
     private boolean backRightGradiantSign;
     private int leftLiftPosition = 0;
     private int rightLiftPosition = 0;
-    private final int distancetoBlock = 990;
+    private final int distancetoBlock = 1060;
     private final int blockHeight = -750;
     private double vuMarkEnd = 0;
     private boolean doneOnce = false;
@@ -65,7 +79,7 @@ class AUTO_METHODS extends LinearOpMode{
 
     //private void initialize(){robot.init(hardwareMap);}
 
-    public void runOpMode() throws InterruptedException{}
+    public void runOpMode() throws InterruptedException {}
 
 
     public void IMUandVu(){
@@ -74,7 +88,8 @@ class AUTO_METHODS extends LinearOpMode{
 
         robot.init(hardwareMap);
         imu = robot.getImu();
-
+        //frontRangeSensor = robot.frontRangeSensor;
+        rightRangeSensor = robot.rightRangeSensor;
         // Set up our telemetry dashboard
         telemetry.addData("Readiness", "Press Play to start");
         composeTelemetry();
@@ -177,6 +192,7 @@ class AUTO_METHODS extends LinearOpMode{
 
     //realigns to initial setup
     public void realign(double speed){
+        resetEncoderToReal();
         float heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         telemetry.addData("IMU", "" + heading);
         updateTelemetry(telemetry);
@@ -191,6 +207,7 @@ class AUTO_METHODS extends LinearOpMode{
 
     //negative degree is left turn, positive is right turn
     public void turnDegree(double speed, double degree){
+        resetEncoderToReal();
         speed(speed);
         telemetry.addData("IMU", "" + imu.getAngularOrientation().firstAngle);
         updateTelemetry(telemetry);
@@ -200,8 +217,9 @@ class AUTO_METHODS extends LinearOpMode{
         backRightMotorPosition += (int)(3520.0*degree/360);
         runDistances();
     }
-    public float getImuHeading(){
-        return imu.getAngularOrientation().firstAngle;
+    public void getImuHeading(){
+        telemetry.addData("IMU HEADINGS", imu.getAngularOrientation().firstAngle + " : " + imu.getAngularOrientation().secondAngle + " : " + imu.getAngularOrientation().thirdAngle);
+        updateTelemetry(telemetry);
     }
     public void turnToDegree(double speed, double degree){
         speed(speed);
@@ -268,22 +286,34 @@ class AUTO_METHODS extends LinearOpMode{
 
         runDistances();
     }
+    public void glideFindSpot(){
+        double glideEnd = robot.getTime() + 5.0;
+        int cryptoCounter = 0;
+        driveForwardStraightDISTANCE(0.15,1);
+        while (glideEnd > robot.getTime()){
+            /*if (frontGetRange() < 15){
+                cryptoCounter++;
+            }*/
+            telemetry.addData("RANGE","RIGHT: " + rightGetRange());
+            updateTelemetry(telemetry);
+
+        }
+    }
     public String leftGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        vuMarkEnd = robot.getTime() + 5;
+        vuMarkEnd = robot.getTime() + 5.2;
         while(vuMarkEnd > robot.getTime()) {
             if(vumark != RelicRecoveryVuMark.UNKNOWN) {
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.06,33);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.06,36);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
         return "UNKNOWN AND PROGRAMMERS BAD";
     }
-
     public String rightGetVu(){
 
         RelicRecoveryVuMark vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
@@ -293,7 +323,7 @@ class AUTO_METHODS extends LinearOpMode{
                 return "" + vumark;
             }
             else{
-                if(!doneOnce){turnDegree(0.06,-33);doneOnce = !doneOnce;}
+                if(!doneOnce){turnDegree(0.06,-24);doneOnce = !doneOnce;}
                 vumark = RelicRecoveryVuMark.from(robot.relicTemplate);
             }
         }
@@ -310,13 +340,13 @@ class AUTO_METHODS extends LinearOpMode{
         updateTelemetry(telemetry);
     }
     public void raiseLiftSlightly(){
-        liftSpeed(-0.45);
-        sleepTau(250);
+        liftSpeed(-0.65);
+        sleepTau(350);
         liftSpeed(0);
     }
     public void lowerLiftSlightly(){
-        liftSpeed(0.45);
-        sleepTau(248);
+        liftSpeed(0.65);
+        sleepTau(350);
         liftSpeed(0);
     }
     public void raiseLiftMoreSlightly(){
@@ -380,57 +410,47 @@ class AUTO_METHODS extends LinearOpMode{
         }
         sleepTau(1500);
     }
-   /* public void setLiftStage1(double speed){
-        liftSpeed(speed);
-        leftLiftPosition = 0;
-        rightLiftPosition = 0;
-        liftDistances();
-    }
-    public void setLiftStage2(double speed){
-        liftSpeed(speed);
-        leftLiftPosition = blockHeight;
-        rightLiftPosition = blockHeight;
-        liftDistances();
-    }
-    public void setLiftStage3(double speed){
-        liftSpeed(speed);
-        leftLiftPosition = 2*blockHeight;
-        rightLiftPosition = 2*blockHeight;
-        liftDistances();
-    }
-    public void setLiftStage4(double speed){
-        liftSpeed(speed);
-        leftLiftPosition = 3*blockHeight;
-        rightLiftPosition = 3*blockHeight;
-        liftDistances();
-    }
-    public void raiseLiftStage(double speed){
-        liftSpeed(speed);
-        leftLiftPosition += blockHeight;
-        rightLiftPosition += blockHeight;
-        liftDistances();
-    }
-    public void lowerLiftStage(double speed){
-        liftSpeed(speed);
-        leftLiftPosition -= blockHeight;
-        rightLiftPosition -= blockHeight;
-        liftDistances();
-    }*/
-
 
     public void sleepTau(long milliSec){try{Thread.sleep(milliSec);}catch(InterruptedException e){throw new RuntimeException(e);}}
     public void sleepTauCheck(long milliSec)
     {
         long time = 0;
         try{
+            if (speed > 0.25) {
+                speedNoChange(speed * 0.55);
+            }
+            else{
+                speedNoChange(0.15);
+            }
+            runDistances();
             while (time < milliSec){
                 Thread.sleep(3);
-                if (checkGradiants()){
-                    speed(0.20);
+                if (checkInitGradiants()){
+                    speed(speed);
                     runDistances();
                     break;
                 }
-                time+=3;
+                time += 3;
+            }
+            while (time < milliSec){
+                Thread.sleep(3);
+                if (checkEndGradiants()){
+                    telemetry.addData("Speed", speed);
+                    updateTelemetry(telemetry);
+                    if (speed > 0.1){
+                        speed-=0.3;
+                        speed(speed);
+                    }
+                    else{
+                        break;
+                    }
+                    runDistances();
+                    time+=1;
+                }else{
+                    time+=3;
+                }
+
+
             }
             if (time < milliSec){
                 Thread.sleep(milliSec-time);
@@ -441,18 +461,17 @@ class AUTO_METHODS extends LinearOpMode{
     }
 
     public void openClaw(){
-        robot.leftLiftServo.setPosition(0.95);
-        robot.rightLiftServo.setPosition(0.85);
+        robot.leftLiftServo.setPosition(0.85);
+        robot.rightLiftServo.setPosition(0.75);
     }
-
     public void closeClaw(){
-        robot.leftLiftServo.setPosition(0.10);
-        robot.rightLiftServo.setPosition(0);
+        robot.leftLiftServo.setPosition(0.25);
+        robot.rightLiftServo.setPosition(0.15);
     }
     public int getJewel(){
         jewelEnd = robot.getTime() + 3;
         int jewelValue = 0;
-        while(jewelEnd > robot.getTime() && robot.jewelServo.getPosition() > 0.9) {
+        while(jewelEnd > robot.getTime() && robot.jewelServo.getPosition() > 0.63) {
             jewelValue = getColor();
             if(jewelValue == 3 || jewelValue == 10) {
                 return jewelValue;
@@ -474,10 +493,11 @@ class AUTO_METHODS extends LinearOpMode{
 
 
     public void driveForwardStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = true;
         frontRightGradiantSign = false;
         backLeftGradiantSign = true;
@@ -487,10 +507,11 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = false;
         frontRightGradiantSign = true;
         backLeftGradiantSign = false;
@@ -501,10 +522,11 @@ class AUTO_METHODS extends LinearOpMode{
 
     }
     public void driveRightStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = true;
         frontRightGradiantSign = true;
         backLeftGradiantSign = false;
@@ -515,10 +537,11 @@ class AUTO_METHODS extends LinearOpMode{
 
     }
     public void driveLeftStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = false;
         frontRightGradiantSign = false;
         backLeftGradiantSign = true;
@@ -528,35 +551,40 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void driveNWStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         int distances = (int)(distancetoBlock*distance);
         setDistances(0,-distances,distances, 0);
         runDistances();
     }
     public void driveNEStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         int distances = (int)(distancetoBlock*distance);
         setDistances(distances,0,0, -distances);
         runDistances();
     }
     public void driveSEStraightDISTANCE(double distance){
-        speed(0.6);
+        resetEncoderToReal();
+        speed(0.55);
         int distances = (int)(distancetoBlock*distance);
         setDistances(0,distances,-distances, 0);
         runDistances();
     }
     public void driveSWStraightDISTANCE(double distance){
-        speed(0.6);
-    int distances = (int)(distancetoBlock*distance);
-    setDistances(-distances,0,0, distances);
-    runDistances();
-}
+        resetEncoderToReal();
+        speed(0.55);
+        int distances = (int)(distancetoBlock*distance);
+        setDistances(-distances,0,0, distances);
+        runDistances();
+    }
     //same with speed
     public void driveForwardStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = true;
         frontRightGradiantSign = false;
         backLeftGradiantSign = true;
@@ -566,10 +594,11 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void driveBackwardStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = false;
         frontRightGradiantSign = true;
         backLeftGradiantSign = false;
@@ -579,10 +608,11 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void driveRightStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = true;
         frontRightGradiantSign = true;
         backLeftGradiantSign = false;
@@ -592,10 +622,11 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void driveLeftStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         resetGradiants();
         int distances = (int)(distancetoBlock*distance);
-        int distancegradiant = (int)(distances-distancetoBlock*0.3);
+        int distancegradiant = (int)(distances-distancetoBlock*1.6*speed);
         frontLeftGradiantSign = false;
         frontRightGradiantSign = false;
         backLeftGradiantSign = true;
@@ -605,24 +636,28 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void driveNWStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         int distances = (int)(distancetoBlock*distance);
         setDistances(0,-distances,distances, 0);
         runDistances();
     }
     public void driveNEStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         int distances = (int)(distancetoBlock*distance);
         setDistances(distances,0,0, -distances);
         runDistances();
     }
     public void driveSEStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         int distances = (int)(distancetoBlock*distance);
         setDistances(0,distances,-distances, 0);
         runDistances();
     }
     public void driveSWStraightDISTANCE(double speed, double distance){
+        resetEncoderToReal();
         speed(speed);
         int distances = (int)(distancetoBlock*distance);
         setDistances(-distances,0,0, distances);
@@ -634,30 +669,24 @@ class AUTO_METHODS extends LinearOpMode{
             updateTelemetry(telemetry);
         }
     }
-    public void getPositions(){
-        telemetry.addData("FRONT LEFT", frontLeftMotorPosition +" : " + robot.frontLeftMotor.getCurrentPosition());
-        telemetry.addData("FRONT RIGHT", frontRightMotorPosition +" : " + robot.frontRightMotor.getCurrentPosition());
-        telemetry.addData("BACK LEFT", backLeftMotorPosition +" : " + robot.backLeftMotor.getCurrentPosition());
-        telemetry.addData("BACK RIGHT", backRightMotorPosition +" : " + robot.backRightMotor.getCurrentPosition());
+    public void getPositions() {
+        telemetry.addData("FRONT LEFT", frontLeftMotorPosition + " : " + robot.frontLeftMotor.getCurrentPosition());
+        telemetry.addData("FRONT RIGHT", frontRightMotorPosition + " : " + robot.frontRightMotor.getCurrentPosition());
+        telemetry.addData("BACK LEFT", backLeftMotorPosition + " : " + robot.backLeftMotor.getCurrentPosition());
+        telemetry.addData("BACK RIGHT", backRightMotorPosition + " : " + robot.backRightMotor.getCurrentPosition());
         updateTelemetry(telemetry);
     }
-    public void getImu(){
-        telemetry.addData("IMU HEADING", getImuHeading());
-        updateTelemetry(telemetry);
-    }
-    public void resetEncoders(){
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+
 
     //BEHIND THE SCENES METHODS
     private void speed(double speed){
+        this.speed = speed;
+        robot.frontLeftMotor.setPower(speed);
+        robot.frontRightMotor.setPower(speed);
+        robot.backLeftMotor.setPower(speed);
+        robot.backRightMotor.setPower(speed);
+    }
+    private void speedNoChange(double speed){
         robot.frontLeftMotor.setPower(speed);
         robot.frontRightMotor.setPower(speed);
         robot.backLeftMotor.setPower(speed);
@@ -671,7 +700,12 @@ class AUTO_METHODS extends LinearOpMode{
         robot.leftLiftMotor.setTargetPosition(leftLiftPosition);
         robot.rightLiftMotor.setTargetPosition(rightLiftPosition);
     }
-
+    /*private double frontGetRange(){
+        return frontRangeSensor.getDistance(DistanceUnit.CM);
+    }*/
+    private double rightGetRange(){
+        return rightRangeSensor.getDistance(DistanceUnit.CM);
+    }
     private void setDistances(int fl, int fr, int bl, int br){
         frontLeftMotorPosition += fl;
         frontRightMotorPosition += fr;
@@ -683,14 +717,22 @@ class AUTO_METHODS extends LinearOpMode{
         frontRightMotorPositionGradiant += fr;
         backLeftMotorPositionGradiant += bl;
         backRightMotorPositionGradiant += br;
+        frontLeftMotorPositionFirstGradiant += fl/Math.abs(fl)*50;
+        frontRightMotorPositionFirstGradiant += fr/Math.abs(fr)*50;
+        backLeftMotorPositionFirstGradiant += bl/Math.abs(bl)*50;
+        backRightMotorPositionFirstGradiant += br/Math.abs(br)*50;
     }
     private void resetGradiants(){
         frontLeftMotorPositionGradiant = frontLeftMotorPosition;
         frontRightMotorPositionGradiant = frontRightMotorPosition;
         backLeftMotorPositionGradiant = backLeftMotorPosition;
         backRightMotorPositionGradiant = backRightMotorPosition;
+        frontLeftMotorPositionFirstGradiant = frontLeftMotorPosition;
+        frontRightMotorPositionFirstGradiant = frontRightMotorPosition;
+        backLeftMotorPositionFirstGradiant = backLeftMotorPosition;
+        backRightMotorPositionFirstGradiant = backRightMotorPosition;
     }
-    private boolean checkGradiants(){
+    private boolean checkEndGradiants(){
         if (frontLeftGradiantSign){
             if (robot.frontLeftMotor.getCurrentPosition() < frontLeftMotorPositionGradiant){
                 return false;
@@ -736,11 +778,62 @@ class AUTO_METHODS extends LinearOpMode{
         return true;
 
     }
+    private boolean checkInitGradiants(){
+        if (frontLeftGradiantSign){
+            if (robot.frontLeftMotor.getCurrentPosition() < frontLeftMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.frontLeftMotor.getCurrentPosition() > frontLeftMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        if (frontRightGradiantSign){
+            if (robot.frontRightMotor.getCurrentPosition() < frontRightMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.frontRightMotor.getCurrentPosition() > frontRightMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        if (backLeftGradiantSign){
+            if (robot.backLeftMotor.getCurrentPosition() < backLeftMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.backLeftMotor.getCurrentPosition() > backLeftMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        if (backRightGradiantSign){
+            if (robot.backRightMotor.getCurrentPosition() < backRightMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+        else{
+            if (robot.backRightMotor.getCurrentPosition() > backRightMotorPositionFirstGradiant){
+                return false;
+            }
+        }
+
+
+        return true;
+    }
     private void runDistances(){
         robot.frontRightMotor.setTargetPosition(frontRightMotorPosition);
         robot.frontLeftMotor.setTargetPosition(frontLeftMotorPosition);
         robot.backRightMotor.setTargetPosition(backRightMotorPosition);
         robot.backLeftMotor.setTargetPosition(backLeftMotorPosition);
     }
-
+    private void resetEncoderToReal(){
+        frontLeftMotorPosition = robot.frontLeftMotor.getCurrentPosition();
+        frontRightMotorPosition = robot.frontRightMotor.getCurrentPosition();
+        backLeftMotorPosition = robot.backLeftMotor.getCurrentPosition();
+        backRightMotorPosition = robot.backRightMotor.getCurrentPosition();
+        runDistances();
+    }
 }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -47,6 +48,8 @@ public class Hardware {
     // Sensor variable names
     public I2cDevice colori2C = null;
     public ModernRoboticsI2cColorSensor2 color = null;
+    //public ModernRoboticsI2cRangeSensor frontRangeSensor = null;
+    public ModernRoboticsI2cRangeSensor rightRangeSensor = null;
 
     //VuForia**************************
     OpenGLMatrix lastLocation = null;
@@ -64,8 +67,8 @@ public class Hardware {
     private Acceleration gravity;
 
     // Constant variable names
-    public static final double LEFT_LIFT_OPEN = 1;
-    public static final double RIGHT_LIFT_OPEN = 0.85;
+    public static final double LEFT_LIFT_OPEN = 0.92;
+    public static final double RIGHT_LIFT_OPEN = 0.82;
 
     public Hardware()
     {
@@ -146,8 +149,8 @@ public class Hardware {
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(0.90);
+        leftLiftServo.setPosition(LEFT_LIFT_OPEN);
+        rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
         jewelServo.setPosition(0);
         relicServo.setPosition(0.5);
 
@@ -174,6 +177,10 @@ public class Hardware {
         colori2C = hwMap.i2cDevice.get("color");
         color = new ModernRoboticsI2cColorSensor2(colori2C.getI2cController(),colori2C.getPort());
         color.setI2cAddress(I2cAddr.create8bit(0x4C));
+
+        //frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
+        rightRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class,"range_right");
+
 
         // Initialize sensors
         imu.initialize(parameters);
@@ -245,8 +252,8 @@ public class Hardware {
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(0.90);
+        leftLiftServo.setPosition(LEFT_LIFT_OPEN);
+        rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
         jewelServo.setPosition(0);
         relicServo.setPosition(0.5);
 
@@ -329,8 +336,8 @@ public class Hardware {
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(1);
-        rightLiftServo.setPosition(0.90);
+        leftLiftServo.setPosition(RIGHT_LIFT_OPEN);
+        rightLiftServo.setPosition(LEFT_LIFT_OPEN);
         jewelServo.setPosition(0);
         relicServo.setPosition(0.5);
     }
