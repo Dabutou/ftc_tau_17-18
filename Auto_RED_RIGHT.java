@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.ThreadPool;
  */
 
 @Autonomous(name = "Auto Red Right", group = "Tau")
-@Disabled
+//@Disabled
 public class Auto_RED_RIGHT extends AUTO_METHODS{
 
     @Override//CALLS AUTO_METHODS TO RUN
@@ -28,66 +28,51 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
 
         //CALL WHATEVER METHODS HERE:
         closeClaw();
-        getLiftPosition();
         lowerJewelServo();
-        sleepTau(1500);
+        sleepTau(500);
         raiseLiftSlightly();
         jewelValue = getJewel();
-        if (jewelValue == 3){
-            turnDegree(0.5,30);
+        if (jewelValue == 3) {
+            turnToDegree(0.2,30);
             sleepTau(1200);
             raiseJewelServo();
             sleepTau(150);
-            realign(0.5);
-            sleepTau(500);
-        }
-        else if(jewelValue == 10){
-            turnDegree(0.5,-30);
+            turnToDegree(0.2,-10);
+            sleepTau(1000);
+        } else if(jewelValue == 10) {
+            turnDegree(0.2,-30);
             sleepTau(1200);
             raiseJewelServo();
             sleepTau(150);
-            realign(0.5);
-            sleepTau(500);
-        }
-        else{
+            turnToDegree(0.2,-10);
+            sleepTau(1000);
+        } else {
             telemetry.addData("Jewel", "Unknown");
             updateTelemetry(telemetry);
             raiseJewelServo();
             sleepTau(450);
+            turnToDegree(0.2,-10);
+            sleepTau(1000);
         }
-        driveForwardStraightDISTANCE(0.8);
-        sleepTau(1500);
-        realign(0.5);
-        sleepTau(200);
-        vuValue = leftGetVu();
+
+        vuValue = rightGetVuSMALL();
         telemetry.addData("VuMark", vuValue);
         updateTelemetry(telemetry);
-        sleepTau(100);
-        realign(0.6);
+        turnToDegree(0.35,-90);
+        sleepTau(1600);
+        turnToDegree(0.05,-87);
+        sleepTau(800);
+        driveRightStraightDISTANCE(0.3, 1.2);
+        sleepTau(1500);
+        turnToDegree(0.1,-90);
         sleepTau(700);
-        driveForwardStraightDISTANCE(0.5);
-        if(vuValue.equals("CENTER")) {
-            driveLeftStraightDISTANCE(0.5);
-        }
-        else if(vuValue.equals("LEFT")){
-           driveLeftStraightDISTANCE(0.79);
-        }
-        else if(vuValue.equals("RIGHT")){
-            driveLeftStraightDISTANCE(0.21);
-        }
-        else {
-            driveForwardStraightDISTANCE(0.5);
-        }
-        sleepTau(1200);
-        driveForwardStraightDISTANCE(0.5);
-        sleepTau(1000);
-        openClaw();
+        glideFindRightWall();
         sleepTau(250);
+        turnToDegree(0.1,-90);
+        sleepTau(800);
+        glideFindSpotFR(vuValue);
         lowerLiftSlightly();
-        driveBackwardStraightDISTANCE(0.5,0.2);
-        sleepTau(500);
-        driveForwardStraightDISTANCE(0.5);
-        sleepTau(2500);
+        autoRepositionSideRED(vuValue);
 
 
 

@@ -44,156 +44,52 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         String vuValue = "";
         int jewelValue = 0;
         IMUandVu();
-/*
+
         //CALL WHATEVER METHODS HERE:
         closeClaw();
-        getLiftPosition();
         lowerJewelServo();
-        sleepTau(1500);
+        sleepTau(500);
         raiseLiftSlightly();
         jewelValue = getJewel();
-        if (jewelValue == 10){
-            turnDegree(0.5,30);
+        if (jewelValue == 10) {
+            turnToDegree(0.2,30);
             sleepTau(1200);
             raiseJewelServo();
             sleepTau(150);
-            realign(0.5);
-            sleepTau(500);
-        }
-        else if(jewelValue == 3){
-            turnDegree(0.5,-30);
+            turnToDegree(0.2,-10);
+            sleepTau(1000);
+        } else if(jewelValue == 3) {
+            turnDegree(0.2,-30);
             sleepTau(1200);
             raiseJewelServo();
             sleepTau(150);
-            realign(0.5);
-            sleepTau(500);
-        }
-        else{
+            turnToDegree(0.2,-10);
+            sleepTau(1000);
+        } else {
             telemetry.addData("Jewel", "Unknown");
             updateTelemetry(telemetry);
             raiseJewelServo();
             sleepTau(450);
+            turnToDegree(0.2,-10);
+            sleepTau(1000);
         }
-        driveLeftStraightDISTANCE(0.75);
-        sleepTau(1500);
-        realign(0.5);
-        sleepTau(200);
-        vuValue = rightGetVu();
+
+        vuValue = rightGetVuSMALL();
         telemetry.addData("VuMark", vuValue);
         updateTelemetry(telemetry);
-        turnToDegree(1,-180);
-        if(vuValue.equals("CENTER")) {
-            driveForwardStraightDISTANCE(1.10);
-        }
-        else if(vuValue.equals("LEFT")){
-            driveForwardStraightDISTANCE(1.39);
-        }
-        else if(vuValue.equals("RIGHT")){
-            driveForwardStraightDISTANCE(0.81);
-        }
-        else {
-            driveForwardStraightDISTANCE(1.10);
-        }
-        sleepTau(1500);
-        turnToDegree(1,90);
-        sleepTau(750);
-        openClaw();
-        sleepTau(1500);
-
-*//*
-        turnToDegree(1,0);
-        sleepTau(2500);
-        turnToDegree(1,90);
-        sleepTau(2500);
-        turnToDegree(1,-45);
-        sleepTau(2500);
-        turnToDegree(1, 180);
-        sleepTau(2500);
-        turnToDegree(1,0);
-        sleepTau(2500);
-        turnDegree(1,-90);
-        sleepTau(2500);
-        turnDegree(1,90);
-        sleepTau(2500);*/
-        ////getPositions();
-        openClaw();
-        sleepTau(150);
-        //getPositions();
-        /*driveForwardStraightDISTANCE(1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        driveBackwardStraightDISTANCE(1);
-        sleepTauCheck(2500);
-        //getPositions();
-        getImuHeading();
-        getPositions();
-        driveForwardStraightDISTANCE(0.5,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        getPositions();
-        driveBackwardStraightDISTANCE(0.5,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        //getPositions();
-        getPositions();
-        driveForwardStraightDISTANCE(0.25,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        getPositions();
-        driveBackwardStraightDISTANCE(0.25,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        //getPositions();
-        getPositions();
-        driveLeftStraightDISTANCE(1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        getPositions();
-        driveRightStraightDISTANCE(1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        //getPositions();
-        getPositions();
-        driveLeftStraightDISTANCE(0.5,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        getPositions();
-        driveRightStraightDISTANCE(0.5,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        getPositions();
-        //getPositions();
-        driveLeftStraightDISTANCE(0.25,1);
-        sleepTauCheck(2500);
-        getImuHeading();
-        getPositions();
-        driveRightStraightDISTANCE(0.25,1);
-        sleepTauCheck(2500);
-        getImuHeading();*/
-        //getPositions();
-        //getPositions();
-        //glideFindSpot();
-        glideFindRightWall();
-
-
-        /*driveLeftStraightDISTANCE(0.5,10);
-        sleepTauCheck(20000);
-*/
-        /*turnDegree(1,180);
-        sleepTau(2000);
-        getImuHeading();
-        turnDegree(1,180);
-        sleepTau(2000);
-        getImuHeading();
-        realign(1);
+        realign(0.1);
         sleepTau(1000);
-        turnDegree(1,-180);
-        sleepTau(2000);
-        turnDegree(1,-180);
-        sleepTau(2000);
-        realign(1);
-        sleepTau(1000);
-*/
+        driveBackwardStraightDISTANCE(0.3,1.08);
+        sleepTauCheck(1400);
+        realign(0.15);
+        sleepTau(700);
+        glideFindRightWallSlow();
+        sleepTau(250);
+        realign(0.15);
+        sleepTau(800);
+        glideFindSpotBACKBR(vuValue);
+        lowerLiftSlightly();
+        autoRepositionFRONT(vuValue);
     }
 
 }
