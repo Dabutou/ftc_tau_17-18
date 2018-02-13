@@ -24,7 +24,7 @@ public class Teleop extends OpMode {
     Hardware robot = new Hardware();
 
     //Drive Variables
-    private BNO055IMU imu;
+    //private BNO055IMU imu;
     private double leftGP1Y = 0;
     private double leftGP1X = 0;
     private double frontleftPOWER = 0;
@@ -47,10 +47,10 @@ public class Teleop extends OpMode {
 
     //Lift Variables
 
-    private static final double LEFT_LIFT_OPEN = 0.85;
-    private static final double LEFT_LIFT_CLOSE = 0.10;
+    private static final double LEFT_LIFT_OPEN = 0.89;
+    private static final double LEFT_LIFT_CLOSE = 0.24;
     private static final double RIGHT_LIFT_OPEN = 0.75;
-    private static final double RIGHT_LIFT_CLOSE = 0;
+    private static final double RIGHT_LIFT_CLOSE = 0.10;
     private double leftGP2Y = 0;
     private double rightGP2Y = 0;
     private double leftLiftPos = LEFT_LIFT_OPEN;
@@ -74,13 +74,13 @@ public class Teleop extends OpMode {
         telemetry.addData("Readiness", "NOT READY TO START, PLEASE WAIT");
         updateTelemetry(telemetry);
 
-        robot.initTeleOp(hardwareMap);
+        robot.initTeleOpNOIMU(hardwareMap);
 
         // Set up our telemetry dashboard
         telemetry.addData("Readiness", "Press Play to start");
         telemetry.addData("If you notice this", "You are COOL!!!");
         updateTelemetry(telemetry);
-        imu = robot.getImu();
+        //imu = robot.getImu();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Teleop extends OpMode {
 
         //Check if absolute drive is on
 
-        if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
+       /* if (absoluteDrive && (Math.abs(leftGP1X) > 0 || Math.abs(leftGP1Y) > 0)) {
 
             length = Math.sqrt(Math.pow(leftGP1X,2) + Math.pow(leftGP1Y,2));
             if (leftGP1X == 0) {
@@ -180,7 +180,7 @@ public class Teleop extends OpMode {
 
 
         }
-
+*/
         //Assign power to each motor based on X and Y vectors
         backleftPOWER = leftGP1Y - leftGP1X;
         backrightPOWER = -leftGP1Y - leftGP1X;
@@ -337,7 +337,7 @@ public class Teleop extends OpMode {
         robot.leftLiftMotor.setPower(0.7 * Math.pow(leftGP2Y,3));
         robot.rightLiftMotor.setPower(0.7 * Math.pow(leftGP2Y,3));
 
-        robot.relicMotor.setPower(-Math.pow(rightGP2Y,3));
+        robot.relicMotor.setPower(Math.pow(rightGP2Y,3));
 
 
         if (gamepad2.left_bumper){

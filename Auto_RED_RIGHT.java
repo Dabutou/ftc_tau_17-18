@@ -51,7 +51,7 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
             updateTelemetry(telemetry);
             raiseJewelServo();
             sleepTau(450);
-            turnToDegree(0.2,-10);
+            turnToDegree(0.15,-10);
             sleepTau(1000);
         }
 

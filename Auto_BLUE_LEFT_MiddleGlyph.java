@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by LH on 11/8/2017.
  */
-@Autonomous(name = "Auto Blue Left Middle Glyph", group = "Tau")
+@Autonomous(name = "Auto Blue Left Middle Glyph", group = "Tau: EXTRA")
 //@Disable
 public class Auto_BLUE_LEFT_MiddleGlyph extends AUTO_METHODS {
 

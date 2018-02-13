@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Created by LH on 1/13/2018.
  */
 
-@Autonomous(name = "Auto Red Jewel", group = "Tau")
+@Autonomous(name = "Auto Red Jewel", group = "Tau: EXTRA")
 //@Disabled
 public class Auto_RED_JEWEL extends AUTO_METHODS{
     @Override

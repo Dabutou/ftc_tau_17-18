@@ -71,7 +71,7 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
             updateTelemetry(telemetry);
             raiseJewelServo();
             sleepTau(450);
-            turnToDegree(0.2,-10);
+            turnToDegree(0.15,-10);
             sleepTau(1000);
         }
 
@@ -84,9 +84,9 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         sleepTau(800);
         driveRightStraightDISTANCE(0.3, 1.2);
         sleepTau(1500);
-        turnToDegree(0.1,90);
-        sleepTau(700);
-        glideFindRightWallSlow();
+        //turnToDegree(0.1,90);
+        //sleepTau(700);
+        glideFindRightWall();
         sleepTau(250);
         turnToDegree(0.1,90);
         sleepTau(800);

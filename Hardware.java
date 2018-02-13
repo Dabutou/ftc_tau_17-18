@@ -48,7 +48,7 @@ public class Hardware {
     // Sensor variable names
     public I2cDevice colori2C = null;
     public ModernRoboticsI2cColorSensor2 color = null;
-    public ModernRoboticsI2cRangeSensor frontRangeSensor = null;
+    //public ModernRoboticsI2cRangeSensor frontRangeSensor = null;
     public ModernRoboticsI2cRangeSensor rightRangeSensor = null;
 
     //VuForia**************************
@@ -67,7 +67,7 @@ public class Hardware {
     private Acceleration gravity;
 
     // Constant variable names
-    public static final double LEFT_LIFT_OPEN = 0.92;
+    public static final double LEFT_LIFT_OPEN = 0.96;
     public static final double RIGHT_LIFT_OPEN = 0.82;
 
     public Hardware()
@@ -178,10 +178,10 @@ public class Hardware {
         color = new ModernRoboticsI2cColorSensor2(colori2C.getI2cController(),colori2C.getPort());
         color.setI2cAddress(I2cAddr.create8bit(0x4C));
 
-        frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
+        //frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
         rightRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class,"range_right");
 
-        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x30));
+        //frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x30));
 
         // Initialize sensors
         imu.initialize(parameters);
@@ -337,8 +337,8 @@ public class Hardware {
         leftLiftServo.setDirection(Servo.Direction.REVERSE);
         rightLiftServo.setDirection(Servo.Direction.FORWARD);
         jewelServo.setDirection(Servo.Direction.FORWARD);
-        leftLiftServo.setPosition(RIGHT_LIFT_OPEN);
-        rightLiftServo.setPosition(LEFT_LIFT_OPEN);
+        leftLiftServo.setPosition(LEFT_LIFT_OPEN);
+        rightLiftServo.setPosition(RIGHT_LIFT_OPEN);
         jewelServo.setPosition(0);
         relicServo.setPosition(0.5);
     }
