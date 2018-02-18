@@ -82,19 +82,14 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         realign(0.1);
         sleepTau(1000);
         driveForwardStraightDISTANCE(0.3,1.08);
-        sleepTauCheck(800);
-        driveBackwardStraightDISTANCE(0.2,0.1);
-        sleepTau(600);
-       // realign(0.15);
-       // sleepTau(700);
-
+        sleepTauCheck(1120);
         glideFindRightWall();
-        sleepTau(250);
+        sleepTau(150);
         realign(0.05);
-        sleepTau(500);
+        sleepTau(900);
         glideFindSpotFL(vuValue);
-        lowerLiftSlightly();
-        autoRepositionFRONT(vuValue);
+
+        autoRepositionFRONT2(vuValue);
 
 
 

@@ -31,6 +31,10 @@ public class Auto_TEST extends AUTO_METHODS{
         ////getPositions();
         openClaw();
         sleepTau(150);
+        closeClaw();
+        sleepTau(200);
+        pokeClaw();
+        sleepTau(500);
         //getPositions();
         /*driveForwardStraightDISTANCE(1);
         sleepTauCheck(2500);

@@ -60,7 +60,7 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
         updateTelemetry(telemetry);
         turnToDegree(0.35,-90);
         sleepTau(1600);
-        turnToDegree(0.05,-87);
+        turnToDegree(0.05,-88.5);
         sleepTau(800);
         driveRightStraightDISTANCE(0.3, 1.2);
         sleepTau(1500);
@@ -71,7 +71,7 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
         turnToDegree(0.1,-90);
         sleepTau(800);
         glideFindSpotFR(vuValue);
-        lowerLiftSlightly();
+        //lowerLiftSlightly();
         autoRepositionSideRED(vuValue);
 
 

@@ -49,7 +49,7 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         closeClaw();
         lowerJewelServo();
         sleepTau(500);
-        raiseLiftSlightly();
+        raiseLiftMoreSlightly();
         jewelValue = getJewel();
         if (jewelValue == 10) {
             turnToDegree(0.2,30);
@@ -83,13 +83,13 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         sleepTauCheck(1400);
         //realign(0.15);
         //sleepTau(700);
-        glideFindRightWall();
+        glideFindRightWallBlue();
         sleepTau(250);
         realign(0.15);
         sleepTau(800);
         glideFindSpotBACKBR(vuValue);
-        lowerLiftSlightly();
-        autoRepositionFRONT(vuValue);
+        //lowerLiftMoreSlightly();
+        autoRepositionFRONT2(vuValue);
     }
 
 }

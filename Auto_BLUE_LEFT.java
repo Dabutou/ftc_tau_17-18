@@ -83,15 +83,13 @@ public class Auto_BLUE_LEFT extends AUTO_METHODS{
         turnToDegree(0.05,87);
         sleepTau(800);
         driveRightStraightDISTANCE(0.3, 1.2);
-        sleepTau(1500);
-        //turnToDegree(0.1,90);
-        //sleepTau(700);
-        glideFindRightWall();
+        sleepTau(1200);
+        glideFindRightWallBlue();
         sleepTau(250);
         turnToDegree(0.1,90);
         sleepTau(800);
         glideFindSpotBACKBL(vuValue);
-        lowerLiftSlightly();
+        //lowerLiftSlightly();
         autoRepositionSIDEBLUE(vuValue);
 
     }

@@ -287,12 +287,12 @@ class AUTO_METHODS extends LinearOpMode{
         runDistances();
     }
     public void glideFindSpotFL(String vuMark){
-        double glideEnd = robot.getTime() + 3.0;
+        double glideEnd = robot.getTime() + 3.5;
         double minTimeBetween = 0;
         int cryptoCounter = 0;
         double distValues = rightGetRange();
         double tempValues = rightGetRange();
-        driveForwardStraightDISTANCE(0.25,0.98);
+        driveForwardStraightDISTANCE(0.2,0.98);
         boolean done = false;
 
 
@@ -302,16 +302,14 @@ class AUTO_METHODS extends LinearOpMode{
                 tempValues = rightGetRange();
                 if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
                     cryptoCounter++;
-                    minTimeBetween = robot.getTime()+0.3;
+                    minTimeBetween = robot.getTime()+0.08;
                 }
                 distValues = rightGetRange();}
-            telemetry.addData("RANGE","RIGHT: " + rightGetRange()+ " CRYPTO: " + cryptoCounter);
+            telemetry.addData("RANGE","CRYPTO: " + cryptoCounter);
             updateTelemetry(telemetry);
             if (vuMark.equals("RIGHT") && cryptoCounter>=1 &&  !done){
                 stopRobot();
                 sleepTau(250);
-               // driveForwardStraightDISTANCE(0.3, 0.05);
-               // sleepTau(800);
                 driveLeftStraightDISTANCE(0.3,0.25);
                 sleepTau(1300);
                 turnToDegree(0.45,90);
@@ -319,19 +317,35 @@ class AUTO_METHODS extends LinearOpMode{
                 driveForwardStraightDISTANCE(0.3,1);
                 sleepTau(1500);
                 stopRobot();
-                openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                pokeClaw();
+                sleepTau(100);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1000);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
+                lowerLiftSlightly();
+                driveForwardStraightDISTANCE(0.6,1.1);
+                sleepTau(1200);
+                closeClaw();
+                sleepTau(200);
+                raiseLiftEntireBlock();
+                driveBackwardStraightDISTANCE(0.4,0.4);
+                sleepTau(1000);
+                turnToDegree(0.6,90);
+                sleepTau(1300);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                openClaw();
+                sleepTau(750);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
+                lowerLiftEntireBlock();
                 done = true;
                 break;
             }
             if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
                 stopRobot();
                 sleepTau(250);
-              //  driveForwardStraightDISTANCE(0.1, 0.1);
-              //  sleepTau(1000);
                 driveLeftStraightDISTANCE(0.3,0.25);
                 sleepTau(1300);
                 turnToDegree(0.45,90);
@@ -339,19 +353,35 @@ class AUTO_METHODS extends LinearOpMode{
                 driveForwardStraightDISTANCE(0.3,1);
                 sleepTau(1500);
                 stopRobot();
-                openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                pokeClaw();
+                sleepTau(100);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1000);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
+                lowerLiftSlightly();
+                driveForwardStraightDISTANCE(0.6,1.1);
+                sleepTau(1200);
+                closeClaw();
+                sleepTau(200);
+                raiseLiftEntireBlock();
+                driveBackwardStraightDISTANCE(0.4,0.4);
+                sleepTau(1000);
+                turnToDegree(0.6,90);
+                sleepTau(1300);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                openClaw();
+                sleepTau(750);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
+                lowerLiftEntireBlock();
                 done = true;
                 break;
             }
             if (vuMark.equals("LEFT") && cryptoCounter >= 3 && !done){
                 stopRobot();
                 sleepTau(250);
-                //driveForwardStraightDISTANCE(0.15,0.09);
-                //sleepTau(1000);
                 driveLeftStraightDISTANCE(0.3,0.25);
                 sleepTau(1300);
                 turnToDegree(0.45,90);
@@ -359,31 +389,109 @@ class AUTO_METHODS extends LinearOpMode{
                 driveForwardStraightDISTANCE(0.3,1);
                 sleepTau(1000);
                 stopRobot();
-                openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
-                sleepTau(1400);
+                pokeClaw();
+                sleepTau(100);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
+                lowerLiftSlightly();
+                driveForwardStraightDISTANCE(0.6,1.1);
+                sleepTau(1200);
+                closeClaw();
+                sleepTau(200);
+                raiseLiftEntireBlock();
+                driveBackwardStraightDISTANCE(0.4,0.4);
+                sleepTau(1000);
+                turnToDegree(0.6,90);
+                sleepTau(1300);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                openClaw();
+                sleepTau(750);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
+                lowerLiftEntireBlock();
                 done = true;
                 break;
             }
 
         }
         if (!done) {
-            driveLeftStraightDISTANCE(0.3, 0.2);
-            sleepTau(1500);
-            turnToDegree(0.35, -90);
-            sleepTau(1000);
+            glideEnd = robot.getTime() + 6;
+            cryptoCounter = 0;
+            distValues = rightGetRange();
+            tempValues = rightGetRange();
+            driveBackwardStraightDISTANCE(0.1,1);
+            while (glideEnd > robot.getTime()){
+
+                if (rightGetRange() < 1000 ){
+                    tempValues = rightGetRange();
+                    if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
+                        cryptoCounter++;
+                        minTimeBetween = robot.getTime() + 0.15;
+                    }
+                    distValues = rightGetRange();}
+                if (vuMark.equals("LEFT") && cryptoCounter>=1 &&  !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,90);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,90);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if (vuMark.equals("RIGHT") && cryptoCounter >= 3 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,90);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+
+            }
         }
 
     }
     public void glideFindSpotFR(String vuMark){
-        double glideEnd = robot.getTime() + 8.0;
+        double glideEnd = robot.getTime() + 6.5;
         double minTimeBetween = 0;
         int cryptoCounter = 0;
         double distValues = rightGetRange();
         double tempValues = rightGetRange();
-        driveForwardStraightDISTANCE(0.088,0.98);
+        driveForwardStraightDISTANCE(0.11,0.98);
         boolean done = false;
 
 
@@ -393,7 +501,7 @@ class AUTO_METHODS extends LinearOpMode{
                 tempValues = rightGetRange();
                 if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
                     cryptoCounter++;
-                    minTimeBetween = robot.getTime()+0.3;
+                    minTimeBetween = robot.getTime()+0.14;
                 }
                 distValues = rightGetRange();}
             telemetry.addData("RANGE","RIGHT: " + rightGetRange()+" CRYPTO: " + cryptoCounter);
@@ -401,8 +509,6 @@ class AUTO_METHODS extends LinearOpMode{
             if (vuMark.equals("RIGHT") && cryptoCounter>=1 &&  !done){
                 stopRobot();
                 sleepTau(250);
-                // driveForwardStraightDISTANCE(0.3, 0.05);
-                // sleepTau(800);
                 driveLeftStraightDISTANCE(0.3,0.25);
                 sleepTau(1300);
                 realign(0.45);
@@ -411,7 +517,7 @@ class AUTO_METHODS extends LinearOpMode{
                 sleepTau(1500);
                 stopRobot();
                 openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1400);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
@@ -421,8 +527,6 @@ class AUTO_METHODS extends LinearOpMode{
             if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
                 stopRobot();
                 sleepTau(250);
-                //  driveForwardStraightDISTANCE(0.1, 0.1);
-                //  sleepTau(1000);
                 driveLeftStraightDISTANCE(0.3,0.25);
                 sleepTau(1300);
                 realign(0.45);
@@ -431,7 +535,7 @@ class AUTO_METHODS extends LinearOpMode{
                 sleepTau(1500);
                 stopRobot();
                 openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1400);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
@@ -441,8 +545,6 @@ class AUTO_METHODS extends LinearOpMode{
             if (vuMark.equals("LEFT") && cryptoCounter >= 3 && !done){
                 stopRobot();
                 sleepTau(250);
-                //driveForwardStraightDISTANCE(0.15,0.09);
-                //sleepTau(1000);
                 driveLeftStraightDISTANCE(0.3,0.25);
                 sleepTau(1300);
                 realign(0.45);
@@ -451,7 +553,7 @@ class AUTO_METHODS extends LinearOpMode{
                 sleepTau(1500);
                 stopRobot();
                 openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1400);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
@@ -461,20 +563,80 @@ class AUTO_METHODS extends LinearOpMode{
 
         }
         if (!done) {
-            driveLeftStraightDISTANCE(0.3, 0.2);
-            sleepTau(1500);
-            turnToDegree(0.35, -90);
-            sleepTau(1000);
+            glideEnd = robot.getTime() + 6;
+            distValues = rightGetRange();
+            tempValues = rightGetRange();
+            driveBackwardStraightDISTANCE(0.1,1);
+            cryptoCounter = 0;
+            while (glideEnd > robot.getTime()){
+
+                if (rightGetRange() < 1000 ){
+                    tempValues = rightGetRange();
+                    if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
+                        cryptoCounter++;
+                        minTimeBetween = robot.getTime() + 0.16;
+                    }
+                    distValues = rightGetRange();}
+                if (vuMark.equals("LEFT") && cryptoCounter>=1 &&  !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    realign(0.45);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    realign(0.45);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if (vuMark.equals("RIGHT") && cryptoCounter >= 3 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    realign(0.45);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+
+            }
         }
 
     }
     public void glideFindSpotBACKBL(String vuMark){
-        double glideEnd = robot.getTime() + 8.0;
+        double glideEnd = robot.getTime() + 4;
         double minTimeBetween = 0;
         int cryptoCounter = 0;
         double distValues = rightGetRange();
         double tempValues = rightGetRange();
-        driveBackwardStraightDISTANCE(0.09,1);
+        driveBackwardStraightDISTANCE(0.1,1);
         boolean done = false;
 
 
@@ -484,7 +646,7 @@ class AUTO_METHODS extends LinearOpMode{
                 tempValues = rightGetRange();
                 if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
                     cryptoCounter++;
-                    minTimeBetween = robot.getTime() + 0.3;
+                    minTimeBetween = robot.getTime() + 0.14;
                 }
                 distValues = rightGetRange();}
             telemetry.addData("RANGE","RIGHT: " + rightGetRange()+" CRYPTO: " + cryptoCounter);
@@ -500,7 +662,7 @@ class AUTO_METHODS extends LinearOpMode{
                 sleepTau(1500);
                 stopRobot();
                 openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1400);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
@@ -518,7 +680,7 @@ class AUTO_METHODS extends LinearOpMode{
                 sleepTau(1500);
                 stopRobot();
                 openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1500);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
@@ -536,7 +698,7 @@ class AUTO_METHODS extends LinearOpMode{
                 sleepTau(1500);
                 stopRobot();
                 openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
+                driveBackwardStraightDISTANCE(0.3,0.45);
                 sleepTau(1500);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
@@ -546,20 +708,80 @@ class AUTO_METHODS extends LinearOpMode{
 
         }
         if (!done) {
-            driveLeftStraightDISTANCE(0.3, 0.2);
-            sleepTau(1500);
-            turnToDegree(0.45, -90);
-            sleepTau(1500);
+            glideEnd = robot.getTime() + 6;
+            distValues = rightGetRange();
+            tempValues = rightGetRange();
+            driveForwardStraightDISTANCE(0.1,1);
+            cryptoCounter = 0;
+            while (glideEnd > robot.getTime()){
+
+                if (rightGetRange() < 1000 ){
+                    tempValues = rightGetRange();
+                    if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
+                        cryptoCounter++;
+                        minTimeBetween = robot.getTime() + 0.15;
+                    }
+                    distValues = rightGetRange();}
+                if (vuMark.equals("RIGHT") && cryptoCounter>=1 &&  !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,176);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,176);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if (vuMark.equals("LEFT") && cryptoCounter >= 3 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,176);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+
+            }
         }
 
     }
     public void glideFindSpotBACKBR(String vuMark){
-        double glideEnd = robot.getTime() + 8.0;
+        double glideEnd = robot.getTime() + 3.5;
         double minTimeBetween = 0;
         int cryptoCounter = 0;
         double distValues = rightGetRange();
         double tempValues = rightGetRange();
-        driveBackwardStraightDISTANCE(0.09,1);
+        driveBackwardStraightDISTANCE(0.2,1);
         boolean done = false;
 
 
@@ -569,7 +791,7 @@ class AUTO_METHODS extends LinearOpMode{
                 tempValues = rightGetRange();
                 if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
                     cryptoCounter++;
-                    minTimeBetween = robot.getTime() + 0.3;
+                    minTimeBetween = robot.getTime() + 0.08;
                 }
                 distValues = rightGetRange();}
             telemetry.addData("RANGE","RIGHT: " + rightGetRange()+" CRYPTO: " + cryptoCounter);
@@ -578,35 +800,72 @@ class AUTO_METHODS extends LinearOpMode{
                 stopRobot();
                 sleepTau(250);
                 driveLeftStraightDISTANCE(0.3,0.25);
-                sleepTau(1500);
+                sleepTau(1300);
                 turnToDegree(0.45,86);
-                sleepTau(1000);
+                sleepTau(1050);
                 driveForwardStraightDISTANCE(0.3,1);
                 sleepTau(1500);
                 stopRobot();
-                openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
-                sleepTau(1400);
+                pokeClaw();
+                sleepTau(100);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
+                lowerLiftSlightly();
+                driveForwardStraightDISTANCE(0.6,1.1);
+                sleepTau(1200);
+                closeClaw();
+                sleepTau(200);
+                raiseLiftEntireBlock();
+                driveBackwardStraightDISTANCE(0.4,0.4);
+                sleepTau(1000);
+                turnToDegree(0.6,90);
+                sleepTau(1300);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                openClaw();
+                sleepTau(750);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
+                lowerLiftEntireBlock();
                 done = true;
                 break;
+
             }
             if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
                 stopRobot();
                 sleepTau(250);
                 driveLeftStraightDISTANCE(0.3,0.25);
-                sleepTau(1500);
+                sleepTau(1300);
                 turnToDegree(0.45,86);
-                sleepTau(1000);
+                sleepTau(1050);
                 driveForwardStraightDISTANCE(0.3,1);
                 sleepTau(1500);
                 stopRobot();
-                openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
-                sleepTau(1500);
+                pokeClaw();
+                sleepTau(100);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
+                lowerLiftSlightly();
+                driveForwardStraightDISTANCE(0.6,1.1);
+                sleepTau(1200);
+                closeClaw();
+                sleepTau(200);
+                raiseLiftEntireBlock();
+                driveBackwardStraightDISTANCE(0.4,0.4);
+                sleepTau(1000);
+                turnToDegree(0.6,90);
+                sleepTau(1300);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                openClaw();
+                sleepTau(750);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
+                lowerLiftEntireBlock();
                 done = true;
                 break;
             }
@@ -614,27 +873,105 @@ class AUTO_METHODS extends LinearOpMode{
                 stopRobot();
                 sleepTau(250);
                 driveLeftStraightDISTANCE(0.3,0.25);
-                sleepTau(1500);
+                sleepTau(1300);
                 turnToDegree(0.45,86);
-                sleepTau(1000);
+                sleepTau(1050);
                 driveForwardStraightDISTANCE(0.3,1);
                 sleepTau(1500);
                 stopRobot();
-                openClaw();
-                driveBackwardStraightDISTANCE(0.3,0.35);
-                sleepTau(1500);
+                pokeClaw();
+                sleepTau(100);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
                 turnToDegree(0.6,-90);
                 sleepTau(1500);
+                lowerLiftSlightly();
+                driveForwardStraightDISTANCE(0.6,1.1);
+                sleepTau(1200);
+                closeClaw();
+                sleepTau(200);
+                raiseLiftEntireBlock();
+                driveBackwardStraightDISTANCE(0.4,0.4);
+                sleepTau(1000);
+                turnToDegree(0.6,90);
+                sleepTau(1300);
+                driveForwardStraightDISTANCE(0.3,1);
+                sleepTau(1500);
+                openClaw();
+                sleepTau(750);
+                driveBackwardStraightDISTANCE(0.3,0.45);
+                sleepTau(1000);
+                lowerLiftEntireBlock();
                 done = true;
                 break;
             }
 
         }
         if (!done) {
-            driveLeftStraightDISTANCE(0.3, 0.2);
-            sleepTau(1500);
-            turnToDegree(0.45, -90);
-            sleepTau(1000);
+            glideEnd = robot.getTime() + 6;
+            distValues = rightGetRange();
+            tempValues = rightGetRange();
+            driveForwardStraightDISTANCE(0.1,1);
+            cryptoCounter = 0;
+            while (glideEnd > robot.getTime()){
+
+                if (rightGetRange() < 1000 ){
+                    tempValues = rightGetRange();
+                    if (distValues - tempValues > 2 && robot.getTime() > minTimeBetween){
+                        cryptoCounter++;
+                        minTimeBetween = robot.getTime() + 0.15;
+                    }
+                    distValues = rightGetRange();}
+                if (vuMark.equals("RIGHT") && cryptoCounter>=1 &&  !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,86);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if ((vuMark.equals("CENTER") || vuMark.equals("CG")) && cryptoCounter >= 2 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,86);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+                if (vuMark.equals("LEFT") && cryptoCounter >= 3 && !done){
+                    stopRobot();
+                    sleepTau(250);
+                    driveLeftStraightDISTANCE(0.3,0.25);
+                    sleepTau(1300);
+                    turnToDegree(0.45,86);
+                    sleepTau(1050);
+                    driveForwardStraightDISTANCE(0.3,1);
+                    sleepTau(1500);
+                    stopRobot();
+                    openClaw();
+                    sleepTau(50);
+                    driveBackwardStraightDISTANCE(0.3,0.45);
+                    sleepTau(1000);
+                    break;
+                }
+
+            }
         }
 
     }
@@ -654,42 +991,29 @@ class AUTO_METHODS extends LinearOpMode{
     }*/
     public void glideFindRightWall(){
         double glideEnd = robot.getTime() + 2;
-        driveRightStraightDISTANCE(0.25,3);
-        //try{
+        driveRightStraightDISTANCE(0.15,3);
+
         while (glideEnd > robot.getTime()){
-            if (rightGetRange() <= 23){
+            if (rightGetRange() <= 21){
                 break;
             }
             telemetry.addData("RIGHT RANGE",rightGetRange());
             updateTelemetry(telemetry);
-            //Thread.sleep(1);
+
         }
-        /*if (glideEnd-robot.getTime() > 8.84){
-            driveForwardStraightDISTANCE(0.15,0.09);
-            sleepTau(1000);
-            double glideEnd2 = robot.getTime() + 3;
-            while (glideEnd2 > robot.getTime()){
-                if (rightGetRange() <= 22){
-                    break;
-                }
-                telemetry.addData("RIGHT RANGE",rightGetRange());
-                updateTelemetry(telemetry);
-            }
-        }*/
         stopRobot();
 
     }
-    public void glideFindRightWallSlow(){
+    public void glideFindRightWallBlue(){
         double glideEnd = robot.getTime() + 10;
-        driveRightStraightDISTANCE(0.09,3);
-        //try{
+        driveRightStraightDISTANCE(0.2,3);
         while (glideEnd > robot.getTime()){
-            if (rightGetRange() <= 23){
+            if (rightGetRange() <= 27){
                 break;
             }
             telemetry.addData("RIGHT RANGE",rightGetRange());
             updateTelemetry(telemetry);
-            //Thread.sleep(1);
+
         }
         stopRobot();
 
@@ -750,22 +1074,32 @@ class AUTO_METHODS extends LinearOpMode{
     }
     public void raiseLiftSlightly(){
         liftSpeed(-0.65);
-        sleepTau(375);
+        sleepTau(340);
         liftSpeed(0);
     }
     public void lowerLiftSlightly(){
         liftSpeed(0.65);
-        sleepTau(315);
+        sleepTau(290);
         liftSpeed(0);
     }
     public void raiseLiftMoreSlightly(){
         liftSpeed(-0.45);
-        sleepTau(500);
+        sleepTau(400);
         liftSpeed(0);
     }
     public void lowerLiftMoreSlightly(){
         liftSpeed(0.45);
-        sleepTau(498);
+        sleepTau(340);
+        liftSpeed(0);
+    }
+    public void raiseLiftEntireBlock(){
+        liftSpeed(-1);
+        sleepTau(1000);
+        liftSpeed(0);
+    }
+    public void lowerLiftEntireBlock(){
+        liftSpeed(0.8);
+        sleepTau(515);
         liftSpeed(0);
     }
     public void autoRepositionFRONT(String vuMark){
@@ -777,6 +1111,21 @@ class AUTO_METHODS extends LinearOpMode{
             driveLeftStraightDISTANCE(0.5,0.35);
         }
         else if (vuMark.equals("RIGHT")){
+            driveRightStraightDISTANCE(0.5,0.35);
+        }
+        else{
+            driveRightStraightDISTANCE(0.5,0.35);
+        }
+        sleepTau(1500);
+    }
+    public void autoRepositionFRONT2(String vuMark){
+        if ((vuMark.equals("CENTER") || vuMark.equals("CG"))){
+            return;
+        }
+        else if (vuMark.equals("RIGHT")){
+            driveLeftStraightDISTANCE(0.5,0.35);
+        }
+        else if (vuMark.equals("LEFT")){
             driveRightStraightDISTANCE(0.5,0.35);
         }
         else{
@@ -862,6 +1211,11 @@ class AUTO_METHODS extends LinearOpMode{
         }catch(InterruptedException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public void pokeClaw(){
+        robot.leftLiftServo.setPosition(0.54);
+        robot.rightLiftServo.setPosition(0.40);
     }
 
     public void openClaw(){
