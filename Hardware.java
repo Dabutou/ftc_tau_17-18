@@ -4,12 +4,14 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.configuration.ModernRoboticsMotorControllerParams;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -23,9 +25,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+
 
 /**
- * Created by Lance He on 9/16/2017.
+ * Created by Lance He 9/16/2017.
  */
 
 public class Hardware {
@@ -59,12 +63,15 @@ public class Hardware {
 
     //IMU******************************
     private BNO055IMU imu;
+    private BNO055IMU.Parameters parameters;
 
     // Other variable names
     HardwareMap hwMap;
     private ElapsedTime period = new ElapsedTime();
     private Orientation angles;
     private Acceleration gravity;
+    private VoltageSensor voltageBoiLEFT = null;
+    private VoltageSensor voltageBoiRIGHT = null;
 
     // Constant variable names
     public static final double LEFT_LIFT_OPEN = 0.96;
@@ -189,10 +196,13 @@ public class Hardware {
 
     }
 
-    public void initTeleOp(HardwareMap hwMap){
+    public void initTeleOpDelayIMU(HardwareMap hwMap){
         // Save reference to Hardware map
         this.hwMap = hwMap;
         period.reset();
+
+        voltageBoiLEFT = hwMap.voltageSensor.get("left");
+        voltageBoiRIGHT = hwMap.voltageSensor.get("right");
 
         // Define Motors
         frontLeftMotor = hwMap.dcMotor.get("left_front");
@@ -259,7 +269,7 @@ public class Hardware {
         relicServo.setPosition(0.5);
 
         // Define sensors
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibrafion sample opmode
@@ -268,10 +278,8 @@ public class Hardware {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hwMap.get(BNO055IMU.class, "imu");
-
-        // Initialize sensors
-        imu.initialize(parameters);
     }
+
 
     public void initTeleOpNOIMU(HardwareMap hwMap){
         // Save reference to Hardware map
@@ -347,6 +355,13 @@ public class Hardware {
         return period.time();
     }
 
+    public double getVoltage(){
+        return (voltageBoiLEFT.getVoltage() + voltageBoiRIGHT.getVoltage())/2;
+    }
+
+    public BNO055IMU.Parameters getImuProperties(){
+        return parameters;
+    }
     public BNO055IMU getImu(){
         return imu;
     }
