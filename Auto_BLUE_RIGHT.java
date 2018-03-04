@@ -45,6 +45,7 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         int jewelValue = 0;
         IMUandVu();
 
+
         //CALL WHATEVER METHODS HERE:
         closeClaw();
         lowerJewelServo();
@@ -52,26 +53,26 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         raiseLiftMoreSlightly();
         jewelValue = getJewel();
         if (jewelValue == 10) {
-            turnToDegree(0.2,30);
-            sleepTau(1200);
+            turnToDegree(0.35,8);
+            sleepTau(700);
             raiseJewelServo();
             sleepTau(150);
             turnToDegree(0.2,-10);
-            sleepTau(1000);
+            sleepTau(800);
         } else if(jewelValue == 3) {
-            turnDegree(0.2,-30);
-            sleepTau(1200);
+            turnDegree(0.35,-8);
+            sleepTau(700);
             raiseJewelServo();
             sleepTau(150);
             turnToDegree(0.2,-10);
-            sleepTau(1000);
+            sleepTau(800);
         } else {
             telemetry.addData("Jewel", "Unknown");
             updateTelemetry(telemetry);
             raiseJewelServo();
             sleepTau(450);
             turnToDegree(0.15,-10);
-            sleepTau(1000);
+            sleepTau(900);
         }
 
         vuValue = rightGetVuSMALL();
@@ -79,17 +80,18 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         updateTelemetry(telemetry);
         realign(0.1);
         sleepTau(1000);
-        driveBackwardStraightDISTANCE(0.3,1.08);
-        sleepTauCheck(1400);
+        driveBackwardStraightDISTANCE(0.4,1.08);
+        sleepTauCheck(1150);
         //realign(0.15);
         //sleepTau(700);
         glideFindRightWallBlue();
-        sleepTau(250);
+        sleepTau(150);
         realign(0.15);
         sleepTau(800);
         glideFindSpotBACKBR(vuValue);
         //lowerLiftMoreSlightly();
         autoRepositionFRONT2(vuValue);
+
     }
 
 }

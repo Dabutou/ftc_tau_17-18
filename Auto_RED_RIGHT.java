@@ -33,15 +33,15 @@ public class Auto_RED_RIGHT extends AUTO_METHODS{
         raiseLiftSlightly();
         jewelValue = getJewel();
         if (jewelValue == 3) {
-            turnToDegree(0.2,30);
-            sleepTau(1200);
+            turnToDegree(0.35,8);
+            sleepTau(700);
             raiseJewelServo();
             sleepTau(150);
             turnToDegree(0.2,-10);
             sleepTau(1000);
         } else if(jewelValue == 10) {
-            turnDegree(0.2,-30);
-            sleepTau(1200);
+            turnToDegree(0.35,-8);
+            sleepTau(700);
             raiseJewelServo();
             sleepTau(150);
             turnToDegree(0.2,-10);

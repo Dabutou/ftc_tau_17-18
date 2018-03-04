@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -22,6 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Absolute extends OpMode {
 
     Hardware robot = new Hardware();
+    private static final String TAG = "LHActivity";
 
     //Drive Variables
     private BNO055IMU imu;
@@ -156,6 +159,9 @@ public class Absolute extends OpMode {
         if (firstTimeABD){
             imu.initialize(parameters);
             firstTimeABD = false;
+            pitchinit = imu.getAngularOrientation().secondAngle;
+            rollinit = imu.getAngularOrientation().thirdAngle;
+
         }
 
 
@@ -217,9 +223,11 @@ public class Absolute extends OpMode {
             centerModeFirstTime = true;
             centerModeEndTime = 0;
         }
-        if (gamepad1.dpad_down && gamepad1.dpad_up && gamepad1.dpad_left && gamepad1.dpad_right){
+        if (gamepad1.dpad_left && gamepad1.b){
             centerMode = false;
+            centerModeFirstTime = false;
             centerModeEndTime = 0;
+            //telemetry.addData("CENTERMODE","DEACTIVATED");
         }
         if (gamepad1.x && gamepad1.dpad_right){
             centerMode = true;
@@ -231,23 +239,25 @@ public class Absolute extends OpMode {
             absoluteDrive = false;
             speedToggle = true;
             if (centerModeFirstTime) {
-                headinginit = imu.getAngularOrientation().firstAngle;
+                Log.i(TAG,"CENTER MODE, FIRST TIME");
+                //headinginit = imu.getAngularOrientation().firstAngle;
                 pitchinit = imu.getAngularOrientation().secondAngle;
                 rollinit = imu.getAngularOrientation().thirdAngle;
-                driveForward(1);
-                sleepTau(675);
+                driveForward(0.9);
+                sleepTau(530);
                 driveForward(0.3);
-                sleepTau(125);
+                sleepTau(70);
                 driveForward(0);
-                sleepTau(100);
+                sleepTau(10);
                 centerModeFirstTime = false;
             }
 
 
-            double heading = imu.getAngularOrientation().firstAngle - headinginit;
+            //double heading = imu.getAngularOrientation().firstAngle - headinginit;
             double pitch = imu.getAngularOrientation().secondAngle - pitchinit;
             double roll = imu.getAngularOrientation().thirdAngle - rollinit;
 
+            Log.i(TAG,"IMU PITCH: "+pitch + " ROLL: "+roll );
 
             if (Math.abs(roll) > 0.05){
                 leftGP1X = -roll/25;
@@ -256,7 +266,7 @@ public class Absolute extends OpMode {
             if (Math.abs(pitch) > 0.05){
                 leftGP1Y = -pitch/25;
             }
-            if (heading > 0.05){
+            /*if (heading > 0.05){
                 RTGP1 =(float)(heading/120);
                 if(RTGP1 > 1){
                     RTGP1 = 1;
@@ -267,7 +277,7 @@ public class Absolute extends OpMode {
                 if (LTGP1 > 1){
                     LTGP1 = 1;
                 }
-            }
+            }*/
             if (centerModeEndTime == 0){
                 if (leftGP1X < 0.05 && leftGP1Y < 0.05 && RTGP1 < 0.05 && LTGP1 < 0.05){
                     centerModeEndTime = robot.getTime() + 5;
@@ -474,6 +484,9 @@ public class Absolute extends OpMode {
             }
 
         }
+
+
+
 
 
 
