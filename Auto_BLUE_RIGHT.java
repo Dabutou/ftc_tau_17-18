@@ -90,7 +90,7 @@ public class Auto_BLUE_RIGHT extends AUTO_METHODS{
         sleepTau(800);
         glideFindSpotBACKBR(vuValue);
         //lowerLiftMoreSlightly();
-        autoRepositionFRONT2(vuValue);
+        autoRepositionFRONT(vuValue);
 
     }
 

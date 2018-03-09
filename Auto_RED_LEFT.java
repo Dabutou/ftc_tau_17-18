@@ -89,7 +89,7 @@ public class Auto_RED_LEFT extends AUTO_METHODS{
         sleepTau(900);
         glideFindSpotFL(vuValue);
 
-        autoRepositionFRONT2(vuValue);
+        autoRepositionFRONT(vuValue);
 
 
 
